@@ -6,6 +6,9 @@ import unicorn from 'eslint-plugin-unicorn';
 export default defineConfig(
   {
     ignores: ['dist', 'node_modules'],
+  },
+
+  {
     linterOptions: {
       noInlineConfig: true,
     },

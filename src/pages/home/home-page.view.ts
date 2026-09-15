@@ -14,5 +14,7 @@ export function getHomePageView(): string {
         </div>
       </div>
     </section>
+
+    <div class="slider-placeholder"></div>
   `;
 }

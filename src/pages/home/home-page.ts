@@ -1,3 +1,4 @@
+import { Slider } from '../../features/slider/slider';
 import { getHomePageView } from './home-page.view';
 
 export class HomePage {
@@ -7,6 +8,10 @@ export class HomePage {
     main.className = 'main';
     main.innerHTML = getHomePageView();
 
+    const slider = new Slider();
+    const sliderPlaceholder = main.querySelector('.slider-placeholder');
+
+    sliderPlaceholder?.replaceWith(slider.render());
     return main;
   }
 }

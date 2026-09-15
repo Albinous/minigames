@@ -1,4 +1,4 @@
-import { HomePage } from "../pages/home/home-page";
+import { HomePage } from '../pages/home/home-page';
 
 export class Router {
   public render(): HTMLElement {

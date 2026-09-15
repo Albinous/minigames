@@ -14,5 +14,5 @@ export function getHomePageView(): string {
         </div>
       </div>
     </section>
-  `
+  `;
 }

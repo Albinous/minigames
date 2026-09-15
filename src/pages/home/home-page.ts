@@ -1,4 +1,4 @@
-import { getHomePageView } from "./home-page.view";
+import { getHomePageView } from './home-page.view';
 
 export class HomePage {
   public render(): HTMLElement {

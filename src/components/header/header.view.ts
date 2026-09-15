@@ -1,16 +1,18 @@
+import './header.scss';
+
 export function getHeaderView(): string {
   return `
-      <div class="container">
+      <div class="container header-container">
         <div class="header-wrapper">
           <a href="#" class="header-logo">
-            <img src="src/assets/icons/logo.svg" alt="" class="header-logo__icon" />
+            <img src="src/assets/icons/logo.svg" alt="minigames logo" class="header-logo__icon" />
             <span class="header-logo__title">MiniGames</span>
           </a>
           <div class="header-main">
             <nav class="nav">
               <ul class="nav-menu">
                 <li class="nav-menu__item">
-                  <a href="#" class="nav-menu__link">Home</a>
+                  <a href="#" class="nav-menu__link active">Home</a>
                 </li>
                 <li class="nav-menu__item">
                   <a href="#" class="nav-menu__link">Library</a>
@@ -23,8 +25,10 @@ export function getHeaderView(): string {
                 </li>
               </ul>
             </nav>
-            <button class="header-btn__login">Log In</button>
-            <button class="header-btn__signup">Sign Up</button>
+            <div class="header-btns">
+              <button class="btn btn-secondary header-btn__login">Log In</button>
+              <button class="btn btn-primary header-btn__signup">Sign Up</button>
+            </div>
           </div>
         </div>
       </div>

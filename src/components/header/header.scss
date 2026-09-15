@@ -1,0 +1,53 @@
+@use '../../styles/mixins' as *;
+@use '../../styles/tokens' as *;
+
+.header {
+  padding: 24px 0;
+  &-container {
+    max-width: 1760px;
+  }
+
+  &-wrapper {
+    @include flex-between;
+  }
+
+  &-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    &__title {
+      font-weight: $font-weight-bold;
+      font-size: 24px;
+    }
+  }
+
+  &-main {
+    display: flex;
+    gap: 32px;
+    align-items: center;
+  }
+
+  &-btns {
+    display: flex;
+    gap: $size-2;
+  }
+}
+
+.nav {
+  &-menu {
+    display: flex;
+    gap: 40px;
+    align-items: center;
+
+    &__link {
+      color: $color-on-bg;
+      font-size: $size-2;
+      font-weight: $font-weight-medium;
+      &.active {
+        color: $color-on-primary;
+        font-weight: $font-weight-bold;
+      }
+    }
+  }
+}

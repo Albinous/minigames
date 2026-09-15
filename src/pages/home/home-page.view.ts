@@ -10,7 +10,7 @@ export function getHomePageView(): string {
             Discover hundreds of curated casual mini-games. Play instantly in your browser —
             puzzle, match 3, farm, and board classics.
           </p>
-          <button class="btn btn-primary">Browse Library</button>
+          <button class="btn btn-primary hero-btn">Browse Library</button>
         </div>
       </div>
     </section>

@@ -1,4 +1,4 @@
-import { getHeaderView } from "./header.view";
+import { getHeaderView } from './header.view';
 
 export class Header {
   public render(): HTMLElement {

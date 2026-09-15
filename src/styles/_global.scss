@@ -46,7 +46,8 @@ button {
   border: 0;
   background: none;
   cursor: pointer;
-  font-family: $font-family-roboto;
+  font-family: $font-family-inter;
+  font-weight: $font-weight-bold;
 }
 
 a {
@@ -60,4 +61,24 @@ img {
   display: block;
   max-width: 100%;
   height: auto;
+}
+
+.container {
+  max-width: 1680px;
+  margin: 0 auto;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 18px;
+  border: 2px solid $color-on-primary;
+  border-radius: $corner-small;
+  color: $color-on-primary;
+  font-size: 14px;
+
+  &-primary {
+    background-color: $color-primary;
+  }
 }

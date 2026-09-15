@@ -24,9 +24,19 @@ h2,
 h3,
 h4,
 h5,
-h6,
-p {
+h6 {
   font-family: $font-family-inter;
+  color: $color-on-primary;
+}
+
+h2 {
+  font-size: $size-4;
+}
+
+p {
+  color: $color-on-bg;
+  font-size: 18px;
+  line-height: 1.5;
 }
 
 ul {

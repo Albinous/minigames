@@ -4,7 +4,12 @@ import { getGameCardView } from './game-card';
 
 export function getSliderView(games: IGame[]): string {
   const activeIndex = 0;
-  const cards = games.filter(game => game.featured === true).map((game, index) => getGameCardView(game, index === activeIndex)).join('')
+  const featuredGames = games.filter(game => game.featured === true)
+  const cards = featuredGames.map((_, index) => {
+    const offset = index - Math.floor(featuredGames.length / 2);
+    const gameIndex = (offset + activeIndex + featuredGames.length) % featuredGames.length;
+    return getGameCardView(featuredGames[gameIndex], gameIndex === activeIndex)
+  }).join('')
   return `
     <div class="container">
       <div class="games-header">

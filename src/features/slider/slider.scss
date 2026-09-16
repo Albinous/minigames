@@ -24,12 +24,14 @@
     &__viewport {
       width: 100%;
       overflow: hidden;
+      padding-bottom: $size-05;
     }
 
     &__track {
       display: flex;
       gap: $size-1;
       align-items: stretch;
+      transform: translate(-44.8%, 0);
     }
   }
 }

@@ -21,9 +21,15 @@
   }
 
   &-slider {
-    display: flex;
-    overflow: hidden;
-    flex-wrap: wrap;
-    gap: $size-1;
+    &__viewport {
+      width: 100%;
+      overflow: hidden;
+    }
+
+    &__track {
+      display: flex;
+      gap: $size-1;
+      align-items: stretch;
+    }
   }
 }

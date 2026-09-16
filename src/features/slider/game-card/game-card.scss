@@ -7,8 +7,12 @@
   border: 2.5px solid $color-on-primary;
   border-radius: $size-3;
   box-shadow: $shadow-level-1;
-  width: 288px;
+  flex: 0 0 288px;
   height: 384px;
+
+  &.active {
+    flex-basis: 816px;
+  }
 
   &__img {
     height: 100%;

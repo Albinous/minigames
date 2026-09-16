@@ -3,7 +3,8 @@ import type { IGame } from '../../core';
 import { getGameCardView } from './game-card';
 
 export function getSliderView(games: IGame[]): string {
-  const cards = games.filter(game => game.featured === true).map(game => getGameCardView(game)).join('')
+  const activeIndex = 0;
+  const cards = games.filter(game => game.featured === true).map((game, index) => getGameCardView(game, index === activeIndex)).join('')
   return `
     <div class="container">
       <div class="games-header">
@@ -41,8 +42,10 @@ export function getSliderView(games: IGame[]): string {
         </div>
       </div>
 
-      <div class="games-slider">
-        ${cards}
+      <div class="games-slider__viewport">
+        <div class="games-slider__track">
+          ${cards}
+        </div>
       </div>
     </div>
     `

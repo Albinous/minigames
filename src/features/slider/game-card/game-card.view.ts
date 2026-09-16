@@ -1,4 +1,5 @@
 import type { IGame } from "../../../core";
+import { formatLikesCount } from "../../../shared";
 
 export function getGameCardView(game: IGame): string {
   return `
@@ -35,7 +36,7 @@ export function getGameCardView(game: IGame): string {
                     fill="#FF4B4B"
                   />
                 </svg>
-                <span>${game.likesCount}</span>
+                <span>${formatLikesCount(game.likesCount)}K</span>
               </div>
             </div>
           </div>

@@ -1,5 +1,5 @@
-import type { IGame } from "../../../core";
-import { formatLikesCount } from "../../../shared";
+import type { IGame } from '../../../core';
+import { formatLikesCount } from '../../../shared';
 
 export function getGameCardView(game: IGame, isActive: boolean): string {
   return `

@@ -1,0 +1,57 @@
+@use '../../../styles/tokens' as *;
+@use '../../../styles/mixins' as *;
+
+.game-card {
+  position: relative;
+  overflow: hidden;
+  border: 2.5px solid $color-on-primary;
+  border-radius: $size-3;
+  box-shadow: $shadow-level-1;
+  flex: 0 0 288px;
+  height: 384px;
+
+  &.active {
+    flex-basis: 816px;
+  }
+
+  &__img {
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: $size-2;
+    color: $color-white;
+    background: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(0, 0, 0, 0.4) 17.31%,
+      rgba(0, 0, 0, 0.85) 46.15%
+    );
+  }
+
+  &__title {
+    color: $color-white;
+    margin-bottom: $size-1;
+    font-size: 18px;
+  }
+
+  &__stats {
+    @include flex-between;
+  }
+
+  &__stat {
+    display: flex;
+    align-items: center;
+    gap: $size-05;
+
+    span {
+      font-size: $size-2;
+      font-weight: $font-weight-bold;
+    }
+  }
+}

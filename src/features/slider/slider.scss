@@ -1,0 +1,29 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/mixins' as *;
+@use './game-card/game-card.scss';
+
+.games {
+  &-header {
+    @include flex-between;
+    margin-bottom: 40px;
+  }
+
+  &-arrows {
+    display: flex;
+    gap: $size-2;
+  }
+
+  &-arrow {
+    width: $size-6;
+    height: $size-6;
+    padding: 0;
+    border-radius: $corner-full;
+  }
+
+  &-slider {
+    display: flex;
+    overflow: hidden;
+    flex-wrap: wrap;
+    gap: $size-1;
+  }
+}

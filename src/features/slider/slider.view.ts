@@ -1,15 +1,15 @@
 import './slider.scss';
 import type { IGame } from '../../core';
-import { getGameCardView } from './game-card.view';
+import { getGameCardView } from './game-card';
 
 export function getSliderView(games: IGame[]): string {
-  const cards = games.filter(game => game.featured === true).map(game => getGameCardView(game))
+  const cards = games.filter(game => game.featured === true).map(game => getGameCardView(game)).join('')
   return `
     <div class="container">
       <div class="games-header">
         <h2 class="section-title">New Games</h2>
         <div class="games-arrows">
-          <button class="btn btn-secondary games-arrows__back">
+          <button class="btn btn-secondary games-arrow">
             <svg
               width="16"
               height="16"
@@ -24,7 +24,7 @@ export function getSliderView(games: IGame[]): string {
             </svg>
           </button>
 
-          <button class="btn btn-primary games-arrow__forward">
+          <button class="btn btn-primary games-arrow">
             <svg
               width="16"
               height="16"

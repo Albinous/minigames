@@ -73,6 +73,10 @@ img {
   height: auto;
 }
 
+section {
+  padding: 40px 0;
+}
+
 .container {
   max-width: 1680px;
   margin: 0 auto;
@@ -90,5 +94,23 @@ img {
 
   &-primary {
     background-color: $color-primary;
+  }
+}
+
+.section-title {
+  position: relative;
+  padding-left: $size-2;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    background-color: $color-primary;
+    border: 1.5px solid $color-on-primary;
+    border-radius: $size-05;
+    width: $size-1;
+    height: $size-4;
   }
 }

@@ -7,5 +7,5 @@ export interface IGame {
   rating: number,
   likesCount: number,
   cardImage: string,
-  featured: true
+  featured: boolean
 }

@@ -3,7 +3,7 @@ import type { IGame } from "../../core";
 export function getGameCardView(game: IGame): string {
   return `
         <div class="game-card">
-          <img src="../..${game.cardImage}" alt="${game.name}" class="game-card__img" />
+          <img src="src${game.cardImage}" alt="${game.name}" class="game-card__img" />
           <h3 class="game-card__title">${game.name}</h3>
           <div class="game-card__stats">
             <div class="game-card__rating">

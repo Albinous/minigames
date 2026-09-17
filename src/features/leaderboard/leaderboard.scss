@@ -1,0 +1,106 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/mixins' as *;
+
+.leaderboard {
+  &-table {
+    margin-top: 40px;
+    width: 100%;
+    text-align: center;
+    font-family: $font-family-roboto;
+    border: 2.5px solid $color-on-primary;
+    border-spacing: 0;
+    border-radius: $corner-large;
+    box-shadow: $shadow-level-2;
+    background: $color-white;
+    overflow: hidden;
+    width: 100%;
+    table-layout: fixed;
+  }
+
+  &-head {
+    background-color: $color-tertiary;
+    border-bottom: 1.5px solid $color-on-primary;
+    border-radius: $corner-large $corner-large 0 0;
+    &__title {
+      text-transform: uppercase;
+      font-weight: $font-weight-extra-bold;
+      font-size: $size-2;
+      padding: $size-3 $size-2;
+      color: $color-white;
+      line-height: 1;
+
+      &:nth-child(1) {
+        width: 120px;
+      }
+    }
+  }
+
+  &-player {
+    &:nth-child(2n + 1) {
+      background-color: $color-bg;
+    }
+    &:nth-child(1) .leaderboard-player__rank {
+      color: $color-primary;
+    }
+    &:nth-child(1) .leaderboard-player__initials {
+      background-color: $color-primary;
+    }
+    &:nth-child(2) .leaderboard-player__initials {
+      background-color: $color-avatar-random-2;
+    }
+    &:nth-child(3) .leaderboard-player__initials {
+      background-color: $color-avatar-random-3;
+    }
+    &:nth-child(4) .leaderboard-player__initials {
+      background-color: $color-avatar-random-4;
+    }
+    &:nth-child(5) .leaderboard-player__initials {
+      background-color: $color-avatar-random-5;
+    }
+    &__item {
+      padding: $size-2 $size-1;
+      font-weight: $font-weight-bold;
+      font-size: $size-2;
+      color: $color-on-primary;
+      border-bottom: 1px solid $color-outline;
+      // width: 294px;
+      line-height: 1;
+      height: 72px;
+    }
+
+    &__rank {
+      width: 120px;
+    }
+
+    &__name {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-align: left;
+      padding: 16px 8px 16px 0px;
+      // width: 294px;
+    }
+
+    &__title {
+      font-size: $size-2;
+    }
+
+    &__initials {
+      @include flex-center;
+      font-size: 14px;
+      border: 1.5px solid $color-on-primary;
+      border-radius: $corner-extra-large;
+      width: 40px;
+      height: 40px;
+    }
+
+    &__favourite-text {
+      border: 1.5px solid $color-on-primary;
+      border-radius: $corner-extra-large;
+      padding: $size-05 12px;
+      font-size: 12px;
+      display: inline-block;
+      line-height: 1;
+    }
+  }
+}

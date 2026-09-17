@@ -38,7 +38,9 @@ function getPlayerView(player: ILeaderboard): string {
         </h3>
       </td>
       <td class="leaderboard-player__item leaderboard-player__games">${player.gamesPlayed}</td>
-      <td class="leaderboard-player__item leaderboard-player__score">${player.totalScore}</td>
+      <td class="leaderboard-player__item leaderboard-player__score">
+        ${formatTotalScore(player.totalScore)}
+      </td>
       <td class="leaderboard-player__item leaderboard-player__streak">🔥 ${player.streakDays} days</td>
       <td class="leaderboard-player__item leaderboard-player__favourite">${player.favoriteGameName}</td>
     </tr>
@@ -49,4 +51,8 @@ function getPlayerInitials(playerName: string): string | undefined {
   const letters = playerName.match(/[A-Z]/g);
   if (!letters) return;
   return letters.join('');
-} 
+}
+
+function formatTotalScore(totalScore: number): string {
+  return totalScore.toLocaleString("en-IN");
+}

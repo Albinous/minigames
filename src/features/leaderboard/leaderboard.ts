@@ -1,6 +1,6 @@
-import { getLeaderBoardView } from "./leaderboard.view";
-import playersData from '../../data/leaderboard.json'
-import type { ILeaderboard } from "../../core";
+import { getLeaderBoardView } from './leaderboard.view';
+import playersData from '../../data/leaderboard.json';
+import type { ILeaderboard } from '../../core';
 
 export class LeaderBoard {
   public render(): HTMLElement {

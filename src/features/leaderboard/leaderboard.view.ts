@@ -1,4 +1,4 @@
-import type { ILeaderboard } from "../../core"
+import type { ILeaderboard } from '../../core';
 import './leaderboard.scss';
 
 export function getLeaderBoardView(players: ILeaderboard[]): string {
@@ -18,11 +18,11 @@ export function getLeaderBoardView(players: ILeaderboard[]): string {
         </thead>
 
             <tbody class="leaderboard-players">
-              ${players.map(playerData => getPlayerView(playerData)).join('')}
+              ${players.map((playerData) => getPlayerView(playerData)).join('')}
             </tbody>
       </table>
     </div>
-  `
+  `;
 }
 
 function getPlayerView(player: ILeaderboard): string {
@@ -46,7 +46,7 @@ function getPlayerView(player: ILeaderboard): string {
         <p class="leaderboard-player__favourite-text">${player.favoriteGameName}</p>
       </td>
     </tr>
-  `
+  `;
 }
 
 function getPlayerInitials(playerName: string): string | undefined {
@@ -56,5 +56,5 @@ function getPlayerInitials(playerName: string): string | undefined {
 }
 
 function formatTotalScore(totalScore: number): string {
-  return totalScore.toLocaleString("en-IN");
+  return totalScore.toLocaleString('en-IN');
 }

@@ -1,9 +1,9 @@
 export interface ILeaderboard {
-  rank: number,
-  playerName: string,
-  gamesPlayed: number,
-  totalScore: number,
-  streakDays: number,
-  favoriteGameSlug: string,
-  favoriteGameName: string
+  rank: number;
+  playerName: string;
+  gamesPlayed: number;
+  totalScore: number;
+  streakDays: number;
+  favoriteGameSlug: string;
+  favoriteGameName: string;
 }

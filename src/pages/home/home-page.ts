@@ -1,4 +1,4 @@
-import { LeaderBoard, Slider } from '../../features';
+import { Slider } from '../../features/slider/slider';
 import { getHomePageView } from './home-page.view';
 
 export class HomePage {
@@ -11,11 +11,7 @@ export class HomePage {
     const slider = new Slider();
     const sliderPlaceholder = main.querySelector('.slider-placeholder');
 
-    const leaderboard = new LeaderBoard();
-    const leaderboardPlaceholder = main.querySelector('.leaderboard-placeholder');
-
     sliderPlaceholder?.replaceWith(slider.render());
-    leaderboardPlaceholder?.replaceWith(leaderboard.render());
     return main;
   }
 }

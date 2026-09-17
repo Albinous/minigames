@@ -1,2 +1,43 @@
 @use '../../styles/tokens' as *;
 @use '../../styles/mixins' as *;
+
+.leaderboard {
+  &-table {
+    margin-top: 40px;
+    width: 100%;
+    text-align: center;
+    font-family: $font-family-roboto;
+    border: 2.5px solid $color-on-primary;
+    border-spacing: 0;
+    border-radius: $corner-large;
+    box-shadow: $shadow-level-2;
+    background: $color-white;
+    overflow: hidden;
+  }
+
+  &-head {
+    background-color: $color-tertiary;
+    border-bottom: 1.5px solid $color-on-primary;
+    border-radius: $corner-large $corner-large 0 0;
+    &__title {
+      text-transform: uppercase;
+      font-weight: $font-weight-extra-bold;
+      font-size: $size-2;
+      padding: $size-3;
+      color: $color-white;
+    }
+  }
+
+  &-player {
+    &:nth-child(2n + 1) {
+      background-color: $color-bg;
+    }
+    &__item {
+      padding: $size-2 $size-3;
+      font-weight: $font-weight-bold;
+      font-size: $size-2;
+      color: $color-on-primary;
+      border-bottom: 1px solid $color-outline;
+    }
+  }
+}

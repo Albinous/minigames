@@ -1,10 +1,11 @@
 import type { ILeaderboard } from "../../core"
+import './leaderboard.scss';
 
 export function getLeaderBoardView(players: ILeaderboard[]): string {
   return `
     <div class="container">
       <h2 class="section-title">Top Players This Week</h2>
-      <table class="leaderboard-tabel">
+      <table class="leaderboard-table">
         <thead class="leaderboard-head">
           <tr class="leaderboard-head__row">
             <th scope="col" class="leaderboard-head__title">Rank</th>
@@ -27,12 +28,25 @@ export function getLeaderBoardView(players: ILeaderboard[]): string {
 function getPlayerView(player: ILeaderboard): string {
   return `
     <tr class="leaderboard-player">
-      <td class="leaderboard-player__rank">${player.rank}</td>
-      <td class="leaderboard-player__name">${player.playerName}</td>
-      <td class="leaderboard-player__games">${player.gamesPlayed}</td>
-      <td class="leaderboard-player__score">${player.totalScore}</td>
-      <td class="leaderboard-player__streak">🔥 ${player.streakDays}</td>
-      <td class="leaderboard-player__favourite">${player.favoriteGameName}</td>
+      <td class="leaderboard-player__item">#${player.rank}</td>
+      <td class="leaderboard-player__item">
+        <span class="leaderboard-player__initials">
+          ${getPlayerInitials(player.playerName)}
+        </span>
+        <h3 class="leaderboard-player__title">
+          ${player.playerName}
+        </h3>
+      </td>
+      <td class="leaderboard-player__item">${player.gamesPlayed}</td>
+      <td class="leaderboard-player__item">${player.totalScore}</td>
+      <td class="leaderboard-player__item">🔥 ${player.streakDays} days</td>
+      <td class="leaderboard-player__item">${player.favoriteGameName}</td>
     </tr>
   `
 }
+
+function getPlayerInitials(playerName: string): string | undefined {
+  const letters = playerName.match(/[A-Z]/g);
+  if (!letters) return;
+  return letters.join('');
+} 

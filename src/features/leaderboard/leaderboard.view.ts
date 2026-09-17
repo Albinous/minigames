@@ -28,19 +28,19 @@ export function getLeaderBoardView(players: ILeaderboard[]): string {
 function getPlayerView(player: ILeaderboard): string {
   return `
     <tr class="leaderboard-player">
-      <td class="leaderboard-player__item">#${player.rank}</td>
-      <td class="leaderboard-player__item">
-        <span class="leaderboard-player__initials">
+      <td class="leaderboard-player__item leaderboard-player__rank">#${player.rank}</td>
+      <td class="leaderboard-player__item leaderboard-player__name">
+        <div class="leaderboard-player__initials">
           ${getPlayerInitials(player.playerName)}
-        </span>
+        </div>
         <h3 class="leaderboard-player__title">
           ${player.playerName}
         </h3>
       </td>
-      <td class="leaderboard-player__item">${player.gamesPlayed}</td>
-      <td class="leaderboard-player__item">${player.totalScore}</td>
-      <td class="leaderboard-player__item">🔥 ${player.streakDays} days</td>
-      <td class="leaderboard-player__item">${player.favoriteGameName}</td>
+      <td class="leaderboard-player__item leaderboard-player__games">${player.gamesPlayed}</td>
+      <td class="leaderboard-player__item leaderboard-player__score">${player.totalScore}</td>
+      <td class="leaderboard-player__item leaderboard-player__streak">🔥 ${player.streakDays} days</td>
+      <td class="leaderboard-player__item leaderboard-player__favourite">${player.favoriteGameName}</td>
     </tr>
   `
 }

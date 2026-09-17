@@ -32,12 +32,57 @@
     &:nth-child(2n + 1) {
       background-color: $color-bg;
     }
+    &:nth-child(1) .leaderboard-player__rank {
+      color: $color-primary;
+    }
+    &:nth-child(1) .leaderboard-player__initials {
+      background-color: $color-primary;
+    }
+    &:nth-child(2) .leaderboard-player__initials {
+      background-color: $color-avatar-random-2;
+    }
+    &:nth-child(3) .leaderboard-player__initials {
+      background-color: $color-avatar-random-3;
+    }
+    &:nth-child(4) .leaderboard-player__initials {
+      background-color: $color-avatar-random-4;
+    }
+    &:nth-child(5) .leaderboard-player__initials {
+      background-color: $color-avatar-random-5;
+    }
     &__item {
       padding: $size-2 $size-3;
       font-weight: $font-weight-bold;
       font-size: $size-2;
       color: $color-on-primary;
       border-bottom: 1px solid $color-outline;
+    }
+
+    &__name {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-align: left;
+    }
+
+    &__title {
+      font-size: $size-2;
+    }
+
+    &__initials {
+      @include flex-center;
+      font-size: 14px;
+      border: 1.5px solid $color-on-primary;
+      border-radius: $corner-extra-large;
+      width: 40px;
+      height: 40px;
+    }
+
+    &__favourite {
+      border: 1.5px solid $color-on-primary;
+      border-radius: $corner-extra-large;
+      padding: $size-05 12px;
+      display: inline;
     }
   }
 }

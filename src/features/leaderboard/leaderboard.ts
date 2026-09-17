@@ -1,12 +1,15 @@
 import { getLeaderBoardView } from "./leaderboard.view";
 import playersData from '../../data/leaderboard.json'
+import type { ILeaderboard } from "../../core";
 
 export class LeaderBoard {
   public render(): HTMLElement {
-    const players = playersData.data;
-    const leaderboard = document.createElement('section');
+    const players: ILeaderboard[] = playersData.data;
+    const leaderboard: HTMLElement = document.createElement('section');
+    const template: string = getLeaderBoardView(players);
+
     leaderboard.className = 'leaderboard';
-    leaderboard.innerHTML = getLeaderBoardView(players);
+    leaderboard.innerHTML = template;
 
     return leaderboard;
   }

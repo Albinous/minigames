@@ -24,10 +24,10 @@ export function getHomePageView(): string {
         <div class="developer-wrapper">
           <img src="src/assets/images/developer-img.jpg" alt="illustration site" class="developer-img" />
           <div class="developer-info">
-            <h2 class="section-title developer-title">Are You a Game Developer?</h2>
+            <h2 class="developer-title">Are You a Game Developer?</h2>
             <p class="developer-text">
               Want to see your game on MiniGames? We're always looking for fun, engaging mini games to
-              add to our platform. Submit your game and reach thousands of players!
+              add to our platform. Submit your game <br> and reach thousands of players!
             </p>
             <button class="btn btn-primary developer-btn">Submit form</button>
             <span class="developer-contact"> or contact us at developers@minigames.com </span>

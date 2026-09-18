@@ -1,4 +1,5 @@
 @use '../../styles/tokens' as *;
+@use '../../styles/mixins' as *;
 
 .hero {
   position: relative;
@@ -32,5 +33,62 @@
     padding: $btn-large-padding;
     align-self: flex-start;
     font-size: 18px;
+  }
+}
+
+.developer {
+  &-wrapper {
+    @include flex-between;
+    gap: 40px;
+  }
+
+  &-img {
+    border-radius: $corner-extra-large;
+  }
+
+  &-info {
+    border: 2px solid $color-on-primary;
+    border-radius: $corner-extra-large;
+    padding: $size-5;
+    box-shadow:
+      0 14px 30px -10px rgba(0, 0, 0, 0.08),
+      0 2px 8px -4px rgba(0, 0, 0, 0.04);
+    background: $color-white;
+    display: flex;
+    flex-direction: column;
+    gap: $size-3;
+    width: 100%;
+  }
+
+  &-title {
+    line-height: 1.2;
+  }
+
+  &-text {
+    max-width: 589px;
+  }
+
+  &-btn {
+    align-self: flex-start;
+    padding: 16px 24px 16px 56px;
+    position: relative;
+    font-size: 18px;
+    border-radius: $corner-medium;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      left: 24px;
+      width: 24px;
+      height: 24px;
+      background-image: url(../../assets/icons/upload.svg);
+    }
+  }
+
+  &-contact {
+    font-size: 14px;
+    color: $color-on-bg-low;
   }
 }

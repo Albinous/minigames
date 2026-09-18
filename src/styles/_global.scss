@@ -58,6 +58,7 @@ button {
   cursor: pointer;
   font-family: $font-family-inter;
   font-weight: $font-weight-bold;
+  transition: 0.2s ease-in;
 }
 
 a {
@@ -65,6 +66,7 @@ a {
   text-decoration: none;
   cursor: pointer;
   font-family: $font-family-inter;
+  transition: 0.2s ease-in;
 }
 
 img {
@@ -94,6 +96,10 @@ section {
 
   &-primary {
     background-color: $color-primary;
+
+    &:hover {
+      background-color: $color-primary-high;
+    }
   }
 }
 

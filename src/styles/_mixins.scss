@@ -9,3 +9,15 @@
   align-items: center;
   justify-content: space-between;
 }
+
+@mixin tablet {
+  @media (max-width: 768px) {
+    @content;
+  }
+}
+
+@mixin mobile {
+  @media (max-width: 375px) {
+    @content;
+  }
+}

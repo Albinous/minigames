@@ -4,10 +4,6 @@ export function getHeaderView(): string {
   return `
       <div class="container header-container">
         <div class="header-wrapper">
-          <a href="#" class="header-logo">
-            <img src="src/assets/icons/logo.svg" alt="minigames logo" class="header-logo__icon" />
-            <span class="header-logo__title">MiniGames</span>
-          </a>
           <div class="header-main">
             <nav class="nav">
               <ul class="nav-menu">

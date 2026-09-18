@@ -11,17 +11,6 @@
     @include flex-between;
   }
 
-  &-logo {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-
-    &__title {
-      font-weight: $font-weight-bold;
-      font-size: 24px;
-    }
-  }
-
   &-main {
     display: flex;
     gap: 32px;

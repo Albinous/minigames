@@ -4,4 +4,95 @@
 .footer {
   background-color: $color-bg-footer;
   padding: $size-5 0;
+
+  &-wrapper {
+    @include flex-between;
+    align-items: flex-start;
+    padding-bottom: $size-8;
+    border-bottom: 1px solid $color-bg-footer-low;
+  }
+
+  &-logo {
+    h2 {
+      color: $color-white;
+    }
+  }
+
+  &-descr {
+    max-width: 400px;
+    font-size: 14px;
+    margin-top: $size-3;
+  }
+
+  &-right {
+    display: flex;
+    gap: $size-10;
+  }
+
+  &-nav {
+    &__menu {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      align-items: flex-start;
+
+      &-link {
+        font-size: 14px;
+        padding-bottom: 2px;
+        color: $color-on-bg-footer;
+
+        &:hover {
+          color: $color-primary;
+          border-bottom: 1.5px solid $color-primary;
+        }
+      }
+    }
+  }
+
+  &-title {
+    color: $color-white;
+    font-size: $size-2;
+    margin-bottom: $size-2;
+  }
+
+  &-community {
+    &__links {
+      display: flex;
+      gap: $size-2;
+    }
+
+    &__link {
+      width: $size-5;
+      height: $size-5;
+      @include flex-center;
+      background-color: $color-bg-footer-low;
+      border-radius: $corner-full;
+
+      &:hover {
+        border: 2px solid $color-primary;
+      }
+    }
+  }
+
+  &-info {
+    padding-top: $size-3;
+    @include flex-between;
+
+    &__link {
+      display: flex;
+      align-items: center;
+      gap: $size-1;
+    }
+
+    &__title {
+      font-size: 14px;
+      color: $color-on-bg-footer;
+      font-weight: $font-weight-regular;
+    }
+  }
+
+  &-text {
+    font-size: 14px;
+    color: $color-on-bg-footer;
+  }
 }

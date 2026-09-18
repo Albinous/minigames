@@ -9,9 +9,10 @@ export class Footer {
     footer.innerHTML = getFooterView();
 
     const footerLeftWrapper = footer.querySelector('.footer-left');
-    const logo = new Logo();
+    const logo = new Logo().render();
+    logo.classList.add('footer-logo')
 
-    footerLeftWrapper?.prepend(logo.render())
+    footerLeftWrapper?.prepend(logo)
 
     return footer;
   }

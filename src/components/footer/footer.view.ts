@@ -81,5 +81,5 @@ export function getFooterView(): string {
         <span class="footer-text"> Designed with love </span>
       </div>
     </div>
-  `
+  `;
 }

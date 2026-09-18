@@ -1,5 +1,5 @@
-import { Logo } from "../logo";
-import { getFooterView } from "./footer.view";
+import { Logo } from '../logo';
+import { getFooterView } from './footer.view';
 
 export class Footer {
   public render(): HTMLElement {
@@ -10,9 +10,9 @@ export class Footer {
 
     const footerLeftWrapper = footer.querySelector('.footer-left');
     const logo = new Logo().render();
-    logo.classList.add('footer-logo')
+    logo.classList.add('footer-logo');
 
-    footerLeftWrapper?.prepend(logo)
+    footerLeftWrapper?.prepend(logo);
 
     return footer;
   }

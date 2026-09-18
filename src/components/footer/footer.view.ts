@@ -100,6 +100,19 @@ export function getFooterView(): string {
           </div>
         </div>
       </div>
+
+      <div class="footer-info">
+        <span class="footer-text">© 2026 MiniGames. All rights reserved.</span>
+        <a href="#" class="footer-info__link">
+          <img src="src/assets/icons/rs-logo.svg" alt="rss logo" class="footer-info__logo" />
+          <h4 class="footer-info__title">RS School</h4>
+        </a>
+        <a href="#" class="footer-info__link">
+          <img src="src/assets/icons/github-icon.svg" alt="github logo" class="footer-info__logo" />
+          <h4 class="footer-info__title">RS School</h4>
+        </a>
+        <span class="footer-text"> Designed with love </span>
+      </div>
     </div>
   `
 }

@@ -1,4 +1,5 @@
 @use './tokens' as *;
+@use './mixins' as *;
 
 *,
 *::before,
@@ -82,6 +83,10 @@ section {
 .container {
   max-width: 1680px;
   margin: 0 auto;
+
+  @include tablet {
+    padding: 0 $size-5;
+  }
 }
 
 .btn {

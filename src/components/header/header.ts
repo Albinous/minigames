@@ -9,9 +9,9 @@ export class Header {
     header.innerHTML = getHeaderView();
 
     const headerWrapper = header.querySelector('.header-wrapper');
-    const logo: HTMLElement = new Logo().render();
+    const logo = new Logo();
 
-    headerWrapper?.prepend(logo);
+    headerWrapper?.prepend(logo.render());
 
     return header;
   }

@@ -38,6 +38,10 @@ p {
   color: $color-on-bg;
   font-size: 18px;
   line-height: 1.5;
+
+  @include tablet {
+    font-size: 14px;
+  }
 }
 
 ul {

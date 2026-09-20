@@ -2,7 +2,7 @@
 @use '../../styles/tokens' as *;
 
 .header {
-  padding: 24px 0;
+  padding: $size-3 0;
   border-bottom: 2px solid $color-on-primary;
   @include tablet {
     padding: 19.5px 0;
@@ -17,7 +17,7 @@
 
   &-main {
     display: flex;
-    gap: 32px;
+    gap: $size-4;
     align-items: center;
   }
 

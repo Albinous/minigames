@@ -6,7 +6,12 @@
   width: 100%;
   min-height: 627px;
   background: url(../../assets/images/games/hero-bg.jpg) no-repeat center / cover;
-  padding: 112px 0;
+  padding: $size-14 0;
+
+  @include tablet {
+    min-height: 383px;
+    padding: $size-9 0;
+  }
 
   &-main {
     max-width: 640px;
@@ -18,21 +23,41 @@
     gap: 24px;
     box-shadow: $shadow-level-3;
     background: $color-bg;
+
+    @include tablet {
+      border-radius: $size-2;
+      padding: 22px;
+      gap: $size-2;
+      max-width: 480px;
+    }
   }
 
   &-title {
     font-size: 56px;
     line-height: 1.1;
+
+    @include tablet {
+      font-size: 36px;
+    }
   }
 
   &-text {
     font-weight: $font-weight-medium;
+
+    @include tablet {
+      line-height: 1.4;
+    }
   }
 
   &-btn {
     padding: $btn-large-padding;
     align-self: flex-start;
     font-size: 18px;
+
+    @include tablet {
+      font-size: 14px;
+      padding: 8px 18px;
+    }
   }
 }
 

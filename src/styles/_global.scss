@@ -32,6 +32,10 @@ h6 {
 
 h2 {
   font-size: $size-4;
+
+  @include tablet {
+    font-size: $size-3;
+  }
 }
 
 p {
@@ -82,6 +86,10 @@ img {
 
 section {
   padding: 40px 0;
+
+  @include tablet {
+    padding: $size-3 0;
+  }
 }
 
 .container {
@@ -127,5 +135,9 @@ section {
     border-radius: $size-05;
     width: $size-1;
     height: $size-4;
+
+    @include tablet {
+      height: $size-3;
+    }
   }
 }

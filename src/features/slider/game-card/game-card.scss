@@ -10,8 +10,21 @@
   flex: 0 0 288px;
   height: 384px;
 
+  @include tablet {
+    flex: 0 0 105px;
+    height: 280px;
+    border-radius: $size-2;
+  }
+
   &.active {
     flex-basis: 816px;
+
+    @include tablet {
+      flex-basis: 448px;
+      & .game-card__content {
+        opacity: 1;
+      }
+    }
   }
 
   &__img {
@@ -32,6 +45,10 @@
       rgba(0, 0, 0, 0.4) 17.31%,
       rgba(0, 0, 0, 0.85) 46.15%
     );
+
+    @include tablet {
+      opacity: 0;
+    }
   }
 
   &__title {
@@ -52,6 +69,10 @@
     span {
       font-size: $size-2;
       font-weight: $font-weight-bold;
+
+      @include tablet {
+        font-size: 14px;
+      }
     }
   }
 }

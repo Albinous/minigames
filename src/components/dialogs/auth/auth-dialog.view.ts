@@ -42,12 +42,8 @@ export function getAuthDialogView(mode: AuthMode): string {
   `;
 }
 
-export function getAuthDialogContentView(
-  mode: AuthMode,
-): string {
-  return mode === 'login'
-    ? getLoginFormView()
-    : getRegisterFormView();
+export function getAuthDialogContentView(mode: AuthMode): string {
+  return mode === 'login' ? getLoginFormView() : getRegisterFormView();
 }
 
 function getLoginFormView(): string {

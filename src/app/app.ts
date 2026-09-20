@@ -12,6 +12,6 @@ export class App {
     const router = new Router();
     const footer = new Footer();
 
-    document.body.prepend(header.render(), router.render(), footer.render(),   authDialog.render(),);
+    document.body.prepend(header.render(), router.render(), footer.render(), authDialog.render());
   }
 }

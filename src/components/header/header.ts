@@ -4,7 +4,7 @@ import type { AuthMode } from '../dialogs/auth/auth-dialog.types';
 
 export class Header {
   private readonly onAuthOpen: (mode: AuthMode) => void;
-  
+
   constructor(onAuthOpen: (mode: AuthMode) => void) {
     this.onAuthOpen = onAuthOpen;
   }
@@ -51,13 +51,9 @@ export class Header {
   }
 
   private bindAuthButtons(header: HTMLElement): void {
-    const loginButton = header.querySelector(
-      '.header-btn__login',
-    );
+    const loginButton = header.querySelector('.header-btn__login');
 
-    const signupButton = header.querySelector(
-      '.header-btn__signup',
-    );
+    const signupButton = header.querySelector('.header-btn__signup');
 
     loginButton?.addEventListener('click', () => {
       this.onAuthOpen('login');
@@ -68,9 +64,9 @@ export class Header {
     });
 
     loginButton?.addEventListener('click', () => {
-  console.log('LOGIN CLICK');
-  this.onAuthOpen('login');
-});
+      console.log('LOGIN CLICK');
+      this.onAuthOpen('login');
+    });
   }
 
   public render(): HTMLElement {

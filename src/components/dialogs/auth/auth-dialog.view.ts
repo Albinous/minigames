@@ -9,6 +9,13 @@ export function getAuthDialogView(mode: AuthMode): string {
         role="dialog"
         aria-modal="true"
       >
+        <button
+          class="auth-dialog__close"
+          type="button"
+          aria-label="Close"
+        >
+          ×
+        </button>
         <div class="auth-dialog__switcher">
           <button class="auth-dialog__btn auth-dialog__login">
             Login
@@ -182,7 +189,5 @@ function getRegisterFormView(): string {
 }
 
 export function getAuthDialogContentView(mode: AuthMode): string {
-  return mode === 'login'
-    ? getLoginFormView()
-    : getRegisterFormView();
+  return mode === 'login' ? getLoginFormView() : getRegisterFormView();
 }

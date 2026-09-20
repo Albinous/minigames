@@ -43,7 +43,7 @@ export class Header {
     });
   }
 
-    public render(): HTMLElement {
+  public render(): HTMLElement {
     const header = document.createElement('header');
 
     header.className = 'header';
@@ -54,5 +54,4 @@ export class Header {
 
     return header;
   }
-
 }

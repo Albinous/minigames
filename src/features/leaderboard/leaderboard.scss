@@ -13,11 +13,14 @@
     box-shadow: $shadow-level-2;
     background: $color-white;
     overflow: hidden;
-    width: 100%;
     table-layout: fixed;
 
     @include tablet {
       margin-top: $size-3;
+    }
+
+    @include mobile {
+      margin-top: $size-2;
     }
   }
 
@@ -39,6 +42,11 @@
         @include tablet {
           padding: 16px 6px 16px 16px;
           width: 102px;
+        }
+
+        @include mobile {
+          padding: 16px 4px 16px 16px;
+          width: 60px;
         }
       }
 
@@ -71,6 +79,25 @@
         &:nth-last-child(2) {
           width: 170px;
           padding: 16px 54px 16px 6px;
+        }
+      }
+
+      @include mobile {
+        padding: 16px 4px;
+
+        &:nth-child(2) {
+          width: 105px;
+        }
+
+        &-short {
+          width: 88px;
+          &:nth-child(4) {
+            display: none;
+          }
+        }
+        &:nth-last-child(2) {
+          width: 100%;
+          padding: 16px 4px 16px 16px;
         }
       }
     }
@@ -122,6 +149,12 @@
         padding: 16px 8px;
         height: 59px;
       }
+
+      @include tablet {
+        font-size: 14px;
+        padding: 16px 4px;
+        height: 54px;
+      }
     }
 
     &__rank {
@@ -129,6 +162,9 @@
 
       @include tablet {
         padding: 16px;
+      }
+      @include mobile {
+        padding: 20px 8px 20px 16px;
       }
     }
 
@@ -142,6 +178,11 @@
       @include tablet {
         padding: 16px 6px;
         gap: $size-1;
+      }
+
+      @include tablet {
+        padding: 0;
+        gap: 6px;
       }
     }
 
@@ -165,6 +206,17 @@
         font-size: 10px;
         width: 28px;
         height: 28px;
+      }
+      @include tablet {
+        width: 24px;
+        height: 24px;
+        padding: 5px;
+      }
+    }
+
+    &__games {
+      @include mobile {
+        display: none;
       }
     }
 
@@ -196,5 +248,18 @@
         line-height: 1;
       }
     }
+  }
+}
+
+.full {
+  @include mobile {
+    display: none;
+  }
+}
+
+.short {
+  display: none;
+  @include mobile {
+    display: block;
   }
 }

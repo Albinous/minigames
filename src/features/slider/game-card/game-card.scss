@@ -16,6 +16,11 @@
     border-radius: $size-2;
   }
 
+  @include tablet {
+    flex: 0 0 56px;
+    height: 200px;
+  }
+
   &.active {
     flex-basis: 816px;
 
@@ -24,6 +29,10 @@
       & .game-card__content {
         opacity: 1;
       }
+    }
+
+    @include tablet {
+      flex-basis: 218px;
     }
   }
 
@@ -55,6 +64,13 @@
     color: $color-white;
     margin-bottom: $size-1;
     font-size: 18px;
+
+    @include mobile {
+      max-width: 100%;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
   }
 
   &__stats {
@@ -72,6 +88,9 @@
 
       @include tablet {
         font-size: 14px;
+      }
+      @include tablet {
+        font-size: 12px;
       }
     }
   }

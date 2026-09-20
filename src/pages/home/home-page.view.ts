@@ -6,9 +6,12 @@ export function getHomePageView(): string {
       <div class="container">
         <div class="hero-main">
           <h1 class="hero-title">Take a Short Break & Have Fun</h1>
-          <p class="hero-text">
+          <p class="hero-text full">
             Discover hundreds of curated casual mini-games. Play instantly in your browser —
             puzzle, match 3, farm, and board classics.
+          </p>
+          <p class="hero-text short">
+            Discover hundreds of curated casual mini-games right in your browser.
           </p>
           <button class="btn btn-primary hero-btn">Browse Library</button>
         </div>

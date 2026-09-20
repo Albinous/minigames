@@ -7,6 +7,9 @@
   @include tablet {
     padding: 19.5px 0;
   }
+  @include mobile {
+    padding: $size-2 0 15px;
+  }
   &-container {
     max-width: 1760px;
   }
@@ -32,6 +35,11 @@
     }
     &__login {
       @include tablet {
+        display: none;
+      }
+    }
+    &__signup {
+      @include mobile {
         display: none;
       }
     }

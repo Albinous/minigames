@@ -10,11 +10,19 @@
     @include tablet {
       margin-bottom: $size-3;
     }
+
+    @include mobile {
+      margin-bottom: $size-2;
+    }
   }
 
   &-arrows {
     display: flex;
     gap: $size-2;
+
+    @include mobile {
+      display: none;
+    }
   }
 
   &-arrow {
@@ -45,6 +53,10 @@
 
       @include tablet {
         transform: translate(-48.6%, 0);
+      }
+
+      @include tablet {
+        transform: translate(-56.5%, 0);
       }
     }
   }

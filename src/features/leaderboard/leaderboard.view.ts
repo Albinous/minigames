@@ -1,10 +1,12 @@
 import type { ILeaderboard } from '../../core';
+import { formatLikesCount } from '../../shared';
 import './leaderboard.scss';
 
 export function getLeaderBoardView(players: ILeaderboard[]): string {
   return `
     <div class="container">
-      <h2 class="section-title">Top Players This Week</h2>
+      <h2 class="section-title full">Top Players This Week</h2>
+      <h2 class="section-title short">Top Players</h2>
       <table class="leaderboard-table">
         <thead class="leaderboard-head">
           <tr class="leaderboard-head__row">
@@ -41,7 +43,8 @@ function getPlayerView(player: ILeaderboard): string {
       </td>
       <td class="leaderboard-player__item leaderboard-player__games">${player.gamesPlayed}</td>
       <td class="leaderboard-player__item leaderboard-player__score">
-        ${formatTotalScore(player.totalScore)}
+        <span class="full">${formatTotalScore(player.totalScore)}</span>
+        <span class="short">${formatLikesCount(player.totalScore)}K</span>
       </td>
       <td class="leaderboard-player__item leaderboard-player__streak">
         <span class="leaderboard-player__streak-value">🔥 ${player.streakDays}</span>

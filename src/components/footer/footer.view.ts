@@ -78,7 +78,7 @@ export function getFooterView(): string {
           <img src="src/assets/icons/github-icon.svg" alt="github logo" class="footer-info__logo" />
           <h4 class="footer-info__title">@Albinous</h4>
         </a>
-        <span class="footer-text"> Designed with love </span>
+        <span class="footer-text footer-designed"> Designed with love </span>
       </div>
     </div>
   `;

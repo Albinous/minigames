@@ -29,8 +29,8 @@ export function getHomePageView(): string {
           <div class="developer-info">
             <h2 class="developer-title">Are You a Game Developer?</h2>
             <p class="developer-text">
-              Want to see your game on MiniGames? We're always looking for fun, engaging mini games to
-              add to our platform. Submit your game <br> and reach thousands of players!
+              Want to see your game on MiniGames? We're always looking for fun,<br>engaging mini games to
+              add to our platform. Submit your game<br>and reach thousands of players!
             </p>
             <button class="btn btn-primary developer-btn">Submit form</button>
             <span class="developer-contact"> or contact us at developers@minigames.com </span>

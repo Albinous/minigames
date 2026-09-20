@@ -5,6 +5,10 @@
   background-color: $color-bg-footer;
   padding: $size-5 0;
 
+  @include mobile {
+    padding: $size-4 0;
+  }
+
   &-wrapper {
     @include flex-between;
     align-items: flex-start;
@@ -15,6 +19,10 @@
       flex-direction: column;
       gap: $size-3;
       padding-bottom: $size-5;
+    }
+
+    @include mobile {
+      padding-bottom: $size-3;
     }
   }
 
@@ -41,6 +49,11 @@
     @include tablet {
       gap: $size-5;
     }
+
+    @include mobile {
+      flex-wrap: wrap;
+      gap: $size-3;
+    }
   }
 
   &-title {
@@ -50,11 +63,20 @@
   }
 
   &-nav {
+    @include mobile {
+      &:first-child {
+        width: 49%;
+      }
+    }
     &__menu {
       display: flex;
       flex-direction: column;
       gap: 14px;
       align-items: flex-start;
+
+      @include mobile {
+        gap: 16px;
+      }
 
       &-item {
         @include tablet {
@@ -114,6 +136,12 @@
       padding-top: $size-2;
     }
 
+    @include mobile {
+      justify-content: flex-start;
+      gap: $size-1;
+      padding-top: $size-1;
+    }
+
     &__logo {
       width: 20px;
       height: 20px;
@@ -129,11 +157,29 @@
       font-size: 14px;
       color: $color-on-bg-footer;
       font-weight: $font-weight-regular;
+
+      @include mobile {
+        font-size: 12px;
+      }
     }
   }
 
   &-text {
     font-size: 14px;
     color: $color-on-bg-footer;
+
+    @include mobile {
+      font-size: 12px;
+
+      &:first-child {
+        width: 100%;
+      }
+    }
+  }
+
+  &-designed {
+    @include mobile {
+      display: none;
+    }
   }
 }

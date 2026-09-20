@@ -8,16 +8,16 @@ export function getHeaderView(): string {
             <nav class="nav">
               <ul class="nav-menu">
                 <li class="nav-menu__item">
-                  <a href="#" class="nav-menu__link active">Home</a>
+                  <a href="/" class="nav-menu__link active">Home</a>
                 </li>
                 <li class="nav-menu__item">
-                  <a href="#" class="nav-menu__link">Library</a>
+                  <a href="/" class="nav-menu__link">Library</a>
                 </li>
                 <li class="nav-menu__item">
-                  <a href="#" class="nav-menu__link">Tournaments</a>
+                  <a href="/" class="nav-menu__link">Tournaments</a>
                 </li>
                 <li class="nav-menu__item">
-                  <a href="#" class="nav-menu__link">Community</a>
+                  <a href="/" class="nav-menu__link">Community</a>
                 </li>
               </ul>
             </nav>

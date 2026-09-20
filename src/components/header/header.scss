@@ -6,6 +6,11 @@
   border-bottom: 2px solid $color-on-primary;
   @include tablet {
     padding: 19.5px 0;
+    position: fixed;
+    width: 100%;
+    height: 64px;
+    z-index: 10;
+    background-color: $color-bg;
   }
   @include mobile {
     padding: $size-2 0 15px;
@@ -22,6 +27,10 @@
     display: flex;
     gap: $size-4;
     align-items: center;
+
+    @include tablet {
+      height: auto;
+    }
   }
 
   &-btns {
@@ -76,16 +85,7 @@
 
   &-menu__open {
     @include tablet {
-      position: fixed;
-      inset: 0;
-      z-index: 1000;
-      width: 100%;
-      height: 100vh;
-      padding: 19.5px 0;
       background-color: $color-bg-footer;
-      overflow-y: auto;
-      padding: $size-3;
-
       .logo-title {
         color: $color-white;
       }
@@ -109,7 +109,8 @@
       }
 
       .nav {
-        display: block;
+        padding: $size-3;
+        transform: translateX(0);
       }
 
       .nav-menu {
@@ -193,7 +194,14 @@
 
 .nav {
   @include tablet {
-    display: none;
+    position: fixed;
+    top: 60px;
+    left: 0;
+    transform: translateX(100%);
+    transition: 0.3s ease;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
   }
   &-menu {
     display: flex;

@@ -10,12 +10,12 @@
 
   @include tablet {
     min-height: 383px;
-    padding: $size-9 0;
+    padding: 128px 0 $size-9;
   }
 
   @include mobile {
     min-height: 331px;
-    padding: $size-8 0;
+    padding: 128px 0 $size-8;
   }
 
   &-main {

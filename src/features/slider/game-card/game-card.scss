@@ -10,8 +10,30 @@
   flex: 0 0 288px;
   height: 384px;
 
+  @include tablet {
+    flex: 0 0 105px;
+    height: 280px;
+    border-radius: $size-2;
+  }
+
+  @include tablet {
+    flex: 0 0 56px;
+    height: 200px;
+  }
+
   &.active {
     flex-basis: 816px;
+
+    @include tablet {
+      flex-basis: 448px;
+      & .game-card__content {
+        opacity: 1;
+      }
+    }
+
+    @include tablet {
+      flex-basis: 218px;
+    }
   }
 
   &__img {
@@ -32,12 +54,23 @@
       rgba(0, 0, 0, 0.4) 17.31%,
       rgba(0, 0, 0, 0.85) 46.15%
     );
+
+    @include tablet {
+      opacity: 0;
+    }
   }
 
   &__title {
     color: $color-white;
     margin-bottom: $size-1;
     font-size: 18px;
+
+    @include mobile {
+      max-width: 100%;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
   }
 
   &__stats {
@@ -52,6 +85,13 @@
     span {
       font-size: $size-2;
       font-weight: $font-weight-bold;
+
+      @include tablet {
+        font-size: 14px;
+      }
+      @include tablet {
+        font-size: 12px;
+      }
     }
   }
 }

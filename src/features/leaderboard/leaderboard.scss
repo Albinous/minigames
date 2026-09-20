@@ -3,7 +3,7 @@
 
 .leaderboard {
   &-table {
-    margin-top: 40px;
+    margin-top: $size-5;
     width: 100%;
     text-align: center;
     font-family: $font-family-roboto;
@@ -13,8 +13,15 @@
     box-shadow: $shadow-level-2;
     background: $color-white;
     overflow: hidden;
-    width: 100%;
     table-layout: fixed;
+
+    @include tablet {
+      margin-top: $size-3;
+    }
+
+    @include mobile {
+      margin-top: $size-2;
+    }
   }
 
   &-head {
@@ -31,6 +38,67 @@
 
       &:nth-child(1) {
         width: 120px;
+
+        @include tablet {
+          padding: 16px 6px 16px 16px;
+          width: 102px;
+        }
+
+        @include mobile {
+          padding: 16px 4px 16px 16px;
+          width: 60px;
+        }
+      }
+
+      &-short {
+        display: none;
+      }
+
+      @include tablet {
+        padding: $size-2 6px;
+        font-size: 14px;
+        line-height: 1.1;
+
+        &:nth-child(2) {
+          width: 172px;
+        }
+
+        &:last-child {
+          display: none;
+        }
+
+        &-short {
+          display: table-cell;
+          width: 120px;
+        }
+
+        &-full {
+          display: none;
+        }
+
+        &:nth-last-child(2) {
+          width: 170px;
+          padding: 16px 54px 16px 6px;
+        }
+      }
+
+      @include mobile {
+        padding: 16px 4px;
+
+        &:nth-child(2) {
+          width: 105px;
+        }
+
+        &-short {
+          width: 88px;
+          &:nth-child(4) {
+            display: none;
+          }
+        }
+        &:nth-last-child(2) {
+          width: 100%;
+          padding: 16px 4px 16px 16px;
+        }
       }
     }
   }
@@ -41,6 +109,10 @@
     }
     &:nth-child(1) .leaderboard-player__rank {
       color: $color-primary;
+
+      @include tablet {
+        color: $color-tertiary;
+      }
     }
     &:nth-child(1) .leaderboard-player__initials {
       background-color: $color-primary;
@@ -57,19 +129,43 @@
     &:nth-child(5) .leaderboard-player__initials {
       background-color: $color-avatar-random-5;
     }
+
+    @include tablet {
+      &:nth-child(n + 4) {
+        display: none;
+      }
+    }
     &__item {
       padding: $size-2 $size-1;
-      font-weight: $font-weight-bold;
+      font-weight: $font-weight-extra-bold;
       font-size: $size-2;
       color: $color-on-primary;
       border-bottom: 1px solid $color-outline;
-      // width: 294px;
       line-height: 1;
-      height: 72px;
+      height: 70px;
+
+      @include tablet {
+        font-size: 14px;
+        padding: 16px 8px;
+        height: 59px;
+      }
+
+      @include tablet {
+        font-size: 14px;
+        padding: 16px 4px;
+        height: 54px;
+      }
     }
 
     &__rank {
       width: 120px;
+
+      @include tablet {
+        padding: 16px;
+      }
+      @include mobile {
+        padding: 20px 8px 20px 16px;
+      }
     }
 
     &__name {
@@ -78,11 +174,24 @@
       gap: 12px;
       text-align: left;
       padding: 16px 8px 16px 0px;
-      // width: 294px;
+
+      @include tablet {
+        padding: 16px 6px;
+        gap: $size-1;
+      }
+
+      @include tablet {
+        padding: 0;
+        gap: 6px;
+      }
     }
 
     &__title {
       font-size: $size-2;
+
+      @include tablet {
+        font-size: 14px;
+      }
     }
 
     &__initials {
@@ -92,15 +201,65 @@
       border-radius: $corner-extra-large;
       width: 40px;
       height: 40px;
+
+      @include tablet {
+        font-size: 10px;
+        width: 28px;
+        height: 28px;
+      }
+      @include tablet {
+        width: 24px;
+        height: 24px;
+        padding: 5px;
+      }
     }
 
-    &__favourite-text {
-      border: 1.5px solid $color-on-primary;
-      border-radius: $corner-extra-large;
-      padding: $size-05 12px;
-      font-size: 12px;
-      display: inline-block;
-      line-height: 1;
+    &__games {
+      @include mobile {
+        display: none;
+      }
     }
+
+    &__streak {
+      @include flex-center;
+      &-full {
+        @include tablet {
+          display: none;
+        }
+      }
+      &-short {
+        display: none;
+        @include tablet {
+          display: inline;
+        }
+      }
+    }
+
+    &__favourite {
+      @include tablet {
+        display: none;
+      }
+      &-text {
+        border: 1.5px solid $color-on-primary;
+        border-radius: $corner-extra-large;
+        padding: $size-05 12px;
+        font-size: 12px;
+        display: inline-block;
+        line-height: 1;
+      }
+    }
+  }
+}
+
+.full {
+  @include mobile {
+    display: none;
+  }
+}
+
+.short {
+  display: none;
+  @include mobile {
+    display: block;
   }
 }

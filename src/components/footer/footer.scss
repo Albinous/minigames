@@ -5,11 +5,25 @@
   background-color: $color-bg-footer;
   padding: $size-5 0;
 
+  @include mobile {
+    padding: $size-4 0;
+  }
+
   &-wrapper {
     @include flex-between;
     align-items: flex-start;
     padding-bottom: $size-8;
     border-bottom: 1px solid $color-bg-footer-low;
+
+    @include tablet {
+      flex-direction: column;
+      gap: $size-3;
+      padding-bottom: $size-5;
+    }
+
+    @include mobile {
+      padding-bottom: $size-3;
+    }
   }
 
   &-logo {
@@ -22,19 +36,53 @@
     max-width: 400px;
     font-size: 14px;
     margin-top: $size-3;
+
+    @include tablet {
+      max-width: 100%;
+    }
   }
 
   &-right {
     display: flex;
     gap: $size-10;
+
+    @include tablet {
+      gap: $size-5;
+    }
+
+    @include mobile {
+      flex-wrap: wrap;
+      gap: $size-3;
+    }
+  }
+
+  &-title {
+    @include tablet {
+      line-height: 1.1;
+    }
   }
 
   &-nav {
+    @include mobile {
+      &:first-child {
+        width: 49%;
+      }
+    }
     &__menu {
       display: flex;
       flex-direction: column;
       gap: 14px;
       align-items: flex-start;
+
+      @include mobile {
+        gap: 16px;
+      }
+
+      &-item {
+        @include tablet {
+          line-height: 1.1;
+        }
+      }
 
       &-link {
         font-size: 14px;
@@ -71,12 +119,33 @@
       &:hover {
         border: 2px solid $color-primary;
       }
+
+      @include tablet {
+        width: $size-4;
+        height: $size-4;
+        padding: 6.5px 8px;
+      }
     }
   }
 
   &-info {
     padding-top: $size-3;
     @include flex-between;
+
+    @include tablet {
+      padding-top: $size-2;
+    }
+
+    @include mobile {
+      justify-content: flex-start;
+      gap: $size-1;
+      padding-top: $size-1;
+    }
+
+    &__logo {
+      width: 20px;
+      height: 20px;
+    }
 
     &__link {
       display: flex;
@@ -88,11 +157,29 @@
       font-size: 14px;
       color: $color-on-bg-footer;
       font-weight: $font-weight-regular;
+
+      @include mobile {
+        font-size: 12px;
+      }
     }
   }
 
   &-text {
     font-size: 14px;
     color: $color-on-bg-footer;
+
+    @include mobile {
+      font-size: 12px;
+
+      &:first-child {
+        width: 100%;
+      }
+    }
+  }
+
+  &-designed {
+    @include mobile {
+      display: none;
+    }
   }
 }

@@ -1,4 +1,5 @@
 @use '../../styles/tokens' as *;
+@use '../../styles/mixins' as *;
 
 .logo {
   display: flex;
@@ -8,5 +9,9 @@
   &-title {
     font-weight: $font-weight-bold;
     font-size: 24px;
+
+    @include tablet {
+      font-size: 20px;
+    }
   }
 }

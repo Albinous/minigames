@@ -8,4 +8,19 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  @include tablet {
+    flex-wrap: wrap;
+  }
+}
+
+@mixin tablet {
+  @media (max-width: 768px) {
+    @content;
+  }
+}
+
+@mixin mobile {
+  @media (max-width: 375px) {
+    @content;
+  }
 }

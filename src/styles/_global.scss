@@ -1,4 +1,5 @@
 @use './tokens' as *;
+@use './mixins' as *;
 
 *,
 *::before,
@@ -31,12 +32,24 @@ h6 {
 
 h2 {
   font-size: $size-4;
+
+  @include tablet {
+    font-size: $size-3;
+  }
 }
 
 p {
   color: $color-on-bg;
   font-size: 18px;
   line-height: 1.5;
+
+  @include tablet {
+    font-size: 14px;
+  }
+
+  @include mobile {
+    font-size: 12px;
+  }
 }
 
 ul {
@@ -77,11 +90,26 @@ img {
 
 section {
   padding: 40px 0;
+
+  @include tablet {
+    padding: $size-3 0;
+  }
+  @include mobile {
+    padding: $size-2 0;
+  }
 }
 
 .container {
   max-width: 1680px;
   margin: 0 auto;
+
+  @include tablet {
+    padding: 0 $size-5;
+  }
+
+  @include mobile {
+    padding: 0 $size-2;
+  }
 }
 
 .btn {
@@ -101,6 +129,10 @@ section {
       background-color: $color-primary-high;
     }
   }
+
+  @include mobile {
+    font-size: 12px;
+  }
 }
 
 .section-title {
@@ -118,5 +150,9 @@ section {
     border-radius: $size-05;
     width: $size-1;
     height: $size-4;
+
+    @include tablet {
+      height: $size-3;
+    }
   }
 }

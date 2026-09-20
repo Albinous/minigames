@@ -6,7 +6,17 @@
   width: 100%;
   min-height: 627px;
   background: url(../../assets/images/games/hero-bg.jpg) no-repeat center / cover;
-  padding: 112px 0;
+  padding: $size-14 0;
+
+  @include tablet {
+    min-height: 383px;
+    padding: 128px 0 $size-9;
+  }
+
+  @include mobile {
+    min-height: 331px;
+    padding: 128px 0 $size-8;
+  }
 
   &-main {
     max-width: 640px;
@@ -18,32 +28,85 @@
     gap: 24px;
     box-shadow: $shadow-level-3;
     background: $color-bg;
+
+    @include tablet {
+      border-radius: $size-2;
+      padding: 22px;
+      gap: $size-2;
+      max-width: 480px;
+    }
   }
 
   &-title {
     font-size: 56px;
     line-height: 1.1;
+
+    @include tablet {
+      font-size: 36px;
+    }
+
+    @include mobile {
+      font-size: $size-3;
+      line-height: 1.2;
+    }
   }
 
   &-text {
     font-weight: $font-weight-medium;
+
+    @include tablet {
+      line-height: 1.4;
+    }
+
+    @include mobile {
+      max-height: 34px;
+      overflow: hidden;
+    }
   }
 
   &-btn {
     padding: $btn-large-padding;
     align-self: flex-start;
     font-size: 18px;
+
+    @include tablet {
+      font-size: 14px;
+      padding: 8px 18px;
+    }
+
+    @include mobile {
+      font-size: 12px;
+      padding: 6px 14px;
+    }
   }
 }
 
 .developer {
   &-wrapper {
     @include flex-between;
-    gap: 40px;
+    gap: $size-5;
+
+    @include tablet {
+      gap: $size-3;
+    }
+
+    @include tablet {
+      gap: $size-2;
+    }
   }
 
   &-img {
     border-radius: $corner-extra-large;
+    object-fit: cover;
+
+    @include tablet {
+      width: 100%;
+      height: 300px;
+    }
+
+    @include mobile {
+      height: 227px;
+    }
   }
 
   &-info {
@@ -58,6 +121,15 @@
     flex-direction: column;
     gap: $size-3;
     width: 100%;
+
+    @include tablet {
+      padding: 30px;
+      gap: $size-2;
+    }
+
+    @include mobile {
+      padding: 22px;
+    }
   }
 
   &-title {
@@ -66,6 +138,9 @@
 
   &-text {
     max-width: 589px;
+    @include tablet {
+      max-width: 500px;
+    }
   }
 
   &-btn {
@@ -85,10 +160,47 @@
       height: 24px;
       background-image: url(../../assets/icons/upload.svg);
     }
+
+    @include tablet {
+      padding: 8px 20px 8px 44px;
+      font-size: 14px;
+
+      &::before {
+        width: $size-2;
+        height: $size-2;
+        left: 18px;
+        background-size: contain;
+      }
+    }
+    @include mobile {
+      padding: 6px 14px 6px 38px;
+      font-size: 12px;
+
+      &::before {
+        left: 12px;
+      }
+    }
   }
 
   &-contact {
     font-size: 14px;
     color: $color-on-bg-low;
+
+    @include tablet {
+      font-size: 12px;
+    }
+  }
+}
+
+.full {
+  @include mobile {
+    display: none;
+  }
+}
+
+.short {
+  display: none;
+  @include mobile {
+    display: block;
   }
 }

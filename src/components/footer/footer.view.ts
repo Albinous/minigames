@@ -11,7 +11,7 @@ export function getFooterView(): string {
           </p>
         </div>
         <div class="footer-right">
-          <nav class="nav">
+          <nav class="footer-nav">
             <h3 class="footer-title">Explore</h3>
             <ul class="footer-nav__menu">
               <li class="footer-nav__menu-item">
@@ -28,7 +28,7 @@ export function getFooterView(): string {
               </li>
             </ul>
           </nav>
-          <nav class="nav">
+          <nav class="footer-nav">
             <h3 class="footer-title">Company</h3>
             <ul class="footer-nav__menu">
               <li class="footer-nav__menu-item">
@@ -78,7 +78,7 @@ export function getFooterView(): string {
           <img src="src/assets/icons/github-icon.svg" alt="github logo" class="footer-info__logo" />
           <h4 class="footer-info__title">@Albinous</h4>
         </a>
-        <span class="footer-text"> Designed with love </span>
+        <span class="footer-text footer-designed"> Designed with love </span>
       </div>
     </div>
   `;

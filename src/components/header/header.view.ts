@@ -22,8 +22,8 @@ export function getHeaderView(): string {
               </ul>
             </nav>
             <div class="header-btns">
-              <button class="btn btn-secondary header-btn__login">Log In</button>
-              <button class="btn btn-primary header-btn__signup">Sign Up</button>
+              <button class="btn header-btn header-btn__login">Log In</button>
+              <button class="btn btn-primary header-btn header-btn__signup">Sign Up</button>
               <button class="header-burger">
                 <span class="header-burger__line"></span>
                 <span class="header-burger__line"></span>

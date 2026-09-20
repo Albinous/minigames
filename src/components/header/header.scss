@@ -3,6 +3,10 @@
 
 .header {
   padding: 24px 0;
+  border-bottom: 2px solid $color-on-primary;
+  @include tablet {
+    padding: 19.5px 0;
+  }
   &-container {
     max-width: 1760px;
   }
@@ -23,6 +27,9 @@
   }
 
   &-btn {
+    @include tablet {
+      padding: 6px 14px;
+    }
     &__login {
       @include tablet {
         display: none;

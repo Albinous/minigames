@@ -20,7 +20,7 @@ export function getAuthDialogView(mode: AuthMode): string {
         </div>
 
         <div class="auth-dialog__content">
-          ${getLoginFormView()}
+          ${getAuthDialogContentView(mode)}
         </div>
       </div>
     </div>
@@ -179,4 +179,10 @@ function getRegisterFormView(): string {
       </p>
     </form>
   `;
+}
+
+export function getAuthDialogContentView(mode: AuthMode): string {
+  return mode === 'login'
+    ? getLoginFormView()
+    : getRegisterFormView();
 }

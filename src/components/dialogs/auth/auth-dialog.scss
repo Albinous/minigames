@@ -1,5 +1,43 @@
+@use '../../../styles/mixins' as *;
+@use '../../../styles/tokens' as *;
+
 .auth-dialog {
+  width: 420px;
+  max-width: calc(100% - 32px);
+
+  padding: $size-2;
+
+  background-color: $color-bg;
+
+  border: 2px solid $color-on-primary;
+  border-radius: $corner-large;
+
+  box-shadow: $shadow-level-3;
   &-root {
     position: relative;
+  }
+
+  &-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: rgb(30 27 58 / 70%);
+
+    opacity: 0;
+    visibility: hidden;
+
+    transition:
+      opacity 0.2s ease,
+      visibility 0.2s ease;
+
+    &--open {
+      opacity: 1;
+      visibility: visible;
+    }
   }
 }

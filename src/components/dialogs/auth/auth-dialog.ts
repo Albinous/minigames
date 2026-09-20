@@ -59,6 +59,41 @@ export class AuthDialog {
     });
   }
 
+   private bindPasswordToggles(): void {
+    const passwordButtons = this.dialogElement?.querySelectorAll(
+      '.auth-form__password-toggle',
+    );
+
+    passwordButtons?.forEach((button) => {
+      button.addEventListener('click', () => {
+        const inputId = button.getAttribute('data-password-for');
+
+        if (!inputId) {
+          return;
+        }
+
+        const input = this.dialogElement?.querySelector(
+          `#${inputId}`,
+        );
+
+        if (!(input instanceof HTMLInputElement)) {
+          return;
+        }
+
+        const isPassword = input.type === 'password';
+
+        input.type = isPassword ? 'text' : 'password';
+
+        button.setAttribute(
+          'aria-label',
+          isPassword
+            ? 'Hide password'
+            : 'Show password',
+        );
+      });
+    });
+  }
+
   public open(mode: AuthMode): void {
     this.mode = mode;
 
@@ -92,6 +127,7 @@ export class AuthDialog {
     this.bindEscape();
     this.bindSwitcher();
     this.bindFormSwitcher();
+    this.bindPasswordToggles();
 
     return root;
   }

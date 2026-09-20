@@ -8,6 +8,7 @@ export function getAuthDialogView(mode: AuthMode): string {
         class="auth-dialog"
         role="dialog"
         aria-modal="true"
+        aria-labelledby="auth-dialog-title"
       >
         <button
           class="auth-dialog__close"
@@ -16,20 +17,21 @@ export function getAuthDialogView(mode: AuthMode): string {
         >
           ×
         </button>
-        <div class="auth-dialog__switcher">
-         <button
-          class="auth-dialog__login"
-          type="button"
-        >
-          Login
-        </button>
 
-        <button
-          class="auth-dialog__register"
-          type="button"
-        >
-          Register
-        </button>
+        <div class="auth-dialog__switcher">
+          <button
+            class="auth-dialog__login"
+            type="button"
+          >
+            Login
+          </button>
+
+          <button
+            class="auth-dialog__register"
+            type="button"
+          >
+            Register
+          </button>
         </div>
 
         <div class="auth-dialog__content">
@@ -40,10 +42,20 @@ export function getAuthDialogView(mode: AuthMode): string {
   `;
 }
 
+export function getAuthDialogContentView(
+  mode: AuthMode,
+): string {
+  return mode === 'login'
+    ? getLoginFormView()
+    : getRegisterFormView();
+}
+
 function getLoginFormView(): string {
   return `
     <form class="auth-form">
-      <h2>Welcome Back!</h2>
+      <h2 id="auth-dialog-title">
+        Welcome Back!
+      </h2>
 
       <p>
         Sign in to resume your games and progress.
@@ -58,7 +70,9 @@ function getLoginFormView(): string {
           id="login-email"
           name="email"
           type="email"
+          autocomplete="email"
           placeholder="e.g. alex@minigames.com"
+          required
         />
       </div>
 
@@ -67,18 +81,37 @@ function getLoginFormView(): string {
           Password
         </label>
 
-        <input
-          id="login-password"
-          name="password"
-          type="password"
-          placeholder="••••••••"
-        />
+        <div class="auth-form__password">
+          <input
+            id="login-password"
+            name="password"
+            type="password"
+            autocomplete="current-password"
+            placeholder="••••••••"
+            minlength="8"
+            required
+          />
+
+          <button
+            class="auth-form__password-toggle"
+            type="button"
+            data-password-for="login-password"
+            aria-label="Show password"
+          >
+            Show
+          </button>
+        </div>
       </div>
 
-      <a href="#">Forgot Password?</a>
+      <a
+        class="auth-form__forgot"
+        href="#"
+      >
+        Forgot Password?
+      </a>
 
       <button
-        class="btn btn-primary auth-form__submit"
+        class="btn btn-primary"
         type="submit"
       >
         Login
@@ -97,7 +130,10 @@ function getLoginFormView(): string {
 
       <p>
         Don't have an account?
-        <button type="button" class="auth-form__register">
+        <button
+          class="auth-form__register"
+          type="button"
+        >
           Register
         </button>
       </p>
@@ -108,7 +144,9 @@ function getLoginFormView(): string {
 function getRegisterFormView(): string {
   return `
     <form class="auth-form">
-      <h2>Create Account</h2>
+      <h2 id="auth-dialog-title">
+        Create Account
+      </h2>
 
       <p>
         Join MiniGames to track your score &amp; streak.
@@ -123,7 +161,9 @@ function getRegisterFormView(): string {
           id="register-username"
           name="username"
           type="text"
+          autocomplete="username"
           placeholder="e.g. CozyGamer_99"
+          required
         />
       </div>
 
@@ -136,7 +176,9 @@ function getRegisterFormView(): string {
           id="register-email"
           name="email"
           type="email"
+          autocomplete="email"
           placeholder="your.email@domain.com"
+          required
         />
       </div>
 
@@ -145,12 +187,26 @@ function getRegisterFormView(): string {
           Password
         </label>
 
-        <input
-          id="register-password"
-          name="password"
-          type="password"
-          placeholder="Min. 8 characters"
-        />
+        <div class="auth-form__password">
+          <input
+            id="register-password"
+            name="password"
+            type="password"
+            autocomplete="new-password"
+            placeholder="Min. 8 characters"
+            minlength="8"
+            required
+          />
+
+          <button
+            class="auth-form__password-toggle"
+            type="button"
+            data-password-for="register-password"
+            aria-label="Show password"
+          >
+            Show
+          </button>
+        </div>
       </div>
 
       <div class="auth-form__field">
@@ -158,16 +214,30 @@ function getRegisterFormView(): string {
           Confirm Password
         </label>
 
-        <input
-          id="register-confirm-password"
-          name="confirmPassword"
-          type="password"
-          placeholder="Repeat your password"
-        />
+        <div class="auth-form__password">
+          <input
+            id="register-confirm-password"
+            name="confirmPassword"
+            type="password"
+            autocomplete="new-password"
+            placeholder="Repeat your password"
+            minlength="8"
+            required
+          />
+
+          <button
+            class="auth-form__password-toggle"
+            type="button"
+            data-password-for="register-confirm-password"
+            aria-label="Show password"
+          >
+            Show
+          </button>
+        </div>
       </div>
 
       <button
-        class="btn btn-primary auth-form__submit"
+        class="btn btn-primary"
         type="submit"
       >
         Create Account
@@ -186,14 +256,13 @@ function getRegisterFormView(): string {
 
       <p>
         Already have an account?
-        <button type="button" class="auth-form__login">
+        <button
+          class="auth-form__login"
+          type="button"
+        >
           Login
         </button>
       </p>
     </form>
   `;
-}
-
-export function getAuthDialogContentView(mode: AuthMode): string {
-  return mode === 'login' ? getLoginFormView() : getRegisterFormView();
 }

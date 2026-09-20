@@ -11,7 +11,7 @@ export function getFooterView(): string {
           </p>
         </div>
         <div class="footer-right">
-          <nav class="nav">
+          <nav class="footer-nav">
             <h3 class="footer-title">Explore</h3>
             <ul class="footer-nav__menu">
               <li class="footer-nav__menu-item">
@@ -28,7 +28,7 @@ export function getFooterView(): string {
               </li>
             </ul>
           </nav>
-          <nav class="nav">
+          <nav class="footer-nav">
             <h3 class="footer-title">Company</h3>
             <ul class="footer-nav__menu">
               <li class="footer-nav__menu-item">

@@ -10,6 +10,12 @@
     align-items: flex-start;
     padding-bottom: $size-8;
     border-bottom: 1px solid $color-bg-footer-low;
+
+    @include tablet {
+      flex-direction: column;
+      gap: $size-3;
+      padding-bottom: $size-5;
+    }
   }
 
   &-logo {
@@ -22,11 +28,25 @@
     max-width: 400px;
     font-size: 14px;
     margin-top: $size-3;
+
+    @include tablet {
+      max-width: 100%;
+    }
   }
 
   &-right {
     display: flex;
     gap: $size-10;
+
+    @include tablet {
+      gap: $size-5;
+    }
+  }
+
+  &-title {
+    @include tablet {
+      line-height: 1.1;
+    }
   }
 
   &-nav {
@@ -35,6 +55,12 @@
       flex-direction: column;
       gap: 14px;
       align-items: flex-start;
+
+      &-item {
+        @include tablet {
+          line-height: 1.1;
+        }
+      }
 
       &-link {
         font-size: 14px;
@@ -71,12 +97,27 @@
       &:hover {
         border: 2px solid $color-primary;
       }
+
+      @include tablet {
+        width: $size-4;
+        height: $size-4;
+        padding: 6.5px 8px;
+      }
     }
   }
 
   &-info {
     padding-top: $size-3;
     @include flex-between;
+
+    @include tablet {
+      padding-top: $size-2;
+    }
+
+    &__logo {
+      width: 20px;
+      height: 20px;
+    }
 
     &__link {
       display: flex;

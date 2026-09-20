@@ -23,6 +23,14 @@ export class AuthDialog {
     });
   }
 
+  private bindEscape(): void {
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      this.close();
+    }
+  });
+}
+
   public open(mode: AuthMode): void {
     this.mode = mode;
 
@@ -52,6 +60,7 @@ export class AuthDialog {
     this.dialogElement = root;
     this.bindCloseButton();
     this.bindBackdrop();
+    this.bindEscape();
 
     return root;
   }

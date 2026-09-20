@@ -17,13 +17,19 @@ export function getAuthDialogView(mode: AuthMode): string {
           ×
         </button>
         <div class="auth-dialog__switcher">
-          <button class="auth-dialog__btn auth-dialog__login">
-            Login
-          </button>
+         <button
+          class="auth-dialog__login"
+          type="button"
+        >
+          Login
+        </button>
 
-          <button class="auth-dialog__btn auth-dialog__login">
-            Register
-          </button>
+        <button
+          class="auth-dialog__register"
+          type="button"
+        >
+          Register
+        </button>
         </div>
 
         <div class="auth-dialog__content">

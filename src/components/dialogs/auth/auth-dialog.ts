@@ -24,12 +24,26 @@ export class AuthDialog {
   }
 
   private bindEscape(): void {
-  document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape') {
-      this.close();
-    }
-  });
-}
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        this.close();
+      }
+    });
+  }
+
+  private bindSwitcher(): void {
+    const loginButton = this.dialogElement?.querySelector('.auth-dialog__login');
+
+    const registerButton = this.dialogElement?.querySelector('.auth-dialog__register');
+
+    loginButton?.addEventListener('click', () => {
+      this.open('login');
+    });
+
+    registerButton?.addEventListener('click', () => {
+      this.open('register');
+    });
+  }
 
   public open(mode: AuthMode): void {
     this.mode = mode;
@@ -61,6 +75,7 @@ export class AuthDialog {
     this.bindCloseButton();
     this.bindBackdrop();
     this.bindEscape();
+    this.bindSwitcher();
 
     return root;
   }

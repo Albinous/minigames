@@ -24,10 +24,21 @@ export function getHeaderView(): string {
             <div class="header-btns">
               <button class="btn header-btn header-btn__login">Log In</button>
               <button class="btn btn-primary header-btn header-btn__signup">Sign Up</button>
-              <button class="header-burger">
+              <button 
+                class="header-burger"
+                type="button"
+                aria-label="Open menu"
+              >
                 <span class="header-burger__line"></span>
                 <span class="header-burger__line"></span>
                 <span class="header-burger__line"></span>
+              </button>
+               <button
+                class="header-close"
+                type="button"
+                aria-label="Close menu"
+              >
+                ×
               </button>
             </div>
           </div>

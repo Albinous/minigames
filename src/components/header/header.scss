@@ -69,25 +69,8 @@
       background-color: $color-on-primary;
     }
   }
-}
 
-.nav {
-  @include tablet {
+  &-close {
     display: none;
-  }
-  &-menu {
-    display: flex;
-    gap: 40px;
-    align-items: center;
-
-    &__link {
-      color: $color-on-bg;
-      font-size: $size-2;
-      font-weight: $font-weight-medium;
-      &.active {
-        color: $color-on-primary;
-        font-weight: $font-weight-bold;
-      }
-    }
   }
 }

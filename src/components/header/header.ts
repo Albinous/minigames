@@ -1,28 +1,26 @@
 import { Logo } from '../logo';
-import { BurgerMenu } from './burger-menu';
 import { getHeaderView } from './header.view';
 
 export class Header {
-   private readonly burgerMenu: BurgerMenu;
-
-  constructor() {
-    this.burgerMenu = new BurgerMenu();
-  }
   private addLogo(header: HTMLElement): void {
     const headerWrapper = header.querySelector('.header-wrapper');
 
     headerWrapper?.prepend(new Logo().render());
   }
 
-  private addBurgerMenu(header: HTMLElement): void {
-    header.append(this.burgerMenu.render());
+  private openMenu(header: HTMLElement): void {
+    const burgerButton = header.querySelector('.header-burger');
+
+    header.classList.add('header-menu__open');
+    burgerButton?.setAttribute('aria-expanded', 'true');
+    document.body.classList.add('menu-open');
   }
 
-  private bindEvents(header: HTMLElement): void {
+  private bindMenuEvents(header: HTMLElement): void {
     const burgerButton = header.querySelector('.header-burger');
 
     burgerButton?.addEventListener('click', () => {
-      this.burgerMenu.open();
+      this.openMenu(header);
     });
   }
 
@@ -33,9 +31,9 @@ export class Header {
     header.innerHTML = getHeaderView();
 
     this.addLogo(header);
-    this.addBurgerMenu(header);
-    this.bindEvents(header);
+    this.bindMenuEvents(header);
 
     return header;
   }
+
 }

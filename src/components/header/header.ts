@@ -1,4 +1,5 @@
 import { Logo } from '../logo';
+import { BurgerMenu } from './burger-menu';
 import { getHeaderView } from './header.view';
 
 export class Header {
@@ -12,6 +13,16 @@ export class Header {
     const logo = new Logo();
 
     headerWrapper?.prepend(logo.render());
+
+    const burgerMenu = new BurgerMenu();
+
+    document.body.append(burgerMenu.render());
+
+    const burgerButton = header.querySelector('.header-burger');
+
+    burgerButton?.addEventListener('click', () => {
+      burgerMenu.open();
+    });
 
     return header;
   }

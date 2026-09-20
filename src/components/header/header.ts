@@ -16,11 +16,30 @@ export class Header {
     document.body.classList.add('menu-open');
   }
 
+  private closeMenu(header: HTMLElement): void {
+    const burgerButton = header.querySelector('.header-burger');
+
+    header.classList.remove('header-menu__open');
+    burgerButton?.setAttribute('aria-expanded', 'false');
+    document.body.classList.remove('menu-open');
+  }
+
   private bindMenuEvents(header: HTMLElement): void {
     const burgerButton = header.querySelector('.header-burger');
+    const closeButton = header.querySelector('.header-close');
 
     burgerButton?.addEventListener('click', () => {
       this.openMenu(header);
+    });
+
+    closeButton?.addEventListener('click', () => {
+      this.closeMenu(header);
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        this.closeMenu(header);
+      }
     });
   }
 

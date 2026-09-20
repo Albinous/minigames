@@ -64,11 +64,21 @@
 .developer {
   &-wrapper {
     @include flex-between;
-    gap: 40px;
+    gap: $size-5;
+
+    @include tablet {
+      gap: $size-3;
+    }
   }
 
   &-img {
     border-radius: $corner-extra-large;
+    width: 100%;
+    object-fit: cover;
+
+    @include tablet {
+      height: 300px;
+    }
   }
 
   &-info {
@@ -83,6 +93,11 @@
     flex-direction: column;
     gap: $size-3;
     width: 100%;
+
+    @include tablet {
+      padding: 30px;
+      gap: $size-2;
+    }
   }
 
   &-title {
@@ -91,6 +106,9 @@
 
   &-text {
     max-width: 589px;
+    @include tablet {
+      max-width: 500px;
+    }
   }
 
   &-btn {
@@ -110,10 +128,26 @@
       height: 24px;
       background-image: url(../../assets/icons/upload.svg);
     }
+
+    @include tablet {
+      padding: 8px 20px 8px 44px;
+      font-size: 14px;
+
+      &::before {
+        width: $size-2;
+        height: $size-2;
+        left: 18px;
+        background-size: contain;
+      }
+    }
   }
 
   &-contact {
     font-size: 14px;
     color: $color-on-bg-low;
+
+    @include tablet {
+      font-size: 12px;
+    }
   }
 }

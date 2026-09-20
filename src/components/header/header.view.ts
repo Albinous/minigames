@@ -3,6 +3,13 @@ import './header.scss';
 export function getHeaderView(): string {
   return `
       <div class="container header-container">
+      <button
+                class="header-close"
+                type="button"
+                aria-label="Close menu"
+              >
+                ×
+              </button>
         <div class="header-wrapper">
           <div class="header-main">
             <nav class="nav">
@@ -32,13 +39,6 @@ export function getHeaderView(): string {
                 <span class="header-burger__line"></span>
                 <span class="header-burger__line"></span>
                 <span class="header-burger__line"></span>
-              </button>
-               <button
-                class="header-close"
-                type="button"
-                aria-label="Close menu"
-              >
-                ×
               </button>
             </div>
           </div>

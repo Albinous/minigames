@@ -97,7 +97,7 @@ function getLoginFormView(): string {
 
       <p>
         Don't have an account?
-        <button type="button">
+        <button type="button" class="auth-form__register">
           Register
         </button>
       </p>
@@ -186,7 +186,7 @@ function getRegisterFormView(): string {
 
       <p>
         Already have an account?
-        <button type="button">
+        <button type="button" class="auth-form__login">
           Login
         </button>
       </p>

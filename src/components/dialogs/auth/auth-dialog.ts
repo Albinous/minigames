@@ -45,6 +45,20 @@ export class AuthDialog {
     });
   }
 
+  private bindFormSwitcher(): void {
+    const registerButton = this.dialogElement?.querySelector('.auth-form__register');
+
+    registerButton?.addEventListener('click', () => {
+      this.open('register');
+    });
+
+    const loginButton = this.dialogElement?.querySelector('.auth-form__login');
+
+    loginButton?.addEventListener('click', () => {
+      this.open('login');
+    });
+  }
+
   public open(mode: AuthMode): void {
     this.mode = mode;
 
@@ -52,6 +66,7 @@ export class AuthDialog {
 
     if (content) {
       content.innerHTML = getAuthDialogContentView(this.mode);
+      this.bindFormSwitcher();
     }
 
     const backdrop = this.dialogElement?.querySelector('.auth-dialog-backdrop');
@@ -76,6 +91,7 @@ export class AuthDialog {
     this.bindBackdrop();
     this.bindEscape();
     this.bindSwitcher();
+    this.bindFormSwitcher();
 
     return root;
   }

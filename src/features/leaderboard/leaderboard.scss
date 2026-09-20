@@ -3,7 +3,7 @@
 
 .leaderboard {
   &-table {
-    margin-top: 40px;
+    margin-top: $size-5;
     width: 100%;
     text-align: center;
     font-family: $font-family-roboto;
@@ -15,6 +15,10 @@
     overflow: hidden;
     width: 100%;
     table-layout: fixed;
+
+    @include tablet {
+      margin-top: $size-3;
+    }
   }
 
   &-head {
@@ -31,6 +35,33 @@
 
       &:nth-child(1) {
         width: 120px;
+
+        @include tablet {
+          padding: 16px 6px 16px 16px;
+          width: 104px;
+        }
+      }
+
+      &-short {
+        display: none;
+      }
+
+      @include tablet {
+        padding: $size-2 6px;
+        font-size: 14px;
+        line-height: 0.5;
+
+        &:last-child {
+          display: none;
+        }
+
+        &-short {
+          display: table-cell;
+        }
+
+        &-full {
+          display: none;
+        }
       }
     }
   }
@@ -57,13 +88,18 @@
     &:nth-child(5) .leaderboard-player__initials {
       background-color: $color-avatar-random-5;
     }
+
+    @include tablet {
+      &:nth-child(n + 4) {
+        display: none;
+      }
+    }
     &__item {
       padding: $size-2 $size-1;
       font-weight: $font-weight-bold;
       font-size: $size-2;
       color: $color-on-primary;
       border-bottom: 1px solid $color-outline;
-      // width: 294px;
       line-height: 1;
       height: 72px;
     }
@@ -78,7 +114,6 @@
       gap: 12px;
       text-align: left;
       padding: 16px 8px 16px 0px;
-      // width: 294px;
     }
 
     &__title {
@@ -94,13 +129,33 @@
       height: 40px;
     }
 
-    &__favourite-text {
-      border: 1.5px solid $color-on-primary;
-      border-radius: $corner-extra-large;
-      padding: $size-05 12px;
-      font-size: 12px;
-      display: inline-block;
-      line-height: 1;
+    &__streak {
+      @include flex-center;
+      &-full {
+        @include tablet {
+          display: none;
+        }
+      }
+      &-short {
+        display: none;
+        @include tablet {
+          display: inline;
+        }
+      }
+    }
+
+    &__favourite {
+      @include tablet {
+        display: none;
+      }
+      &-text {
+        border: 1.5px solid $color-on-primary;
+        border-radius: $corner-extra-large;
+        padding: $size-05 12px;
+        font-size: 12px;
+        display: inline-block;
+        line-height: 1;
+      }
     }
   }
 }

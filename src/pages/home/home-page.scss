@@ -73,10 +73,10 @@
 
   &-img {
     border-radius: $corner-extra-large;
-    width: 100%;
     object-fit: cover;
 
     @include tablet {
+      width: 100%;
       height: 300px;
     }
   }

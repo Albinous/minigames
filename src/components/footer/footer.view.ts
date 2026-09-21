@@ -50,17 +50,17 @@ export function getFooterView(): string {
             <ul class="footer-community__links">
               <li class="footer-community__item">
                 <a href="#" class="footer-community__link">
-                  <img src="src/assets/icons/share.svg" class="footer-community__img">
+                  <img src="assets/icons/share.svg" class="footer-community__img">
                 </a>
               </li>
               <li class="footer-community__item">
                 <a href="#" class="footer-community__link">
-                  <img src="src/assets/icons/chat.svg" class="footer-community__img">
+                  <img src="assets/icons/chat.svg" class="footer-community__img">
                 </a>
               </li>
               <li class="footer-community__item">
                 <a href="#" class="footer-community__link">
-                  <img src="src/assets/icons/rss_feed.svg" class="footer-community__img">
+                  <img src="assets/icons/rss_feed.svg" class="footer-community__img">
                 </a>
               </li>
             </ul>
@@ -71,11 +71,11 @@ export function getFooterView(): string {
       <div class="footer-info">
         <span class="footer-text">© 2026 MiniGames. All rights reserved.</span>
         <a href="#" class="footer-info__link">
-          <img src="src/assets/icons/rs-logo.svg" alt="rss logo" class="footer-info__logo" />
+          <img src="assets/icons/rs-logo.svg" alt="rss logo" class="footer-info__logo" />
           <h4 class="footer-info__title">RS School</h4>
         </a>
         <a href="#" class="footer-info__link">
-          <img src="src/assets/icons/github-icon.svg" alt="github logo" class="footer-info__logo" />
+          <img src="assets/icons/github-icon.svg" alt="github logo" class="footer-info__logo" />
           <h4 class="footer-info__title">@Albinous</h4>
         </a>
         <span class="footer-text footer-designed"> Designed with love </span>

@@ -25,7 +25,7 @@ export function getHomePageView(): string {
     <section class="developer">
       <div class="container">
         <div class="developer-wrapper">
-          <img src="src/assets/images/developer-img.jpg" alt="illustration site" class="developer-img" />
+          <img src="assets/images/developer-img.jpg" alt="illustration site" class="developer-img" />
           <div class="developer-info">
             <h2 class="developer-title">Are You a Game Developer?</h2>
             <p class="developer-text">

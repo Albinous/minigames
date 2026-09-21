@@ -1,0 +1,182 @@
+@use '../../../styles/mixins' as *;
+@use '../../../styles/tokens' as *;
+
+.auth-dialog-root {
+  position: relative;
+}
+
+.auth-dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: rgb(30 27 58 / 70%);
+
+  opacity: 0;
+  visibility: hidden;
+
+  transition:
+    opacity 0.2s ease,
+    visibility 0.2s ease;
+
+  &--open {
+    opacity: 1;
+    visibility: visible;
+
+    .auth-dialog {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+.auth-dialog {
+  position: relative;
+
+  width: 420px;
+  max-width: calc(100% - 32px);
+
+  padding: $size-2;
+
+  background-color: $color-bg;
+
+  border: 2px solid $color-on-primary;
+  border-radius: $corner-large;
+
+  box-shadow: $shadow-level-3;
+
+  opacity: 0;
+  transform: translateY(-20px);
+
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+
+  &__close {
+    position: absolute;
+    top: $size-1;
+    right: $size-1;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 40px;
+    height: 40px;
+
+    background: transparent;
+    border: 0;
+
+    font-size: 28px;
+
+    cursor: pointer;
+  }
+
+  &__switcher {
+    display: flex;
+    gap: $size-1;
+
+    margin-bottom: $size-2;
+
+    button {
+      flex: 1;
+
+      padding: $size-1;
+
+      background: transparent;
+      border: 0;
+
+      cursor: pointer;
+    }
+  }
+
+  &__content {
+    transition: opacity 0.15s ease;
+
+    &--switching {
+      opacity: 0;
+    }
+  }
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: $size-1;
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__password {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    input {
+      width: 100%;
+      padding-right: 60px;
+    }
+  }
+
+  &__password-toggle {
+    position: absolute;
+    right: 8px;
+
+    background: transparent;
+    border: 0;
+
+    cursor: pointer;
+  }
+
+  &__forgot {
+    align-self: flex-end;
+  }
+
+  &__divider {
+    display: flex;
+    align-items: center;
+    gap: $size-1;
+
+    &::before,
+    &::after {
+      content: '';
+
+      flex: 1;
+
+      height: 1px;
+
+      background-color: $color-on-primary;
+    }
+  }
+
+  &__google {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-dialog-backdrop {
+    padding: 16px;
+  }
+
+  .auth-dialog {
+    width: 100%;
+    max-width: none;
+
+    padding: 20px;
+  }
+}
+
+@media (max-width: 375px) {
+  .auth-dialog {
+    padding: 16px;
+  }
+}

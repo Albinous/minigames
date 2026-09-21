@@ -15,16 +15,16 @@ export function getFooterView(): string {
             <h3 class="footer-title">Explore</h3>
             <ul class="footer-nav__menu">
               <li class="footer-nav__menu-item">
-                <a href="#" class="footer-nav__menu-link">Home</a>
+                <a href="/" class="footer-nav__menu-link">Home</a>
               </li>
               <li class="footer-nav__menu-item">
-                <a href="#" class="footer-nav__menu-link">Library</a>
+                <a href="/" class="footer-nav__menu-link">Library</a>
               </li>
               <li class="footer-nav__menu-item">
-                <a href="#" class="footer-nav__menu-link">Categories</a>
+                <a href="/" class="footer-nav__menu-link">Categories</a>
               </li>
               <li class="footer-nav__menu-item">
-                <a href="#" class="footer-nav__menu-link">Tournaments</a>
+                <a href="/" class="footer-nav__menu-link">Tournaments</a>
               </li>
             </ul>
           </nav>
@@ -32,16 +32,16 @@ export function getFooterView(): string {
             <h3 class="footer-title">Company</h3>
             <ul class="footer-nav__menu">
               <li class="footer-nav__menu-item">
-                <a href="#" class="footer-nav__menu-link">About Us</a>
+                <a href="/" class="footer-nav__menu-link">About Us</a>
               </li>
               <li class="footer-nav__menu-item">
-                <a href="#" class="footer-nav__menu-link">Contact</a>
+                <a href="/" class="footer-nav__menu-link">Contact</a>
               </li>
               <li class="footer-nav__menu-item">
-                <a href="#" class="footer-nav__menu-link">Privacy Policy</a>
+                <a href="/" class="footer-nav__menu-link">Privacy Policy</a>
               </li>
               <li class="footer-nav__menu-item">
-                <a href="#" class="footer-nav__menu-link">Terms of Service</a>
+                <a href="/" class="footer-nav__menu-link">Terms of Service</a>
               </li>
             </ul>
           </nav>
@@ -49,18 +49,18 @@ export function getFooterView(): string {
             <h3 class="footer-title">Community</h3>
             <ul class="footer-community__links">
               <li class="footer-community__item">
-                <a href="#" class="footer-community__link">
-                  <img src="assets/icons/share.svg" class="footer-community__img">
+                <a href="/" class="footer-community__link">
+                  <img src="/assets/icons/share.svg" class="footer-community__img">
                 </a>
               </li>
               <li class="footer-community__item">
-                <a href="#" class="footer-community__link">
-                  <img src="assets/icons/chat.svg" class="footer-community__img">
+                <a href="/" class="footer-community__link">
+                  <img src="/assets/icons/chat.svg" class="footer-community__img">
                 </a>
               </li>
               <li class="footer-community__item">
-                <a href="#" class="footer-community__link">
-                  <img src="assets/icons/rss_feed.svg" class="footer-community__img">
+                <a href="/" class="footer-community__link">
+                  <img src="/assets/icons/rss_feed.svg" class="footer-community__img">
                 </a>
               </li>
             </ul>
@@ -70,12 +70,12 @@ export function getFooterView(): string {
 
       <div class="footer-info">
         <span class="footer-text">© 2026 MiniGames. All rights reserved.</span>
-        <a href="#" class="footer-info__link">
-          <img src="assets/icons/rs-logo.svg" alt="rss logo" class="footer-info__logo" />
+        <a href="https://rs.school/courses/short-track" class="footer-info__link">
+          <img src="/assets/icons/rs-logo.svg" alt="rss logo" class="footer-info__logo" />
           <h4 class="footer-info__title">RS School</h4>
         </a>
-        <a href="#" class="footer-info__link">
-          <img src="assets/icons/github-icon.svg" alt="github logo" class="footer-info__logo" />
+        <a href="https://github.com/Albinous" class="footer-info__link">
+          <img src="/assets/icons/github-icon.svg" alt="github logo" class="footer-info__logo" />
           <h4 class="footer-info__title">@Albinous</h4>
         </a>
         <span class="footer-text footer-designed"> Designed with love </span>

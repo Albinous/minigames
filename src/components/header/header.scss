@@ -86,30 +86,36 @@
   &-menu__open {
     @include tablet {
       background-color: $color-bg-footer;
+      height: 100vh;
       .logo-title {
         color: $color-white;
       }
 
-      .header-container,
-      .header-wrapper,
-      .header-main {
+      .header-container {
         height: 100%;
       }
 
       .header-wrapper {
+        height: 100%;
         gap: $size-4;
       }
 
       .header-main {
         width: 100%;
         height: 100%;
+
+        display: flex;
         flex-direction: column;
         align-items: stretch;
+
         gap: $size-4;
       }
 
       .nav {
-        transform: translateX(0);
+        position: static;
+        width: 100%;
+        height: auto;
+        transform: none;
       }
 
       .nav-menu {
@@ -129,21 +135,24 @@
       }
 
       .header-btns {
-        width: 100%;
+        position: absolute;
+        bottom: 90px;
 
+        width: 100%;
+        padding: 0 24px;
+        left: 0;
+
+        display: flex;
         flex-direction: column;
         gap: $size-2;
 
         margin-top: auto;
-      }
 
-      .header-btn {
-        width: 100%;
-      }
-
-      .header-btn__login,
-      .header-btn__signup {
-        display: flex;
+        .header-btn__login,
+        .header-btn__signup {
+          display: flex;
+          width: 100%;
+        }
       }
 
       .header-btn__login {
@@ -199,7 +208,7 @@
     transform: translateX(100%);
     transition: 0.3s ease;
     width: 100%;
-    height: 100%;
+    height: calc(100vh - 60px);
     z-index: 2;
     background-color: $color-bg-footer;
     padding: $size-3;

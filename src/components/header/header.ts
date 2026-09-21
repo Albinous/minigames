@@ -1,7 +1,14 @@
 import { Logo } from '../logo';
 import { getHeaderView } from './header.view';
+import type { AuthMode } from '../dialogs/auth/auth-dialog.types';
 
 export class Header {
+  private readonly onAuthOpen: (mode: AuthMode) => void;
+
+  constructor(onAuthOpen: (mode: AuthMode) => void) {
+    this.onAuthOpen = onAuthOpen;
+  }
+
   private addLogo(header: HTMLElement): void {
     const headerWrapper = header.querySelector('.header-wrapper');
 
@@ -43,6 +50,25 @@ export class Header {
     });
   }
 
+  private bindAuthButtons(header: HTMLElement): void {
+    const loginButton = header.querySelector('.header-btn__login');
+
+    const signupButton = header.querySelector('.header-btn__signup');
+
+    loginButton?.addEventListener('click', () => {
+      this.onAuthOpen('login');
+    });
+
+    signupButton?.addEventListener('click', () => {
+      this.onAuthOpen('register');
+    });
+
+    loginButton?.addEventListener('click', () => {
+      console.log('LOGIN CLICK');
+      this.onAuthOpen('login');
+    });
+  }
+
   public render(): HTMLElement {
     const header = document.createElement('header');
 
@@ -51,6 +77,7 @@ export class Header {
 
     this.addLogo(header);
     this.bindMenuEvents(header);
+    this.bindAuthButtons(header);
 
     return header;
   }

@@ -1,5 +1,5 @@
-import { createElement } from '../../shared/utils/create-element';
 import categoriesJson from '../../data/categories.json';
+import { createElement, createContainer } from '../../shared';
 
 export class LibraryPage {
   private createSection(): HTMLElement {
@@ -18,14 +18,8 @@ export class LibraryPage {
     return section;
   }
 
-  private createContainer(className: string): HTMLElement {
-    const container = createElement('div', {className: className});
-
-    return container
-  }
-
   private createControls(): HTMLElement {
-    const container = this.createContainer('library-controls');
+    const container = createContainer('library-controls');
     const categories = this.createCategories();
     const sorting = this.createSorting();
 
@@ -34,11 +28,23 @@ export class LibraryPage {
     return container;
   }
 
-  private createCategories():HTMLElement {
-    const categories = createElement('div', {className: 'library-categories'});
+  private createCategories(): HTMLElement {
+    const categories = createElement('div', { className: 'library-categories' });
     const categoriesData = categoriesJson.data;
     for (const category of categoriesData) {
-      const categoryButton = createElement('button', {className: 'library-category', text: category.label});
+      const categoryButton = createElement('button', {
+        className: 'library-category',
+        text: category.label,
+        attributes: {
+          type: 'button',
+          'data-category': category.slug
+        }
+      });
+
+      if (category.isDefault) {
+        categoryButton.classList.add('active')
+      }
+
       categories.append(categoryButton);
     }
 
@@ -46,7 +52,10 @@ export class LibraryPage {
   }
 
   private createSorting(): HTMLElement {
-    const sortingButton = createElement('button', {className: 'library-sort', text:'Sort by: Rating ↓'});
+    const sortingButton = createElement('button', {
+      className: 'library-sort',
+      text: 'Sort by: Rating ↓',
+    });
 
     return sortingButton;
   }

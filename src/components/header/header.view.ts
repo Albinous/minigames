@@ -21,10 +21,10 @@ export function getHeaderView(): string {
                   <a href="/" class="nav-menu__link" data-route="/library">Library</a>
                 </li>
                 <li class="nav-menu__item">
-                  <a href="/" class="nav-menu__link" data-route="/">Tournaments</a>
+                  <a href="/" class="nav-menu__link">Tournaments</a>
                 </li>
                 <li class="nav-menu__item">
-                  <a href="/" class="nav-menu__link" data-route="/">Community</a>
+                  <a href="/" class="nav-menu__link">Community</a>
                 </li>
               </ul>
             </nav>

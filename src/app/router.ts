@@ -8,9 +8,9 @@ export class Router {
     '/library': () => new LibraryPage().render()
   };
 
-  private readonly onRouteChange: (page: HTMLElement) => void;
+  private readonly onRouteChange: (page: HTMLElement, route: Route) => void;
 
-  constructor(onRouteChange: (page: HTMLElement) => void) {
+  constructor(onRouteChange: (page: HTMLElement, route: Route) => void) {
     this.onRouteChange = onRouteChange;
 
     globalThis.addEventListener('popstate', () => {
@@ -18,9 +18,7 @@ export class Router {
     })
   }
 
-  private createPage(): HTMLElement {
-    const route = this.getCurrentRoute();
-
+  private createPage(route: Route): HTMLElement {
     return this.routes[route]();
   }
   
@@ -29,13 +27,16 @@ export class Router {
   }
 
   private renderCurrentPage(): void {
-    const page = this.createPage();
+    const route = this.getCurrentRoute();
+    const page = this.createPage(route);
 
-    this.onRouteChange(page);
+    this.onRouteChange(page, route);
   }
 
     public render(): HTMLElement {
-    return this.createPage();
+    const route = this.getCurrentRoute();
+
+    return this.createPage(route);
   }
 
   public navigate(route: Route): void {

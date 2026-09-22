@@ -82,8 +82,17 @@ export class Header {
 
       const route = link.dataset.route as Route;
 
-      return this.onNavigate(route);
+      this.onNavigate(route);
+      this.setActiveRoute(route, header);
     })
+  }
+
+  public setActiveRoute(route: Route, header: HTMLElement) {
+    const links = header.querySelectorAll<HTMLAnchorElement>('[data-route]');
+
+    for (const link of links) {
+      link.classList.toggle('active', link.dataset.route === route);
+    }
   }
 
   public render(): HTMLElement {
@@ -96,6 +105,11 @@ export class Header {
     this.bindMenuEvents(header);
     this.bindAuthButtons(header);
     this.bindNavLinks(header);
+
+    this.setActiveRoute(
+      globalThis.location.pathname === '/library' ? '/library' : '/',
+    header,
+  );
 
     return header;
   }

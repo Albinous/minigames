@@ -62,11 +62,6 @@ export class Header {
     signupButton?.addEventListener('click', () => {
       this.onAuthOpen('register');
     });
-
-    loginButton?.addEventListener('click', () => {
-      console.log('LOGIN CLICK');
-      this.onAuthOpen('login');
-    });
   }
 
   public render(): HTMLElement {

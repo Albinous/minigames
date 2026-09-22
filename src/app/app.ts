@@ -9,7 +9,11 @@ export class App {
     const header = new Header((mode) => {
       authDialog.open(mode);
     });
-    const router = new Router();
+    const router = new Router((page) => {
+      const currentPage = document.querySelector('main');
+
+      currentPage?.replaceWith(page);
+    });
     const footer = new Footer();
 
     document.body.prepend(header.render(), router.render(), footer.render(), authDialog.render());

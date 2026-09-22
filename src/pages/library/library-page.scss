@@ -30,11 +30,22 @@
 
   &-categories {
     display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    white-space: nowrap;
     gap: $size-2;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 
   &-category {
     padding: 6px 14px;
+    flex: 0 0 auto;
 
     &:active {
       background-color: $color-primary;

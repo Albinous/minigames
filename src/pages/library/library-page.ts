@@ -1,21 +1,31 @@
+import './library-page.scss';
 import categoriesJson from '../../data/categories.json';
 import { createElement, createContainer } from '../../shared';
 
 export class LibraryPage {
   private createSection(): HTMLElement {
     const section = createElement('section', { className: 'library' });
-    const container = createElement('div', { className: 'container' });
+    const container = createContainer('container');
+    const header = this.createHeader();
+    const controls = this.createControls();
+
+    container.append(header, controls);
+    section.append(container);
+
+    return section;
+  }
+
+  private createHeader(): HTMLElement {
+    const container = createContainer('library-header');
     const title = createElement('h1', { className: 'library-title', text: 'Game Library' });
     const text = createElement('p', {
       className: 'library-text',
       text: 'Browse our collection of casual mini-games',
     });
-    const controls = this.createControls();
 
-    container.append(title, text, controls);
-    section.append(container);
+    container.append(title, text);
 
-    return section;
+    return container;
   }
 
   private createControls(): HTMLElement {
@@ -33,16 +43,16 @@ export class LibraryPage {
     const categoriesData = categoriesJson.data;
     for (const category of categoriesData) {
       const categoryButton = createElement('button', {
-        className: 'library-category',
+        className: 'btn btn-secondary library-category',
         text: category.label,
         attributes: {
           type: 'button',
-          'data-category': category.slug
-        }
+          'data-category': category.slug,
+        },
       });
 
       if (category.isDefault) {
-        categoryButton.classList.add('active')
+        categoryButton.classList.add('btn-primary', 'active');
       }
 
       categories.append(categoryButton);
@@ -53,7 +63,7 @@ export class LibraryPage {
 
   private createSorting(): HTMLElement {
     const sortingButton = createElement('button', {
-      className: 'library-sort',
+      className: 'btn btn-secondary library-sort__btn',
       text: 'Sort by: Rating ↓',
     });
 
@@ -63,9 +73,9 @@ export class LibraryPage {
   public render(): HTMLElement {
     const main = createElement('main', { className: 'main' });
 
-    const wrapper = this.createSection();
+    const section = this.createSection();
 
-    main.append(wrapper);
+    main.append(section);
 
     return main;
   }

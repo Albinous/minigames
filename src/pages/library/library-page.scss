@@ -1,0 +1,49 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/mixins' as *;
+
+.library {
+  &-header {
+    padding: $size-5 0;
+  }
+
+  &-title {
+    font-size: $size-7;
+    margin-bottom: $size-1;
+  }
+
+  &-text {
+    line-height: 1;
+  }
+
+  &-controls {
+    @include flex-between;
+    padding: $size-2 0;
+
+    button {
+      border-radius: $corner-extra-large;
+
+      &:hover {
+        background-color: $color-surface;
+      }
+    }
+  }
+
+  &-categories {
+    display: flex;
+    gap: $size-2;
+  }
+
+  &-category {
+    padding: 6px 14px;
+
+    &:active {
+      background-color: $color-primary;
+    }
+  }
+
+  &-sort {
+    &__btn {
+      padding: 11.5px 50px 11.5px 18px;
+    }
+  }
+}

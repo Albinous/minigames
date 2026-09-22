@@ -12,6 +12,7 @@ export class LibraryPage {
     { value: 'name-asc', label: 'Name A→Z'},
     { value: 'name-desc', label: 'Name Z→A'}
   ]
+  private sortSelected: SortOption = 'rating-desc';
   private createSection(): HTMLElement {
     const section = createElement('section', { className: 'library' });
     const container = createContainer('container');
@@ -71,9 +72,20 @@ export class LibraryPage {
   }
 
   private createSorting(): HTMLElement {
-    const sortingButton = createElement('button', {
+    const container = createContainer('library-sort');
+    const button = this.createSortButton();
+
+    container.append(button);
+
+    return container
+  }
+
+  private createSortButton(): HTMLElement {
+    const selectedSort = this.sortOptions.find(option => option.value === this.sortSelected);
+    const buttonText = selectedSort?.label;
+      const sortingButton = createElement('button', {
       className: 'btn btn-secondary library-sort__btn',
-      text: 'Sort by: Rating ↓',
+      text: `Sort by: ${buttonText}`,
     });
 
     return sortingButton;

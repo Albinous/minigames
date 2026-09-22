@@ -4,6 +4,7 @@ import type { AuthMode } from '../dialogs/auth/auth-dialog.types';
 import type { Route } from '../../app/router';
 
 export class Header {
+  private element: HTMLElement | undefined;
   private readonly onAuthOpen: (mode: AuthMode) => void;
   private readonly onNavigate: (route: Route) => void;
 
@@ -83,12 +84,13 @@ export class Header {
       const route = link.dataset.route as Route;
 
       this.onNavigate(route);
-      this.setActiveRoute(route, header);
+      this.setActiveRoute(route);
     })
   }
 
-  public setActiveRoute(route: Route, header: HTMLElement) {
-    const links = header.querySelectorAll<HTMLAnchorElement>('[data-route]');
+  public setActiveRoute(route: Route) {
+    if (!this.element) return;
+    const links = this.element.querySelectorAll<HTMLAnchorElement>('[data-route]');
 
     for (const link of links) {
       link.classList.toggle('active', link.dataset.route === route);
@@ -97,6 +99,7 @@ export class Header {
 
   public render(): HTMLElement {
     const header = document.createElement('header');
+    this.element = header;
 
     header.className = 'header';
     header.innerHTML = getHeaderView();
@@ -108,7 +111,6 @@ export class Header {
 
     this.setActiveRoute(
       globalThis.location.pathname === '/library' ? '/library' : '/',
-    header,
   );
 
     return header;

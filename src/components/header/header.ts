@@ -1,12 +1,16 @@
 import { Logo } from '../logo';
 import { getHeaderView } from './header.view';
 import type { AuthMode } from '../dialogs/auth/auth-dialog.types';
+import type { Route } from '../../app/router';
 
 export class Header {
+  private element: HTMLElement | undefined;
   private readonly onAuthOpen: (mode: AuthMode) => void;
+  private readonly onNavigate: (route: Route) => void;
 
-  constructor(onAuthOpen: (mode: AuthMode) => void) {
+  constructor(onAuthOpen: (mode: AuthMode) => void, onNavigate: (route: Route) => void) {
     this.onAuthOpen = onAuthOpen;
+    this.onNavigate = onNavigate;
   }
 
   private addLogo(header: HTMLElement): void {
@@ -62,15 +66,38 @@ export class Header {
     signupButton?.addEventListener('click', () => {
       this.onAuthOpen('register');
     });
+  }
 
-    loginButton?.addEventListener('click', () => {
-      console.log('LOGIN CLICK');
-      this.onAuthOpen('login');
+  private bindNavLinks(header: HTMLElement): void {
+    const links = header.querySelector('.nav-menu');
+
+    links?.addEventListener('click', (event) => {
+      const target = event.target as HTMLElement;
+      const link = target.closest<HTMLAnchorElement>('[data-route]');
+
+      if (!link) return;
+
+      event.preventDefault();
+
+      const route = link.dataset.route as Route;
+
+      this.onNavigate(route);
+      this.setActiveRoute(route);
     });
+  }
+
+  public setActiveRoute(route: Route) {
+    if (!this.element) return;
+    const links = this.element.querySelectorAll<HTMLAnchorElement>('[data-route]');
+
+    for (const link of links) {
+      link.classList.toggle('active', link.dataset.route === route);
+    }
   }
 
   public render(): HTMLElement {
     const header = document.createElement('header');
+    this.element = header;
 
     header.className = 'header';
     header.innerHTML = getHeaderView();
@@ -78,6 +105,9 @@ export class Header {
     this.addLogo(header);
     this.bindMenuEvents(header);
     this.bindAuthButtons(header);
+    this.bindNavLinks(header);
+
+    this.setActiveRoute(globalThis.location.pathname === '/library' ? '/library' : '/');
 
     return header;
   }

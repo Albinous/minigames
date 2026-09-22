@@ -5,11 +5,20 @@ import { AuthDialog } from '../components/dialogs/auth/auth-dialog';
 export class App {
   public render(): void {
     const authDialog = new AuthDialog();
+    const header = new Header(
+      (mode) => {
+        authDialog.open(mode);
+      },
+      (route) => {
+        router.navigate(route);
+      },
+    );
+    const router = new Router((page, route) => {
+      const currentPage = document.querySelector('main');
 
-    const header = new Header((mode) => {
-      authDialog.open(mode);
+      currentPage?.replaceWith(page);
+      header.setActiveRoute(route);
     });
-    const router = new Router();
     const footer = new Footer();
 
     document.body.prepend(header.render(), router.render(), footer.render(), authDialog.render());

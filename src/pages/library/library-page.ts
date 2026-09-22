@@ -5,13 +5,14 @@ import type { SortOption } from './library-page.types';
 
 export class LibraryPage {
   private readonly sortOptions: {
-    value: SortOption, label: string
+    value: SortOption;
+    label: string;
   }[] = [
-    { value: 'rating-asc', label: 'Rating ↑'},
-    { value: 'rating-desc', label: 'Rating ↓'},
-    { value: 'name-asc', label: 'Name A→Z'},
-    { value: 'name-desc', label: 'Name Z→A'}
-  ]
+    { value: 'rating-asc', label: 'Rating ↑' },
+    { value: 'rating-desc', label: 'Rating ↓' },
+    { value: 'name-asc', label: 'Name A→Z' },
+    { value: 'name-desc', label: 'Name Z→A' },
+  ];
   private sortSelected: SortOption = 'rating-desc';
   private createSection(): HTMLElement {
     const section = createElement('section', { className: 'library' });
@@ -74,16 +75,16 @@ export class LibraryPage {
   private createSorting(): HTMLElement {
     const container = createContainer('library-sort');
     const button = this.createSortButton();
-    const options = this.createSortOptions()
+    const options = this.createSortOptions();
 
     container.append(button, options);
-    return container
+    return container;
   }
 
   private createSortButton(): HTMLButtonElement {
-    const selectedSort = this.sortOptions.find(option => option.value === this.sortSelected);
+    const selectedSort = this.sortOptions.find((option) => option.value === this.sortSelected);
     const buttonText = selectedSort?.label;
-      const sortingButton = createElement('button', {
+    const sortingButton = createElement('button', {
       className: 'btn btn-secondary library-sort__btn',
       text: `Sort by: ${buttonText}`,
     });
@@ -92,20 +93,42 @@ export class LibraryPage {
   }
 
   private createSortOptions(): HTMLElement {
-    const container = createContainer('library-sort__options')
+    const container = createContainer('library-sort__options');
     for (const option of this.sortOptions) {
       const sortOption = createElement('button', {
         className: 'library-sort__option',
         text: option.label,
         attributes: {
-          'data-sort': option.value
-        }
+          'data-sort': option.value,
+        },
       });
 
       container.append(sortOption);
     }
 
     return container;
+  }
+
+  private bindSortOptionsEvents(main: HTMLElement): void {
+    const sortOptions = main.querySelector('.library-sort__options');
+
+    sortOptions?.addEventListener('click', (event) => {
+      const target = event.target as HTMLElement;
+      const optionSelected = target.closest<HTMLButtonElement>('[data-sort]');
+
+      if (!optionSelected) return;
+
+      const sort = optionSelected.dataset.sort;
+      if (!sort) return;
+
+      this.sortSelected = sort as SortOption;
+
+      const options = sortOptions.querySelectorAll<HTMLButtonElement>('.library-sort__option');
+
+      for (const option of options) {
+        option.classList.toggle('active', option === optionSelected)
+      }
+    })
   }
 
   private bindCategoryEvents(main: HTMLElement): void {
@@ -131,6 +154,7 @@ export class LibraryPage {
     main.append(section);
 
     this.bindCategoryEvents(main);
+    this.bindSortOptionsEvents(main);
 
     return main;
   }

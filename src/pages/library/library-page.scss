@@ -60,5 +60,11 @@
     &__btn {
       padding: 11.5px 50px 11.5px 18px;
     }
+
+    &__option {
+      &.active {
+        background-color: $color-primary;
+      }
+    }
   }
 }

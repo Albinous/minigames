@@ -52,7 +52,7 @@ export class LibraryPage {
       });
 
       if (category.isDefault) {
-        categoryButton.classList.add('btn-primary', 'active');
+        categoryButton.classList.add('active');
       }
 
       categories.append(categoryButton);
@@ -70,12 +70,29 @@ export class LibraryPage {
     return sortingButton;
   }
 
+  private bindCategoryEvents(main: HTMLElement): void {
+    const categories = main.querySelector('.library-categories');
+    categories?.addEventListener('click', (event) => {
+      const target = event.target as HTMLElement;
+      const button = target.closest<HTMLButtonElement>('[data-category]');
+
+      if (!button) return;
+
+      const buttons = categories.querySelectorAll<HTMLButtonElement>('[data-category');
+
+      for (const categoryButton of buttons) {
+        categoryButton.classList.toggle('active', categoryButton === button);
+      }
+    });
+  }
+
   public render(): HTMLElement {
     const main = createElement('main', { className: 'main' });
 
     const section = this.createSection();
-
     main.append(section);
+
+    this.bindCategoryEvents(main);
 
     return main;
   }

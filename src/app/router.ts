@@ -1,11 +1,11 @@
-import { HomePage, LibraryPage } from "../pages";
+import { HomePage, LibraryPage } from '../pages';
 
 export type Route = '/' | '/library';
 
 export class Router {
   private readonly routes: Record<Route, () => HTMLElement> = {
     '/': () => new HomePage().render(),
-    '/library': () => new LibraryPage().render()
+    '/library': () => new LibraryPage().render(),
   };
 
   private readonly onRouteChange: (page: HTMLElement, route: Route) => void;
@@ -15,13 +15,13 @@ export class Router {
 
     globalThis.addEventListener('popstate', () => {
       this.renderCurrentPage();
-    })
+    });
   }
 
   private createPage(route: Route): HTMLElement {
     return this.routes[route]();
   }
-  
+
   private getCurrentRoute(): Route {
     return globalThis.location.pathname === '/library' ? '/library' : '/';
   }
@@ -33,7 +33,7 @@ export class Router {
     this.onRouteChange(page, route);
   }
 
-    public render(): HTMLElement {
+  public render(): HTMLElement {
     const route = this.getCurrentRoute();
 
     return this.createPage(route);
@@ -46,5 +46,4 @@ export class Router {
 
     this.renderCurrentPage();
   }
-
 }

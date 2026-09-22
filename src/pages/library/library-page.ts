@@ -1,4 +1,4 @@
-import { getLibraryPageView } from "./library-page.view";
+import { getLibraryPageView } from './library-page.view';
 
 export class LibraryPage {
   public render(): HTMLElement {

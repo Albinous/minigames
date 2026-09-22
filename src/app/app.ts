@@ -4,14 +4,14 @@ import { AuthDialog } from '../components/dialogs/auth/auth-dialog';
 
 export class App {
   public render(): void {
-    const authDialog = new AuthDialog();  
+    const authDialog = new AuthDialog();
     const header = new Header(
       (mode) => {
         authDialog.open(mode);
       },
       (route) => {
-        router.navigate(route)
-      }
+        router.navigate(route);
+      },
     );
     const router = new Router((page, route) => {
       const currentPage = document.querySelector('main');

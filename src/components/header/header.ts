@@ -8,9 +8,7 @@ export class Header {
   private readonly onAuthOpen: (mode: AuthMode) => void;
   private readonly onNavigate: (route: Route) => void;
 
-  constructor(
-    onAuthOpen: (mode: AuthMode) => void,
-    onNavigate: (route: Route) => void) {
+  constructor(onAuthOpen: (mode: AuthMode) => void, onNavigate: (route: Route) => void) {
     this.onAuthOpen = onAuthOpen;
     this.onNavigate = onNavigate;
   }
@@ -85,7 +83,7 @@ export class Header {
 
       this.onNavigate(route);
       this.setActiveRoute(route);
-    })
+    });
   }
 
   public setActiveRoute(route: Route) {
@@ -109,9 +107,7 @@ export class Header {
     this.bindAuthButtons(header);
     this.bindNavLinks(header);
 
-    this.setActiveRoute(
-      globalThis.location.pathname === '/library' ? '/library' : '/',
-  );
+    this.setActiveRoute(globalThis.location.pathname === '/library' ? '/library' : '/');
 
     return header;
   }

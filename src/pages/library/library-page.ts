@@ -74,13 +74,13 @@ export class LibraryPage {
   private createSorting(): HTMLElement {
     const container = createContainer('library-sort');
     const button = this.createSortButton();
+    const options = this.createSortOptions()
 
-    container.append(button);
-
+    container.append(button, options);
     return container
   }
 
-  private createSortButton(): HTMLElement {
+  private createSortButton(): HTMLButtonElement {
     const selectedSort = this.sortOptions.find(option => option.value === this.sortSelected);
     const buttonText = selectedSort?.label;
       const sortingButton = createElement('button', {
@@ -89,6 +89,23 @@ export class LibraryPage {
     });
 
     return sortingButton;
+  }
+
+  private createSortOptions(): HTMLElement {
+    const container = createContainer('library-sort__options')
+    for (const option of this.sortOptions) {
+      const sortOption = createElement('button', {
+        className: 'library-sort__option',
+        text: option.label,
+        attributes: {
+          'data-sort': option.value
+        }
+      });
+
+      container.append(sortOption);
+    }
+
+    return container;
   }
 
   private bindCategoryEvents(main: HTMLElement): void {

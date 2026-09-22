@@ -15,16 +15,16 @@ export function getHeaderView(): string {
             <nav class="nav">
               <ul class="nav-menu">
                 <li class="nav-menu__item">
-                  <a href="/" class="nav-menu__link active">Home</a>
+                  <a href="/" class="nav-menu__link active" data-route="/">Home</a>
                 </li>
                 <li class="nav-menu__item">
-                  <a href="/" class="nav-menu__link">Library</a>
+                  <a href="/" class="nav-menu__link" data-route="/library">Library</a>
                 </li>
                 <li class="nav-menu__item">
-                  <a href="/" class="nav-menu__link">Tournaments</a>
+                  <a href="/" class="nav-menu__link" data-route="/">Tournaments</a>
                 </li>
                 <li class="nav-menu__item">
-                  <a href="/" class="nav-menu__link">Community</a>
+                  <a href="/" class="nav-menu__link" data-route="/">Community</a>
                 </li>
               </ul>
             </nav>

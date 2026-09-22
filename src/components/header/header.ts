@@ -1,12 +1,17 @@
 import { Logo } from '../logo';
 import { getHeaderView } from './header.view';
 import type { AuthMode } from '../dialogs/auth/auth-dialog.types';
+import type { Route } from '../../app/router';
 
 export class Header {
   private readonly onAuthOpen: (mode: AuthMode) => void;
+  private readonly onNavigate: (route: Route) => void;
 
-  constructor(onAuthOpen: (mode: AuthMode) => void) {
+  constructor(
+    onAuthOpen: (mode: AuthMode) => void,
+    onNavigate: (route: Route) => void) {
     this.onAuthOpen = onAuthOpen;
+    this.onNavigate = onNavigate;
   }
 
   private addLogo(header: HTMLElement): void {
@@ -64,6 +69,23 @@ export class Header {
     });
   }
 
+  private bindNavLinks(header: HTMLElement): void {
+    const links = header.querySelector('.nav-menu');
+
+    links?.addEventListener('click', (event) => {
+      const target = event.target as HTMLElement;
+      const link = target.closest<HTMLAnchorElement>('[data-route]');
+
+      if (!link) return;
+
+      event.preventDefault();
+
+      const route = link.dataset.route as Route;
+
+      return this.onNavigate(route);
+    })
+  }
+
   public render(): HTMLElement {
     const header = document.createElement('header');
 
@@ -73,6 +95,7 @@ export class Header {
     this.addLogo(header);
     this.bindMenuEvents(header);
     this.bindAuthButtons(header);
+    this.bindNavLinks(header);
 
     return header;
   }

@@ -1,13 +1,13 @@
 type ElementOptions = {
-  className?: string,
-  text?: string,
-  attributes?: Record<string, string>
-}
+  className?: string;
+  text?: string;
+  attributes?: Record<string, string>;
+};
 
 export function createElement<K extends keyof HTMLElementTagNameMap>(
   tagname: K,
-  options: ElementOptions = {}
-):HTMLElementTagNameMap[K] {
+  options: ElementOptions = {},
+): HTMLElementTagNameMap[K] {
   const element = document.createElement(tagname);
 
   if (options.className) {

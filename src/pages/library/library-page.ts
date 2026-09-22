@@ -1,8 +1,17 @@
 import './library-page.scss';
 import categoriesJson from '../../data/categories.json';
 import { createElement, createContainer } from '../../shared';
+import type { SortOption } from './library-page.types';
 
 export class LibraryPage {
+  private readonly sortOptions: {
+    value: SortOption, label: string
+  }[] = [
+    { value: 'rating-asc', label: 'Rating ↑'},
+    { value: 'rating-desc', label: 'Rating ↓'},
+    { value: 'name-asc', label: 'Name A→Z'},
+    { value: 'name-desc', label: 'Name Z→A'}
+  ]
   private createSection(): HTMLElement {
     const section = createElement('section', { className: 'library' });
     const container = createContainer('container');

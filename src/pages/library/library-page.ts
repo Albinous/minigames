@@ -1,7 +1,10 @@
 import './library-page.scss';
 import categoriesJson from '../../data/categories.json';
+import gameCardJson from '../../data/all-games-seed.json';
 import { createElement, createContainer } from '../../shared';
 import type { SortOption } from './library-page.types';
+import { GameCard } from '../../components';
+import type { IGame } from '../../core';
 
 export class LibraryPage {
   private readonly sortOptions: {
@@ -13,14 +16,19 @@ export class LibraryPage {
     { value: 'name-asc', label: 'Name A→Z' },
     { value: 'name-desc', label: 'Name Z→A' },
   ];
+
   private sortSelected: SortOption = 'rating-desc';
+  private readonly gamesPerPage: number = 6;
+  private currentPage: number = 1;
+
   private createSection(): HTMLElement {
     const section = createElement('section', { className: 'library' });
     const container = createContainer('container');
     const header = this.createHeader();
     const controls = this.createControls();
+    const gameCards = this.createGameCards();
 
-    container.append(header, controls);
+    container.append(header, controls, gameCards);
     section.append(container);
 
     return section;
@@ -118,6 +126,27 @@ export class LibraryPage {
     return this.sortOptions.some((option) => option.value === value);
   }
 
+  private createGameCards(): HTMLElement {
+    const container = createContainer('game-cards');
+    const gameData = gameCardJson.data;
+
+    const gamesOnPage = this.getGamesPerPage(gameData, this.currentPage);
+
+    for (const game of gamesOnPage) {
+      const gameCard = new GameCard(game);
+      container.append(gameCard.render());
+    }
+
+    return container;
+  }
+
+  private getGamesPerPage(games: IGame[], page: number): IGame[] {
+    const start = (page - 1) * this.gamesPerPage;
+    const end = this.gamesPerPage + start;
+
+    return games.slice(start, end);
+  }
+
   private bindSortButtonEvents(main: HTMLElement): void {
     const sortContainer = main.querySelector('.library-sort');
     const sortButton = main.querySelector('.library-sort__btn');
@@ -139,9 +168,10 @@ export class LibraryPage {
       if (!optionSelected) return;
 
       const sort = optionSelected.dataset.sort;
-      if (!sort) return;
 
-      this.sortSelected = sort as SortOption;
+      if (!sort || !this.isSortOption(sort)) return;
+
+      this.sortSelected = sort;
 
       const sortButton = sortContainer.querySelector<HTMLButtonElement>('.library-sort__btn');
       if (sortButton) {

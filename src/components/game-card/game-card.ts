@@ -1,6 +1,7 @@
 import './games-card.scss';
 import { createContainer, createElement } from '../../shared';
 import type { IGame } from '../../core';
+import { Rating } from '../rating';
 
 export class GameCard {
 
@@ -15,12 +16,55 @@ export class GameCard {
     const img = createElement('img', {
       className: 'game-card__img',
       attributes: {
-        src: `${this.game.cardImage}`
+        src: this.game.cardImage
       }
     });
-    const cardInfo = createContainer('game-card__info');
+    const cardInfo = this.createCardInfo();
+    const stats = this.createStats();
 
-    container.append(img, cardInfo);
+    container.append(img, cardInfo, stats);
+
+    return container;
+  }
+
+  private createCardInfo(): HTMLElement {
+    const container = createContainer('game-card__info');
+    const cardHeader = this.createHeader();
+    const description = createElement('p', {
+      className: 'game-card__descr',
+      text: this.game.shortDescription
+    })
+
+    container.append(cardHeader, description);
+
+    return container;
+  }
+
+  private createHeader(): HTMLElement {
+    const container = createContainer('game-card__header');
+    const title = createElement('h3', {
+      className: 'game-card__title',
+      text: this.game.name
+    });
+    const category = createElement('span', {
+      className: 'game-card__category',
+      text: this.game.category
+    });
+    const price = createElement('h4', {
+      className: 'game-card__price',
+      text: this.game.price
+    });
+
+    container.append(title, category, price);
+
+    return container;
+  }
+
+  private createStats(): HTMLElement {
+    const container = createContainer('game-card__stats');
+    const rating = new Rating(this.game.rating);
+
+    container.append(rating.render());
 
     return container;
   }

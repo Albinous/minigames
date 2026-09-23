@@ -15,7 +15,9 @@ export class LibraryPage {
     { value: 'name-asc', label: 'Name A→Z' },
     { value: 'name-desc', label: 'Name Z→A' },
   ];
+  
   private sortSelected: SortOption = 'rating-desc';
+
   private createSection(): HTMLElement {
     const section = createElement('section', { className: 'library' });
     const container = createContainer('container');

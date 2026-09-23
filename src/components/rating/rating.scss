@@ -1,0 +1,17 @@
+.game-stat {
+  display: flex;
+  align-items: center;
+  gap: $size-05;
+
+  span {
+    font-size: $size-2;
+    font-weight: $font-weight-bold;
+
+    @include tablet {
+      font-size: 14px;
+    }
+    @include tablet {
+      font-size: 12px;
+    }
+  }
+}

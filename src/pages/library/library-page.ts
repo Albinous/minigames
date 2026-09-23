@@ -115,7 +115,7 @@ export class LibraryPage {
   }
 
   private isSortOption(value: string): value is SortOption {
-    return this.sortOptions.some(option => option.value === value);
+    return this.sortOptions.some((option) => option.value === value);
   }
 
   private bindSortButtonEvents(main: HTMLElement): void {

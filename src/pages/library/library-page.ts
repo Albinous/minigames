@@ -154,8 +154,9 @@ export class LibraryPage {
     const container = createContainer('library-pagination');
     const previousButton = this.createArrowButton('prev', 'Previous', arrowLeftIcon);
     const nextButton = this.createArrowButton('next', 'Next', arrowRightIcon);
+    const pageButtons = this.createPageButtons();
 
-    container.append(previousButton, nextButton);
+    container.append(previousButton, pageButtons, nextButton);
     return container;
   }
 
@@ -171,12 +172,25 @@ export class LibraryPage {
       className: 'library-pagination__icon',
       attributes: {
         src: iconSource,
-        alt: 'arrow-back',
+        alt: '',
       },
     });
     button.append(icon);
 
     return button;
+  }
+
+  private createPageButtons(): HTMLElement {
+        const pageButtons = createContainer('library-pagination__pages');
+
+    const pageSum = Math.ceil(gameCardJson.meta.totalItems / this.gamesPerPage);
+
+    for (let index = 1; index <= pageSum; index++) {
+      const pageButton = this.createPageButton(index);
+      pageButtons.append(pageButton)
+    }
+
+    return pageButtons;
   }
 
   private createPageButton(page: number): HTMLButtonElement {

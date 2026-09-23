@@ -162,15 +162,15 @@ export class LibraryPage {
   }
 
   private createArrowButton(type: ArrowType, label: string, iconSource: string): HTMLButtonElement {
+    const isDisabled =
+      (type === 'prev' && this.currentPage === 1) ||
+      (type === 'next' && this.currentPage === this.pageSum);
     const button = createElement('button', {
       className: `btn btn-secondary library-pagination__arrow library-pagination__arrow-${type}`,
       attributes: {
         type: 'button',
         'aria-label': `${label} page`,
-        disabled: `${
-          (type === 'prev' && `${this.currentPage === 1}`) ||
-          (type === 'next' && `${this.currentPage === this.pageSum}`)
-        }`,
+        disabled: isDisabled,
       },
     });
     const icon = createElement('img', {

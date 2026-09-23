@@ -123,14 +123,20 @@
       height: 40px;
       border-radius: $corner-full;
       background-color: $color-white;
+
+      &:not(:disabled):hover {
+        background-color: $color-surface;
+      }
     }
 
     &__arrow {
       padding: 0;
 
-      &[disabled='true'] {
+      &:disabled {
         border: 2px solid $color-outline;
         background-color: $color-bg;
+        cursor: not-allowed;
+        opacity: 0.5;
       }
     }
 

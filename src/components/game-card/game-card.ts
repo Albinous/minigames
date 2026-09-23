@@ -64,10 +64,19 @@ export class GameCard {
 
   private createStats(): HTMLElement {
     const container = createContainer('game-card__stats');
+    const stats = createContainer('game-card__stats')
     const rating = new GameStat({icon: starIcon, value: this.game.rating, className: 'rating'});
     const likes = new GameStat({icon: likeIcon, value: formatLikesCount(this.game.likesCount), className: 'likes'});
+    const buttonDetails = createElement('button', {
+      className: 'btn btn-primary game-card__btn',
+      text: 'Details',
+      attributes: {
+        type: 'button'
+      }
+    })
 
-    container.append(rating.render(), likes.render());
+    stats.append(rating.render(), likes.render());
+    container.append(stats, buttonDetails)
 
     return container;
   }

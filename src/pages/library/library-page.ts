@@ -1,7 +1,9 @@
 import './library-page.scss';
 import categoriesJson from '../../data/categories.json';
+import gameCardJson from '../../data/all-games-seed.json';
 import { createElement, createContainer } from '../../shared';
 import type { SortOption } from './library-page.types';
+import { GameCard } from '../../components';
 
 export class LibraryPage {
   private readonly sortOptions: {
@@ -19,8 +21,9 @@ export class LibraryPage {
     const container = createContainer('container');
     const header = this.createHeader();
     const controls = this.createControls();
+    const gameCards = this.createGameCards();
 
-    container.append(header, controls);
+    container.append(header, controls, gameCards);
     section.append(container);
 
     return section;
@@ -115,7 +118,19 @@ export class LibraryPage {
   }
 
   private isSortOption(value: string): value is SortOption {
-    return this.sortOptions.some((option) => option.value === value);
+    return this.sortOptions.some(option => option.value === value);
+  }
+
+  private createGameCards(): HTMLElement {
+    const container = createContainer('game-cards')
+    const gameData = gameCardJson.data;
+
+    for (const game of gameData) {
+      const gameCard = new GameCard(game);
+      container.append(gameCard.render());
+    }
+
+    return container;
   }
 
   private bindSortButtonEvents(main: HTMLElement): void {
@@ -139,9 +154,10 @@ export class LibraryPage {
       if (!optionSelected) return;
 
       const sort = optionSelected.dataset.sort;
-      if (!sort) return;
 
-      this.sortSelected = sort as SortOption;
+      if (!sort || !this.isSortOption(sort)) return;
+
+      this.sortSelected = sort;
 
       const sortButton = sortContainer.querySelector<HTMLButtonElement>('.library-sort__btn');
       if (sortButton) {

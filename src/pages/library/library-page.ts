@@ -15,7 +15,7 @@ export class LibraryPage {
     { value: 'name-asc', label: 'Name A→Z' },
     { value: 'name-desc', label: 'Name Z→A' },
   ];
-  
+
   private sortSelected: SortOption = 'rating-desc';
 
   private createSection(): HTMLElement {
@@ -120,11 +120,11 @@ export class LibraryPage {
   }
 
   private isSortOption(value: string): value is SortOption {
-    return this.sortOptions.some(option => option.value === value);
+    return this.sortOptions.some((option) => option.value === value);
   }
 
   private createGameCards(): HTMLElement {
-    const container = createContainer('game-cards')
+    const container = createContainer('game-cards');
     const gameData = gameCardJson.data;
 
     for (const game of gameData) {

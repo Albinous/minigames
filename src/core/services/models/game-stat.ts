@@ -1,5 +1,5 @@
 export interface IGameStatOptions {
   icon: string;
-  value: number;
+  value: string;
   className?: string;
 }

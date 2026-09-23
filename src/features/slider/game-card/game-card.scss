@@ -1,7 +1,7 @@
 @use '../../../styles/tokens' as *;
 @use '../../../styles/mixins' as *;
 
-.game-card {
+.slider-game-card {
   position: relative;
   overflow: hidden;
   border: 2.5px solid $color-on-primary;

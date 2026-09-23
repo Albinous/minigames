@@ -1,1 +1,87 @@
 @use '../../styles/components/game-stat';
+@use '../../styles/mixins' as *;
+@use '../../styles/tokens' as *;
+
+.game {
+  &-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: $size-3;
+  }
+  &-card {
+    display: flex;
+    height: 200px;
+    border: 2.5px solid $color-on-primary;
+    box-shadow: $shadow-level-1;
+    border-radius: $corner-large;
+    overflow: hidden;
+
+    &__img {
+      width: 320px;
+      object-fit: cover;
+    }
+
+    &__info {
+      display: flex;
+      flex-direction: column;
+      gap: 17.5px;
+      padding: $size-2;
+    }
+
+    &__header {
+      @include flex-between;
+
+      &-left {
+        display: flex;
+        align-items: center;
+        gap: $size-2;
+      }
+    }
+
+    &__stats {
+      @include flex-between;
+    }
+
+    &__title {
+      font-size: $size-3;
+    }
+
+    &__category {
+      background-color: $color-secondary;
+      font-weight: $font-weight-bold;
+      font-size: 12px;
+      border: 1.5px solid $color-on-primary;
+      padding: 2.5px 6.5px;
+      border-radius: $corner-extra-large;
+    }
+
+    &__price {
+      font-size: $size-3;
+      color: $color-price-free;
+    }
+
+    &__descr {
+      font-weight: $font-weight-medium;
+      font-size: $size-2;
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 3;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: $color-on-bg;
+    }
+
+    &__stats {
+      display: flex;
+      align-items: center;
+      gap: $size-3;
+    }
+  }
+
+  &-stat {
+    span {
+      color: $color-on-primary;
+    }
+  }
+}

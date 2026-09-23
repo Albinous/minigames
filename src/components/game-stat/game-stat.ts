@@ -1,10 +1,10 @@
-import type { IGameStatOptions } from "../../core";
-import { createElement } from "../../shared";
+import type { IGameStatOptions } from '../../core';
+import { createElement } from '../../shared';
 
 export class GameStat {
   private readonly options: IGameStatOptions;
   constructor(options: IGameStatOptions) {
-    this.options = options
+    this.options = options;
   }
 
   public render(): HTMLElement {

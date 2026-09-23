@@ -3,12 +3,12 @@ import { formatLikesCount } from '../../../shared';
 
 export function getGameCardView(game: IGame, isActive: boolean): string {
   return `
-        <div class="game-card ${isActive ? 'active' : ''}">
-          <img src="${game.cardImage}" alt="${game.name}" class="game-card__img" />
-          <div class="game-card__content">
-            <h3 class="game-card__title">${game.name}</h3>
-            <div class="game-card__stats">
-              <div class="game-card__stat game-card__rating">
+        <div class="slider-game-card ${isActive ? 'active' : ''}">
+          <img src="${game.cardImage}" alt="${game.name}" class="slider-game-card__img" />
+          <div class="slider-game-card__content">
+            <h3 class="slider-game-card__title">${game.name}</h3>
+            <div class="slider-game-card__stats">
+              <div class="slider-game-card__stat slider-game-card__rating">
                 <svg
                   width="24"
                   height="24"
@@ -23,7 +23,7 @@ export function getGameCardView(game: IGame, isActive: boolean): string {
                 </svg>
                 <span>${game.rating}</span>
               </div>
-              <div class="game-card__stat game-card__likes">
+              <div class="slider-game-card__stat slider-game-card__likes">
                 <svg
                   width="20"
                   height="19"

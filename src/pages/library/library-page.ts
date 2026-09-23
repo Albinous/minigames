@@ -7,6 +7,7 @@ import { GameCard } from '../../components';
 import type { IGame } from '../../core';
 import arrowLeftIcon from '../../assets/icons/pagination_backward.svg';
 import arrowRightIcon from '../../assets/icons/pagination_forward.svg';
+import { setActiveElement } from '../../shared/utils/set-active-element';
 
 export class LibraryPage {
   private readonly sortOptions: {
@@ -202,6 +203,7 @@ export class LibraryPage {
       text: `${page}`,
       attributes: {
         type: 'button',
+        'data-page': `${page}`,
       },
     });
 
@@ -210,6 +212,23 @@ export class LibraryPage {
     }
 
     return button;
+  }
+
+  private bindPaginationEvents(main: HTMLElement): void {
+    const pagesContainer = main.querySelector('.library-pagination__pages');
+    if (!pagesContainer) return;
+
+    pagesContainer.addEventListener('click', (event) => {
+      const target = event.target as HTMLElement;
+      const button = target.closest<HTMLButtonElement>('[data-page]');
+
+      if (!button) return;
+
+      const pageButtons = pagesContainer.querySelectorAll<HTMLButtonElement>(
+        '.library-pagination__page',
+      );
+      setActiveElement(pageButtons, button);
+    });
   }
 
   private bindSortButtonEvents(main: HTMLElement): void {
@@ -278,6 +297,7 @@ export class LibraryPage {
     this.bindCategoryEvents(main);
     this.bindSortButtonEvents(main);
     this.bindSortOptionsEvents(main);
+    this.bindPaginationEvents(main);
 
     return main;
   }

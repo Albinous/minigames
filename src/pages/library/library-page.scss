@@ -124,8 +124,13 @@
       border-radius: $corner-full;
       background-color: $color-white;
 
-      &:not(:disabled):hover {
+      &:not(.active):hover {
         background-color: $color-surface;
+      }
+
+      &:active {
+        background-color: $color-on-primary;
+        color: $color-white;
       }
     }
 

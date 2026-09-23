@@ -29,7 +29,7 @@ export class LibraryPage {
     const header = this.createHeader();
     const controls = this.createControls();
     const gameCards = this.createGameCards();
-    const pagination = this.createPagination()
+    const pagination = this.createPagination();
 
     container.append(header, controls, gameCards, pagination);
     section.append(container);
@@ -152,30 +152,27 @@ export class LibraryPage {
 
   private createPagination(): HTMLElement {
     const container = createContainer('library-pagination');
-    const previousButton = this.createArrowButton('prev', 'Previous', arrowLeftIcon)
-    const nextButton = this.createArrowButton('next', 'Next', arrowRightIcon)
+    const previousButton = this.createArrowButton('prev', 'Previous', arrowLeftIcon);
+    const nextButton = this.createArrowButton('next', 'Next', arrowRightIcon);
 
-    container.append(previousButton, nextButton)
+    container.append(previousButton, nextButton);
     return container;
   }
 
-  private createArrowButton(
-    type: string,
-    label: string,
-    iconSource: string): HTMLButtonElement {
-        const button = createElement('button', {
+  private createArrowButton(type: string, label: string, iconSource: string): HTMLButtonElement {
+    const button = createElement('button', {
       className: `library-pagination__arrow library-pagination__arrow-${type}`,
-        attributes: {
-    type: 'button',
-    'aria-label': `${label} page`,
-  },
+      attributes: {
+        type: 'button',
+        'aria-label': `${label} page`,
+      },
     });
     const icon = createElement('img', {
       className: 'library-pagination__icon',
       attributes: {
         src: iconSource,
-        alt: 'arrow-back'
-      }
+        alt: 'arrow-back',
+      },
     });
     button.append(icon);
 
@@ -187,8 +184,8 @@ export class LibraryPage {
       className: 'library-pagination__page',
       text: `${page}`,
       attributes: {
-        type: 'button'
-      }
+        type: 'button',
+      },
     });
 
     return button;

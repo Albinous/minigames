@@ -214,6 +214,23 @@ export class LibraryPage {
     return button;
   }
 
+  private setCurrentPage(main: HTMLElement, page: number) {
+    this.currentPage = page;
+
+    const pageButtons = main.querySelectorAll<HTMLButtonElement>('.library-pagination__page');
+    const pageButton = main.querySelector<HTMLButtonElement>(
+      `[data-page="${CSS.escape(String(this.currentPage))}"]`,
+    );
+    if (!pageButton) return;
+
+    setActiveElement(pageButtons, pageButton);
+  }
+
+  private setDisabledArrow(previous: HTMLButtonElement, next: HTMLButtonElement) {
+    previous.disabled = this.currentPage === 1;
+    next.disabled = this.currentPage === this.pageSum;
+  }
+
   private bindPaginationEvents(main: HTMLElement): void {
     const pagesContainer = main.querySelector('.library-pagination');
     if (!pagesContainer) return;
@@ -221,25 +238,37 @@ export class LibraryPage {
     pagesContainer.addEventListener('click', (event) => {
       if (!(event.target instanceof Element)) return;
       const button = event.target.closest<HTMLButtonElement>('[data-page]');
-
       if (!button) return;
 
-      const pageButtons = pagesContainer.querySelectorAll<HTMLButtonElement>(
-        '.library-pagination__page',
-      );
-      setActiveElement(pageButtons, button);
-
-      const pageNumber = button.dataset.page
-
+      const pageNumber = Number(button.dataset.page);
       if (!pageNumber) return;
 
-      this.currentPage = Number(pageNumber);
-      const previousButton = pagesContainer.querySelector<HTMLButtonElement>('.library-pagination__arrow-prev');
-      const nextButton = pagesContainer.querySelector<HTMLButtonElement>('.library-pagination__arrow-next');
+      this.setCurrentPage(main, pageNumber);
+
+      const previousButton = pagesContainer.querySelector<HTMLButtonElement>(
+        '.library-pagination__arrow-prev',
+      );
+      const nextButton = pagesContainer.querySelector<HTMLButtonElement>(
+        '.library-pagination__arrow-next',
+      );
 
       if (!previousButton || !nextButton) return;
-      previousButton.disabled = this.currentPage === 1;
-      nextButton.disabled = this.currentPage === this.pageSum
+      this.setDisabledArrow(previousButton, nextButton);
+    });
+  }
+
+  private bindPaginationArrowEvents(main: HTMLElement): void {
+    const previousButton = main.querySelector<HTMLButtonElement>('.library-pagination__arrow-prev');
+    const nextButton = main.querySelector<HTMLButtonElement>('.library-pagination__arrow-next');
+    if (!previousButton || !nextButton) return;
+
+    previousButton.addEventListener('click', () => {
+      this.setCurrentPage(main, this.currentPage - 1);
+      this.setDisabledArrow(previousButton, nextButton);
+    });
+    nextButton.addEventListener('click', () => {
+      this.setCurrentPage(main, this.currentPage + 1);
+      this.setDisabledArrow(previousButton, nextButton);
     });
   }
 
@@ -292,7 +321,7 @@ export class LibraryPage {
 
       if (!button) return;
 
-      const buttons = categories.querySelectorAll<HTMLButtonElement>('[data-category');
+      const buttons = categories.querySelectorAll<HTMLButtonElement>('[data-category]');
 
       for (const categoryButton of buttons) {
         categoryButton.classList.toggle('active', categoryButton === button);
@@ -310,6 +339,7 @@ export class LibraryPage {
     this.bindSortButtonEvents(main);
     this.bindSortOptionsEvents(main);
     this.bindPaginationEvents(main);
+    this.bindPaginationArrowEvents(main);
 
     return main;
   }

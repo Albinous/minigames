@@ -4,6 +4,7 @@ import gameCardJson from '../../data/all-games-seed.json';
 import { createElement, createContainer } from '../../shared';
 import type { SortOption } from './library-page.types';
 import { GameCard } from '../../components';
+import type { IGame } from '../../core';
 
 export class LibraryPage {
   private readonly sortOptions: {
@@ -17,6 +18,8 @@ export class LibraryPage {
   ];
 
   private sortSelected: SortOption = 'rating-desc';
+  private readonly gamesPerPage: number = 6;
+  private currentPage: number = 1;
 
   private createSection(): HTMLElement {
     const section = createElement('section', { className: 'library' });
@@ -127,12 +130,21 @@ export class LibraryPage {
     const container = createContainer('game-cards');
     const gameData = gameCardJson.data;
 
-    for (const game of gameData) {
+    const gamesOnPage = this.getGamesPerPage(gameData, this.currentPage);
+
+    for (const game of gamesOnPage) {
       const gameCard = new GameCard(game);
       container.append(gameCard.render());
     }
 
     return container;
+  }
+
+  private getGamesPerPage(games: IGame[], page: number): IGame[] {
+    const start = (page - 1) * this.gamesPerPage;
+    const end = this.gamesPerPage + start;
+
+    return games.slice(start, end);
   }
 
   private bindSortButtonEvents(main: HTMLElement): void {

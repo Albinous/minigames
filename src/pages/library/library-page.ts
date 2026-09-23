@@ -99,9 +99,14 @@ export class LibraryPage {
         className: 'library-sort__option',
         text: option.label,
         attributes: {
+          type: 'button',
           'data-sort': option.value,
         },
       });
+
+      if (option.value === this.sortSelected) {
+        sortOption.classList.add('active');
+      }
 
       container.append(sortOption);
     }
@@ -109,10 +114,21 @@ export class LibraryPage {
     return container;
   }
 
-  private bindSortOptionsEvents(main: HTMLElement): void {
-    const sortOptions = main.querySelector('.library-sort__options');
+  private bindSortButtonEvents(main: HTMLElement): void {
+    const sortContainer = main.querySelector('.library-sort');
+    const sortButton = main.querySelector('.library-sort__btn');
 
-    sortOptions?.addEventListener('click', (event) => {
+    if (!sortContainer || !sortButton) return;
+
+    sortButton?.addEventListener('click', () => {
+      sortContainer.classList.toggle('is-open');
+    });
+  }
+
+  private bindSortOptionsEvents(main: HTMLElement): void {
+    const sortContainer = main.querySelector('.library-sort');
+
+    sortContainer?.addEventListener('click', (event) => {
       const target = event.target as HTMLElement;
       const optionSelected = target.closest<HTMLButtonElement>('[data-sort]');
 
@@ -123,12 +139,19 @@ export class LibraryPage {
 
       this.sortSelected = sort as SortOption;
 
-      const options = sortOptions.querySelectorAll<HTMLButtonElement>('.library-sort__option');
+      const sortButton = sortContainer.querySelector<HTMLButtonElement>('.library-sort__btn');
+      if (sortButton) {
+        sortButton.textContent = `Sort by: ${optionSelected.textContent}`;
+      }
+
+      const options = sortContainer.querySelectorAll<HTMLButtonElement>('.library-sort__option');
 
       for (const option of options) {
-        option.classList.toggle('active', option === optionSelected)
+        option.classList.toggle('active', option === optionSelected);
       }
-    })
+
+      sortContainer.classList.remove('is-open');
+    });
   }
 
   private bindCategoryEvents(main: HTMLElement): void {
@@ -154,6 +177,7 @@ export class LibraryPage {
     main.append(section);
 
     this.bindCategoryEvents(main);
+    this.bindSortButtonEvents(main);
     this.bindSortOptionsEvents(main);
 
     return main;

@@ -55,6 +55,10 @@
 
   &-sort {
     position: relative;
+
+    &.is-open .library-sort__options {
+      display: flex;
+    }
     &__btn {
       padding: 11.5px 50px 11.5px 18px;
       border-radius: $corner-extra-large;
@@ -65,8 +69,8 @@
     }
 
     &__options {
+      display: none;
       position: absolute;
-      display: flex;
       flex-direction: column;
       top: 100%;
       left: 0;

@@ -1,7 +1,9 @@
 import './games-card.scss';
-import { createContainer, createElement } from '../../shared';
+import { createContainer, createElement, formatLikesCount } from '../../shared';
 import type { IGame } from '../../core';
-import { Rating } from '../rating';
+import { GameStat } from '../game-stat';
+import starIcon from '../../assets/icons/star.svg';
+import likeIcon from '../../assets/icons/like.svg';
 
 export class GameCard {
 
@@ -62,9 +64,10 @@ export class GameCard {
 
   private createStats(): HTMLElement {
     const container = createContainer('game-card__stats');
-    const rating = new Rating(this.game.rating);
+    const rating = new GameStat({icon: starIcon, value: this.game.rating, className: 'rating'});
+    const likes = new GameStat({icon: likeIcon, value: formatLikesCount(this.game.likesCount), className: 'likes'});
 
-    container.append(rating.render());
+    container.append(rating.render(), likes.render());
 
     return container;
   }

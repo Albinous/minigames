@@ -215,12 +215,12 @@ export class LibraryPage {
   }
 
   private bindPaginationEvents(main: HTMLElement): void {
-    const pagesContainer = main.querySelector('.library-pagination__pages');
+    const pagesContainer = main.querySelector('.library-pagination');
     if (!pagesContainer) return;
 
     pagesContainer.addEventListener('click', (event) => {
-      const target = event.target as HTMLElement;
-      const button = target.closest<HTMLButtonElement>('[data-page]');
+      if (!(event.target instanceof Element)) return;
+      const button = event.target.closest<HTMLButtonElement>('[data-page]');
 
       if (!button) return;
 
@@ -228,6 +228,18 @@ export class LibraryPage {
         '.library-pagination__page',
       );
       setActiveElement(pageButtons, button);
+
+      const pageNumber = button.dataset.page
+
+      if (!pageNumber) return;
+
+      this.currentPage = Number(pageNumber);
+      const previousButton = pagesContainer.querySelector<HTMLButtonElement>('.library-pagination__arrow-prev');
+      const nextButton = pagesContainer.querySelector<HTMLButtonElement>('.library-pagination__arrow-next');
+
+      if (!previousButton || !nextButton) return;
+      previousButton.disabled = this.currentPage === 1;
+      nextButton.disabled = this.currentPage === this.pageSum
     });
   }
 
@@ -246,8 +258,8 @@ export class LibraryPage {
     const sortContainer = main.querySelector('.library-sort');
 
     sortContainer?.addEventListener('click', (event) => {
-      const target = event.target as HTMLElement;
-      const optionSelected = target.closest<HTMLButtonElement>('[data-sort]');
+      if (!(event.target instanceof Element)) return;
+      const optionSelected = event.target.closest<HTMLButtonElement>('[data-sort]');
 
       if (!optionSelected) return;
 
@@ -275,8 +287,8 @@ export class LibraryPage {
   private bindCategoryEvents(main: HTMLElement): void {
     const categories = main.querySelector('.library-categories');
     categories?.addEventListener('click', (event) => {
-      const target = event.target as HTMLElement;
-      const button = target.closest<HTMLButtonElement>('[data-category]');
+      if (!(event.target instanceof Element)) return;
+      const button = event.target.closest<HTMLButtonElement>('[data-category]');
 
       if (!button) return;
 

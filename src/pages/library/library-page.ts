@@ -114,13 +114,17 @@ export class LibraryPage {
     return container;
   }
 
+  private isSortOption(value: string): value is SortOption {
+    return this.sortOptions.some(option => option.value === value);
+  }
+
   private bindSortButtonEvents(main: HTMLElement): void {
     const sortContainer = main.querySelector('.library-sort');
     const sortButton = main.querySelector('.library-sort__btn');
 
     if (!sortContainer || !sortButton) return;
 
-    sortButton?.addEventListener('click', () => {
+    sortButton.addEventListener('click', () => {
       sortContainer.classList.toggle('is-open');
     });
   }

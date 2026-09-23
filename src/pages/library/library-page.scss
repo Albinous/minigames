@@ -1,0 +1,115 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/mixins' as *;
+
+.library {
+  &-header {
+    padding: $size-5 0;
+  }
+
+  &-title {
+    font-size: $size-7;
+    margin-bottom: $size-1;
+  }
+
+  &-text {
+    line-height: 1;
+  }
+
+  &-controls {
+    @include flex-between;
+    padding: $size-2 0;
+  }
+
+  &-categories {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    white-space: nowrap;
+    gap: $size-2;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  &-category {
+    padding: 6px 14px;
+    flex: 0 0 auto;
+    border-radius: $corner-extra-large;
+
+    &:hover {
+      background-color: $color-surface;
+    }
+
+    &:active {
+      background-color: $color-primary;
+    }
+
+    &.active {
+      background-color: $color-primary;
+    }
+  }
+
+  &-sort {
+    position: relative;
+
+    &.is-open .library-sort__options {
+      display: flex;
+    }
+    &__btn {
+      padding: 11.5px 50px 11.5px 18px;
+      border-radius: $corner-extra-large;
+
+      &:hover {
+        background-color: $color-surface;
+      }
+    }
+
+    &__options {
+      display: none;
+      position: absolute;
+      flex-direction: column;
+      top: 100%;
+      left: 0;
+      max-width: 100%;
+      width: 100%;
+      border: 2px solid $color-on-primary;
+      border-radius: $corner-medium;
+      box-shadow: 4px 4px 0 0 #000;
+      background-color: $color-white;
+      overflow: hidden;
+    }
+
+    &__option {
+      text-align-last: left;
+      padding: 16px 16px 16px 38px;
+      font-size: 14px;
+      font-weight: $font-weight-medium;
+      color: $color-on-primary;
+      border-top: 1px solid $color-outline;
+      border-bottom: 1px solid $color-outline;
+      border-radius: 0;
+      &.active {
+        font-weight: $font-weight-bold;
+        border-top: 1px solid $color-on-primary;
+        border-bottom: 1px solid $color-on-primary;
+        background-color: $color-primary;
+        position: relative;
+
+        &::before {
+          content: '';
+          position: absolute;
+          left: 16px;
+          top: 50%;
+          transform: translate(0, -50%);
+          background-image: url(../../assets/icons/check.svg);
+          width: 14px;
+          height: 14px;
+        }
+      }
+    }
+  }
+}

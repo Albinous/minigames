@@ -112,4 +112,38 @@
       }
     }
   }
+
+  &-pagination {
+    @include flex-center;
+    gap: $size-2;
+    padding-top: $size-5;
+
+    button {
+      width: 40px;
+      height: 40px;
+      border-radius: $corner-full;
+      background-color: $color-white;
+    }
+
+    &__arrow {
+      padding: 0;
+
+      &[disabled='true'] {
+        border: 2px solid $color-outline;
+        background-color: $color-bg;
+      }
+    }
+
+    &__pages {
+      display: flex;
+      gap: $size-2;
+    }
+
+    &__page {
+      &.active {
+        background-color: $color-on-primary;
+        color: $color-white;
+      }
+    }
+  }
 }

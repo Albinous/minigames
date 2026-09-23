@@ -2,11 +2,11 @@ import './library-page.scss';
 import categoriesJson from '../../data/categories.json';
 import gameCardJson from '../../data/all-games-seed.json';
 import { createElement, createContainer } from '../../shared';
-import type { SortOption } from './library-page.types';
+import type { ArrowType, SortOption } from './library-page.types';
 import { GameCard } from '../../components';
 import type { IGame } from '../../core';
-import arrowLeftIcon from '../../assets/icons/arrow_back.svg';
-import arrowRightIcon from '../../assets/icons/arrow_forward.svg';
+import arrowLeftIcon from '../../assets/icons/pagination_backward.svg';
+import arrowRightIcon from '../../assets/icons/pagination_forward.svg';
 
 export class LibraryPage {
   private readonly sortOptions: {
@@ -22,6 +22,7 @@ export class LibraryPage {
   private sortSelected: SortOption = 'rating-desc';
   private readonly gamesPerPage: number = 6;
   private currentPage: number = 1;
+  private readonly pageSum: number = Math.ceil(gameCardJson.meta.totalItems / this.gamesPerPage);
 
   private createSection(): HTMLElement {
     const section = createElement('section', { className: 'library' });
@@ -160,12 +161,16 @@ export class LibraryPage {
     return container;
   }
 
-  private createArrowButton(type: string, label: string, iconSource: string): HTMLButtonElement {
+  private createArrowButton(type: ArrowType, label: string, iconSource: string): HTMLButtonElement {
     const button = createElement('button', {
-      className: `library-pagination__arrow library-pagination__arrow-${type}`,
+      className: `btn btn-secondary library-pagination__arrow library-pagination__arrow-${type}`,
       attributes: {
         type: 'button',
         'aria-label': `${label} page`,
+        disabled: `${
+          (type === 'prev' && `${this.currentPage === 1}`) ||
+          (type === 'next' && `${this.currentPage === this.pageSum}`)
+        }`,
       },
     });
     const icon = createElement('img', {
@@ -181,13 +186,11 @@ export class LibraryPage {
   }
 
   private createPageButtons(): HTMLElement {
-        const pageButtons = createContainer('library-pagination__pages');
+    const pageButtons = createContainer('library-pagination__pages');
 
-    const pageSum = Math.ceil(gameCardJson.meta.totalItems / this.gamesPerPage);
-
-    for (let index = 1; index <= pageSum; index++) {
+    for (let index = 1; index <= this.pageSum; index++) {
       const pageButton = this.createPageButton(index);
-      pageButtons.append(pageButton)
+      pageButtons.append(pageButton);
     }
 
     return pageButtons;
@@ -195,12 +198,16 @@ export class LibraryPage {
 
   private createPageButton(page: number): HTMLButtonElement {
     const button = createElement('button', {
-      className: 'library-pagination__page',
+      className: 'btn btn-secondary library-pagination__page',
       text: `${page}`,
       attributes: {
         type: 'button',
       },
     });
+
+    if (button.textContent === `${this.currentPage}`) {
+      button.classList.add('active');
+    }
 
     return button;
   }

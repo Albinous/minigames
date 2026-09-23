@@ -5,6 +5,8 @@ import { createElement, createContainer } from '../../shared';
 import type { SortOption } from './library-page.types';
 import { GameCard } from '../../components';
 import type { IGame } from '../../core';
+import arrowLeftIcon from '../../assets/icons/arrow_back.svg';
+import arrowRightIcon from '../../assets/icons/arrow_forward.svg';
 
 export class LibraryPage {
   private readonly sortOptions: {
@@ -27,8 +29,9 @@ export class LibraryPage {
     const header = this.createHeader();
     const controls = this.createControls();
     const gameCards = this.createGameCards();
+    const pagination = this.createPagination()
 
-    container.append(header, controls, gameCards);
+    container.append(header, controls, gameCards, pagination);
     section.append(container);
 
     return section;
@@ -145,6 +148,50 @@ export class LibraryPage {
     const end = this.gamesPerPage + start;
 
     return games.slice(start, end);
+  }
+
+  private createPagination(): HTMLElement {
+    const container = createContainer('library-pagination');
+    const previousButton = this.createArrowButton('prev', 'Previous', arrowLeftIcon)
+    const nextButton = this.createArrowButton('next', 'Next', arrowRightIcon)
+
+    container.append(previousButton, nextButton)
+    return container;
+  }
+
+  private createArrowButton(
+    type: string,
+    label: string,
+    iconSource: string): HTMLButtonElement {
+        const button = createElement('button', {
+      className: `library-pagination__arrow library-pagination__arrow-${type}`,
+        attributes: {
+    type: 'button',
+    'aria-label': `${label} page`,
+  },
+    });
+    const icon = createElement('img', {
+      className: 'library-pagination__icon',
+      attributes: {
+        src: iconSource,
+        alt: 'arrow-back'
+      }
+    });
+    button.append(icon);
+
+    return button;
+  }
+
+  private createPageButton(page: number): HTMLButtonElement {
+    const button = createElement('button', {
+      className: 'library-pagination__page',
+      text: `${page}`,
+      attributes: {
+        type: 'button'
+      }
+    });
+
+    return button;
   }
 
   private bindSortButtonEvents(main: HTMLElement): void {

@@ -3,21 +3,46 @@
 
 .library {
   &-header {
-    padding: $size-5 0;
+    padding-bottom: $size-5;
+
+    @include tablet {
+      padding: $size-9 0 $size-3;
+    }
+
+    @include mobile {
+      padding: $size-8 0 $size-2;
+    }
   }
 
   &-title {
     font-size: $size-7;
     margin-bottom: $size-1;
+
+    @include tablet {
+      font-size: 36px;
+    }
+
+    @include mobile {
+      font-size: $size-3;
+    }
   }
 
   &-text {
-    line-height: 1;
+    line-height: 1.1;
+    font-weight: $font-weight-medium;
+
+    @include tablet {
+      font-size: $size-2;
+    }
   }
 
   &-controls {
     @include flex-between;
     padding: $size-2 0;
+
+    @include tablet {
+      gap: $size-2;
+    }
   }
 
   &-categories {
@@ -33,12 +58,20 @@
     &::-webkit-scrollbar {
       display: none;
     }
+
+    @include tablet {
+      gap: $size-1;
+    }
   }
 
   &-category {
-    padding: 6px 14px;
+    padding: 8px 15px;
     flex: 0 0 auto;
     border-radius: $corner-extra-large;
+
+    @include tablet {
+      padding: 6px 14px;
+    }
 
     &:hover {
       background-color: $color-surface;
@@ -56,12 +89,26 @@
   &-sort {
     position: relative;
 
+    @include mobile {
+      width: 100%;
+    }
+
     &.is-open .library-sort__options {
       display: flex;
     }
     &__btn {
-      padding: 11.5px 50px 11.5px 18px;
+      padding: 13.5px 52px 13.5px 19px;
       border-radius: $corner-extra-large;
+
+      @include tablet {
+        padding: 10.5px 46px 10.5px 14px;
+      }
+
+      @include mobile {
+        width: 100%;
+        display: block;
+        text-align: left;
+      }
 
       &:hover {
         background-color: $color-surface;
@@ -118,6 +165,15 @@
     gap: $size-2;
     padding-top: $size-5;
 
+    @include tablet {
+      gap: $size-1;
+      padding-bottom: $size-2;
+    }
+
+    @include mobile {
+      padding: 24px 0 8px 0;
+    }
+
     button {
       width: 40px;
       height: 40px;
@@ -148,6 +204,10 @@
     &__pages {
       display: flex;
       gap: $size-2;
+
+      @include tablet {
+        gap: $size-1;
+      }
     }
 
     &__page {

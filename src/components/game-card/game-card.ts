@@ -54,7 +54,7 @@ export class GameCard {
   }
 
   private createStats(): HTMLElement {
-    const container = createContainer('game-card__stats');
+    const container = createContainer('game-card__end');
     const stats = createContainer('game-card__stats');
     const rating = new GameStat({
       icon: starIcon,

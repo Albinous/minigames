@@ -189,7 +189,9 @@ export class LibraryPage {
   private createPageButtons(): HTMLElement {
     const pageButtons = createContainer('library-pagination__pages');
 
-    for (let index = 1; index <= this.pageSum; index++) {
+    const maxVisiblePages = window.innerWidth < 768 ? 3 : this.pageSum;
+
+    for (let index = 1; index <= Math.min(maxVisiblePages, this.pageSum); index++) {
       const pageButton = this.createPageButton(index);
       pageButtons.append(pageButton);
     }

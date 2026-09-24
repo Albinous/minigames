@@ -11,17 +11,20 @@
     @include tablet {
       grid-template-columns: repeat(1, 1fr);
     }
+
+    @include mobile {
+      gap: $size-2;
+    }
   }
   &-card {
     display: flex;
-    height: 200px;
     border: 2.5px solid $color-on-primary;
     box-shadow: $shadow-level-1;
     border-radius: $corner-large;
     overflow: hidden;
 
-    @include tablet {
-      height: 152px;
+    @include mobile {
+      flex-direction: column;
     }
 
     &__img {
@@ -31,16 +34,25 @@
       @include tablet {
         width: 270px;
       }
+
+      @include mobile {
+        width: 100%;
+      }
     }
 
     &__info {
       display: flex;
       flex-direction: column;
       gap: 17.5px;
-      padding: $size-2;
+      padding: 14px;
 
       @include tablet {
         gap: 11.5px;
+      }
+
+      @include mobile {
+        gap: 14px;
+        position: relative;
       }
     }
 
@@ -51,11 +63,22 @@
         display: flex;
         align-items: center;
         gap: $size-2;
+
+        @include mobile {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: $size-1;
+        }
       }
     }
 
-    &__stats {
+    &__end {
       @include flex-between;
+
+      @include mobile {
+        flex-direction: column;
+        gap: 16px;
+      }
     }
 
     &__title {
@@ -87,6 +110,12 @@
       @include tablet {
         font-size: 20px;
       }
+
+      @include mobile {
+        position: absolute;
+        top: 139px;
+        right: 16px;
+      }
     }
 
     &__descr {
@@ -110,6 +139,27 @@
       display: flex;
       align-items: center;
       gap: $size-3;
+
+      @include tablet {
+        gap: $size-2;
+      }
+
+      @include mobile {
+        justify-content: flex-start;
+        width: 100%;
+      }
+    }
+
+    &__btn {
+      @include tablet {
+        padding: 6px 14px;
+      }
+
+      @include mobile {
+        width: 100%;
+        font-size: 14px;
+        padding: 10px;
+      }
     }
   }
 
@@ -117,9 +167,5 @@
     span {
       color: $color-on-primary;
     }
-  }
-
-  &__btn {
-    padding: 6px 14px;
   }
 }

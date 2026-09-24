@@ -4,7 +4,7 @@ import closeIconImg from '../../../assets/icons/close.svg';
 import gameDetailsData from '../../../data/game-tukoni-forest-keepers.json';
 
 export class GameDialog {
-  private dialogElement: HTMLElement | undefined;
+  private dialogElement: HTMLDialogElement | undefined;
   private readonly game: IGameDetails = gameDetailsData.data;
 
   private createHero(): HTMLElement {
@@ -39,12 +39,11 @@ export class GameDialog {
   }
 
   public open(): void {
-    const root = document.querySelector('.game-dialog');
-    if (!root) return;
-    root.classList.add('open'); 
+    if (!this.dialogElement) return;
+    this.dialogElement.showModal();
   }
 
-  public render(): HTMLElement {
+  public render(): HTMLDialogElement {
     const root = createElement('dialog', {
       className: 'game-dialog',
     });

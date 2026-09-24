@@ -3,7 +3,7 @@
 
 .library {
   &-header {
-    padding: $size-5 0;
+    padding-bottom: $size-5;
   }
 
   &-title {
@@ -12,7 +12,7 @@
   }
 
   &-text {
-    line-height: 1;
+    line-height: 1.1;
   }
 
   &-controls {
@@ -36,7 +36,7 @@
   }
 
   &-category {
-    padding: 6px 14px;
+    padding: 8px 15px;
     flex: 0 0 auto;
     border-radius: $corner-extra-large;
 
@@ -60,7 +60,7 @@
       display: flex;
     }
     &__btn {
-      padding: 11.5px 50px 11.5px 18px;
+      padding: 13.5px 52px 13.5px 19px;
       border-radius: $corner-extra-large;
 
       &:hover {

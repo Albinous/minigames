@@ -17,15 +17,23 @@ export class App {
     const gameDialog = new GameDialog();
     const router = new Router(
       () => {
-      gameDialog.open();
-    }, (page, route) => {
-      const currentPage = document.querySelector('main');
+        gameDialog.open();
+      },
+      (page, route) => {
+        const currentPage = document.querySelector('main');
 
-      currentPage?.replaceWith(page);
-      header.setActiveRoute(route);
-    });
+        currentPage?.replaceWith(page);
+        header.setActiveRoute(route);
+      },
+    );
     const footer = new Footer();
 
-    document.body.prepend(header.render(), router.render(), footer.render(), authDialog.render(), gameDialog.render());
+    document.body.prepend(
+      header.render(),
+      router.render(),
+      footer.render(),
+      authDialog.render(),
+      gameDialog.render(),
+    );
   }
 }

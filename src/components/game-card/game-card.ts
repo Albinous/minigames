@@ -29,7 +29,7 @@ export class GameCard {
     const stats = this.createStats();
 
     container.append(cardHeader, description, stats);
-    
+
     return container;
   }
 
@@ -81,7 +81,7 @@ export class GameCard {
 
     buttonDetails.addEventListener('click', () => {
       this.onDetailsClick();
-    })
+    });
 
     return container;
   }

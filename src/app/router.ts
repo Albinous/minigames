@@ -11,7 +11,10 @@ export class Router {
   private readonly onRouteChange: (page: HTMLElement, route: Route) => void;
   private readonly onDetailsClick: () => void;
 
-  constructor(onDetailsClick: () => void, onRouteChange: (page: HTMLElement, route: Route) => void, ) {
+  constructor(
+    onDetailsClick: () => void,
+    onRouteChange: (page: HTMLElement, route: Route) => void,
+  ) {
     this.onRouteChange = onRouteChange;
     this.onDetailsClick = onDetailsClick;
 

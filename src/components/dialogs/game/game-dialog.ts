@@ -6,6 +6,7 @@ import type {
 } from '../../../core/services/models/game-details';
 import closeIconImg from '../../../assets/icons/close.svg';
 import gameDetailsData from '../../../data/game-tukoni-forest-keepers.json';
+import { formatRelativeDate } from '../../../shared/utils/format-relative-date';
 
 export class GameDialog {
   private dialogElement: HTMLDialogElement | undefined;
@@ -145,13 +146,18 @@ export class GameDialog {
 
   private createTopRecordItem(record: ITopRecord): HTMLElement {
     const container = createContainer('game-dialog__record');
+    let topRecordItem;
 
     for (const [key, value] of Object.entries(record)) {
       if (key === 'position') {
-        container.append(this.getTopRecordSpan(key, this.getPositionIcon(value)));
+        topRecordItem = this.getTopRecordSpan(key, this.getPositionIcon(value));
+      } else if (key === 'achievedAt') {
+        topRecordItem = this.getTopRecordSpan('date', formatRelativeDate(value));
+      } else {
+        topRecordItem = this.getTopRecordSpan(key, value);
       }
 
-      container.append(this.getTopRecordSpan(key, value));
+      container.append(topRecordItem);
     }
 
     return container;

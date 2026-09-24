@@ -3,9 +3,7 @@ const relativeTimeFormatter = new Intl.RelativeTimeFormat('en', {
 });
 
 export function formatRelativeDate(date: string): string {
-  const differenceInSeconds = Math.floor(
-    (Date.now() - new Date(date).getTime()) / 1000,
-  );
+  const differenceInSeconds = Math.floor((Date.now() - new Date(date).getTime()) / 1000);
 
   const days = Math.floor(differenceInSeconds / 86_400);
 

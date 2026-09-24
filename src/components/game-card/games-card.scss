@@ -7,6 +7,10 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: $size-3;
+
+    @include tablet {
+      grid-template-columns: repeat(1, 1fr);
+    }
   }
   &-card {
     display: flex;
@@ -16,9 +20,17 @@
     border-radius: $corner-large;
     overflow: hidden;
 
+    @include tablet {
+      height: 152px;
+    }
+
     &__img {
       width: 320px;
       object-fit: cover;
+
+      @include tablet {
+        width: 270px;
+      }
     }
 
     &__info {
@@ -26,6 +38,10 @@
       flex-direction: column;
       gap: 17.5px;
       padding: $size-2;
+
+      @include tablet {
+        gap: 11.5px;
+      }
     }
 
     &__header {
@@ -44,6 +60,10 @@
 
     &__title {
       font-size: $size-3;
+
+      @include tablet {
+        font-size: 20px;
+      }
     }
 
     &__category {
@@ -53,11 +73,20 @@
       border: 1.5px solid $color-on-primary;
       padding: 2.5px 6.5px;
       border-radius: $corner-extra-large;
+
+      @include tablet {
+        line-height: 1;
+        padding: 4px 8px;
+      }
     }
 
     &__price {
       font-size: $size-3;
       color: $color-price-free;
+
+      @include tablet {
+        font-size: 20px;
+      }
     }
 
     &__descr {
@@ -70,6 +99,11 @@
       overflow: hidden;
       text-overflow: ellipsis;
       color: $color-on-bg;
+
+      @include tablet {
+        font-size: 14px;
+        -webkit-line-clamp: 2;
+      }
     }
 
     &__stats {
@@ -83,5 +117,9 @@
     span {
       color: $color-on-primary;
     }
+  }
+
+  &__btn {
+    padding: 6px 14px;
   }
 }

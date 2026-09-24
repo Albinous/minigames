@@ -83,6 +83,27 @@ export class GameDialog {
     return spec;
   }
 
+  private createDialogButtons(): HTMLElement {
+    const container = createContainer('game-dialog__btns');
+    const playNow = this.createDialogBtn('play', 'primary', 'Play Now');
+    const addFavourites = this.createDialogBtn('favourite', 'secondary', 'Add to Favourites');
+
+    container.append(playNow, addFavourites)
+  }
+
+  private createDialogBtn(className: string, buttonType: string, text: string): HTMLButtonElement {
+    const button = createElement('button', {
+      className: `btn btn-${buttonType} game-dialog__btn game-dialog__btn-${className}`,
+      text,
+      attributes: {
+        type: 'button',
+        'aria-label':  `${text}`
+      }
+    });
+
+    return button;
+  }
+
   public open(): void {
     if (!this.dialogElement) return;
     this.dialogElement.showModal();

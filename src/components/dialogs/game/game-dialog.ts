@@ -1,15 +1,11 @@
-import { createContainer, createElement } from "../../../shared";
-import type { IGameDetails } from "../../../core/services/models/game-details";
+import { createContainer, createElement } from '../../../shared';
+import type { IGameDetails } from '../../../core/services/models/game-details';
 import closeIconImg from '../../../assets/icons/close.svg';
+import gameDetailsData from '../../../data/game-tukoni-forest-keepers.json';
 
-export class GameDetails {
-
+export class GameDialog {
   private dialogElement: HTMLElement | undefined;
-  private readonly game: IGameDetails;
-
-  constructor(game: IGameDetails) {
-    this.game = game;
-  }
+  private readonly game: IGameDetails = gameDetailsData.data;
 
   private createHero(): HTMLElement {
     const container = createContainer('game-dialog__hero');
@@ -17,34 +13,40 @@ export class GameDetails {
       className: 'game-dialog__img',
       attributes: {
         src: this.game.heroImage,
-        alt: this.game.name
-      }
+        alt: this.game.name,
+      },
     });
     const closeButton = createElement('button', {
       className: 'game-dialog__close',
       attributes: {
         type: 'button',
-        'aria-label': 'Close'
-      }
+        'aria-label': 'Close',
+      },
     });
 
     const closeIcon = createElement('img', {
       className: 'game-dialog__close-icon',
       attributes: {
         src: closeIconImg,
-        alt: 'close'
-      }
+        alt: 'close',
+      },
     });
 
     closeButton.append(closeIcon);
     container.append(img, closeButton);
 
-    return container
+    return container;
+  }
+
+  public open(): void {
+    const root = document.querySelector('.game-dialog');
+    if (!root) return;
+    root.classList.add('open'); 
   }
 
   public render(): HTMLElement {
     const root = createElement('dialog', {
-      className: 'game-dialog__root'
+      className: 'game-dialog',
     });
 
     this.dialogElement = root;

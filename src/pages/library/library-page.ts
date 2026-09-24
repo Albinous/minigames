@@ -24,6 +24,11 @@ export class LibraryPage {
   private readonly gamesPerPage: number = 6;
   private currentPage: number = 1;
   private readonly pageSum: number = Math.ceil(gameCardJson.meta.totalItems / this.gamesPerPage);
+  private readonly onDetailsClick: () => void;
+
+  constructor(onDetailsClick: () => void) {
+    this.onDetailsClick = onDetailsClick;
+  }
 
   private createSection(): HTMLElement {
     const section = createElement('section', { className: 'library' });
@@ -138,7 +143,7 @@ export class LibraryPage {
     const gamesOnPage = this.getGamesPerPage(gameData, this.currentPage);
 
     for (const game of gamesOnPage) {
-      const gameCard = new GameCard(game);
+      const gameCard = new GameCard(game, this.onDetailsClick);
       container.append(gameCard.render());
     }
 

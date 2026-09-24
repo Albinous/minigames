@@ -1,0 +1,7 @@
+.game-dialog {
+  visibility: hidden;
+
+  &.open {
+    visibility: visible;
+  }
+}

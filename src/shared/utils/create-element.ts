@@ -1,7 +1,7 @@
 type ElementOptions = {
   className?: string;
   text?: string;
-  attributes?: Record<string, string>;
+  attributes?: Record<string, string | boolean>;
 };
 
 export function createElement<K extends keyof HTMLElementTagNameMap>(
@@ -20,7 +20,11 @@ export function createElement<K extends keyof HTMLElementTagNameMap>(
 
   if (options.attributes) {
     for (const [name, value] of Object.entries(options.attributes)) {
-      element.setAttribute(name, value);
+      if (typeof value === 'boolean') {
+        element.toggleAttribute(name, value);
+      } else {
+        element.setAttribute(name, value);
+      }
     }
   }
 

@@ -1,5 +1,9 @@
 import { createContainer, createElement } from '../../../shared';
-import type { IGameDetails } from '../../../core/services/models/game-details';
+import type {
+  IGameDetails,
+  IGameSpecs,
+  ITopRecord,
+} from '../../../core/services/models/game-details';
 import closeIconImg from '../../../assets/icons/close.svg';
 import gameDetailsData from '../../../data/game-tukoni-forest-keepers.json';
 
@@ -40,7 +44,7 @@ export class GameDialog {
 
   private createInfo(): HTMLElement {
     const container = createContainer('game-dialog__info');
-    const title = createElement('h3', {
+    const title = createElement('h2', {
       className: 'game-dialog__title',
       text: this.game.name,
     });
@@ -49,15 +53,17 @@ export class GameDialog {
       text: this.game.fullDescription,
     });
     const specs = this.createSpecs();
+    const buttons = this.createDialogButtons();
+    const topRecords = this.createTopRecords();
 
-    container.append(title, text, specs);
+    container.append(title, text, specs, buttons, topRecords);
 
     return container;
   }
 
   private createSpecs(): HTMLElement {
     const container = createContainer('.game-dialog__specs');
-    const specData = this.game.specs;
+    const specData: IGameSpecs = this.game.specs;
 
     for (const [key, value] of Object.entries(specData)) {
       const specElement = this.createSpec(key, value);
@@ -88,7 +94,9 @@ export class GameDialog {
     const playNow = this.createDialogBtn('play', 'primary', 'Play Now');
     const addFavourites = this.createDialogBtn('favourite', 'secondary', 'Add to Favourites');
 
-    container.append(playNow, addFavourites)
+    container.append(playNow, addFavourites);
+
+    return container;
   }
 
   private createDialogBtn(className: string, buttonType: string, text: string): HTMLButtonElement {
@@ -97,11 +105,69 @@ export class GameDialog {
       text,
       attributes: {
         type: 'button',
-        'aria-label':  `${text}`
-      }
+        'aria-label': `${text}`,
+      },
     });
 
     return button;
+  }
+
+  private createTopRecords(): HTMLElement {
+    const container = createContainer('game-dialog__records');
+    const header = this.createTopRecordsTitle();
+    const records = createContainer('game-dialog__records-list');
+    const recordsData = this.game.topRecords;
+
+    for (const record of recordsData) {
+      records.append(this.createTopRecordItem(record));
+    }
+
+    container.append(header, records);
+
+    return container;
+  }
+
+  private createTopRecordsTitle(): HTMLElement {
+    const container = createContainer('game-dialog__records-header');
+    const emoji = createElement('span', {
+      className: 'game-dialog__records-emoji',
+      text: '🏆',
+    });
+    const title = createElement('h3', {
+      className: 'game-dialog__records-title',
+      text: 'Top Records',
+    });
+
+    container.append(emoji, title);
+
+    return container;
+  }
+
+  private createTopRecordItem(record: ITopRecord): HTMLElement {
+    const container = createContainer('game-dialog__record');
+
+    for (const [key, value] of Object.entries(record)) {
+      if (key === 'position') {
+        container.append(this.getTopRecordSpan(key, this.getPositionIcon(value)));
+      }
+
+      container.append(this.getTopRecordSpan(key, value));
+    }
+
+    return container;
+  }
+
+  private getTopRecordSpan(classname: string, value: string) {
+    return createElement('span', {
+      className: `game-dialog__record-${classname}`,
+      text: value,
+    });
+  }
+
+  private getPositionIcon(position: number) {
+    const positionIcons = ['🥇', '🥈', '🥉'];
+
+    return positionIcons[position - 1] ?? String(position);
   }
 
   public open(): void {

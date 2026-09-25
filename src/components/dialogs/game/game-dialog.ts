@@ -129,14 +129,24 @@ export class GameDialog {
   private createDialogButtons(): HTMLElement {
     const container = createContainer('game-dialog__btns');
     const playNow = this.createDialogBtn('play', 'primary', 'Play Now');
-    const addFavourites = this.createDialogBtn('favourite', 'secondary', 'Add to Favourites', likeIconImg);
+    const addFavourites = this.createDialogBtn(
+      'favourite',
+      'secondary',
+      'Add to Favourites',
+      likeIconImg,
+    );
 
     container.append(playNow, addFavourites);
 
     return container;
   }
 
-  private createDialogBtn(className: string, buttonType: string, text: string, icon?: string): HTMLButtonElement {
+  private createDialogBtn(
+    className: string,
+    buttonType: string,
+    text: string,
+    icon?: string,
+  ): HTMLButtonElement {
     const button = createElement('button', {
       className: `btn btn-${buttonType} game-dialog__btn game-dialog__btn-${className}`,
       text,
@@ -189,19 +199,19 @@ export class GameDialog {
 
   private createTopRecordItem(record: ITopRecord): HTMLElement {
     const container = createContainer('game-dialog__record');
-    
+
     const position = this.getTopRecordSpan('position', this.getPositionIcon(record.position));
     const playerName = this.getTopRecordSpan('player', record.playerName);
     const score = this.getTopRecordSpan('score', `${formatTotalScore(record.score)} pts`);
-    const date =  this.getTopRecordSpan('date', formatRelativeDate(record.achievedAt));
+    const date = this.getTopRecordSpan('date', formatRelativeDate(record.achievedAt));
 
     const leftContainer = createContainer('game-dialog__record-left');
     const rightContainer = createContainer('game-dialog__record-right');
 
     leftContainer.append(position, playerName);
-    rightContainer.append(score, date)
+    rightContainer.append(score, date);
 
-      container.append(leftContainer, rightContainer);
+    container.append(leftContainer, rightContainer);
 
     return container;
   }
@@ -212,7 +222,7 @@ export class GameDialog {
     const comments = commentsData.data;
     const title = createElement('h3', {
       className: 'game-dialog__comments-title',
-      text: `Comments(${comments.length})`,
+      text: `Comments (${comments.length})`,
     });
     const form = this.createCommentInput();
 

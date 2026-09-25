@@ -117,11 +117,19 @@
   }
 
   &__records {
-    &-header {
+    &-header,
+    &-list {
       display: flex;
-      align-items: center;
       gap: $size-1;
+    }
+
+    &-header {
       margin-bottom: $size-2;
+      align-items: center;
+    }
+
+    &-list {
+      flex-direction: column;
     }
 
     &-emoji {
@@ -130,6 +138,36 @@
 
     &-title {
       font-size: $font-size-body-medium;
+    }
+  }
+
+  &__record {
+    @include flex-between;
+    border-radius: $size-1;
+    padding: $size-2;
+    background-color: $color-white;
+
+    &-left,
+    &-right {
+      display: flex;
+      align-items: center;
+      gap: $size-2;
+    }
+
+    &-position {
+      font-size: $font-size-label-extra-large;
+    }
+
+    &-player,
+    &-score {
+      font-size: $font-size-label-large;
+      font-weight: $font-weight-bold;
+      color: $color-on-primary;
+    }
+
+    &-date {
+      font-size: $font-size-label-medium;
+      color: $color-on-bg;
     }
   }
 }

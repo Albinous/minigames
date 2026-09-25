@@ -1,16 +1,16 @@
-import { createContainer, createElement } from '../../../shared';
+import { createContainer, createElement, formatRelativeDate } from '../../../shared';
 import type {
   IGameDetails,
   IGameSpecs,
   ITopRecord,
-} from '../../../core/services/models/game-details';
-import closeIconImg from '../../../assets/icons/close.svg';
-import sendIconImg from '../../../assets/icons/send.svg';
-import likeIcon from '../../../assets/icons/like.svg';
-import gameDetailsData from '../../../data/game-tukoni-forest-keepers.json';
-import commentsData from '../../../data/comments-tukoni-forest-keepers.json';
-import { formatRelativeDate } from '../../../shared/utils/format-relative-date';
-import type { IComment } from '../../../core/services/models/comment';
+  IComment
+} from '../../../core';
+import {
+  closeIconImg,
+  likeIconImg,
+  sendIconImg,
+} from '../../../assets/icons';
+import { gameDetailsData, commentsData} from '../../../data';
 
 export class GameDialog {
   private dialogElement: HTMLDialogElement | undefined;
@@ -232,7 +232,7 @@ export class GameDialog {
     const likesIcon = createElement('img', {
       className: 'game-dialog__comment-like',
       attributes: {
-        src: likeIcon,
+        src: likeIconImg,
       },
     });
     const likesCount = createElement('span', {

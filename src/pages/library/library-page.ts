@@ -1,13 +1,10 @@
 import './library-page.scss';
-import categoriesJson from '../../data/categories.json';
-import gameCardJson from '../../data/all-games-seed.json';
-import { createElement, createContainer } from '../../shared';
+import { categoriesJson, gameCardJson } from '../../data';
+import { createElement, createContainer, setActiveElement } from '../../shared';
 import type { ArrowType, SortOption } from './library-page.types';
 import { GameCard } from '../../components';
 import type { IGame } from '../../core';
-import arrowLeftIcon from '../../assets/icons/pagination_backward.svg';
-import arrowRightIcon from '../../assets/icons/pagination_forward.svg';
-import { setActiveElement } from '../../shared/utils/set-active-element';
+import { arrowLeftIcon, arrowRightIcon} from '../../assets/icons';
 
 export class LibraryPage {
   private readonly sortOptions: {

@@ -5,8 +5,12 @@ import type {
   ITopRecord,
 } from '../../../core/services/models/game-details';
 import closeIconImg from '../../../assets/icons/close.svg';
+import sendIconImg from '../../../assets/icons/send.svg';
+import likeIcon from '../../../assets/icons/like.svg';
 import gameDetailsData from '../../../data/game-tukoni-forest-keepers.json';
+import commentsData from '../../../data/comments-tukoni-forest-keepers.json';
 import { formatRelativeDate } from '../../../shared/utils/format-relative-date';
+import type { IComment } from '../../../core/services/models/comment';
 
 export class GameDialog {
   private dialogElement: HTMLDialogElement | undefined;
@@ -56,8 +60,9 @@ export class GameDialog {
     const specs = this.createSpecs();
     const buttons = this.createDialogButtons();
     const topRecords = this.createTopRecords();
+    const comments = this.createComments();
 
-    container.append(title, text, specs, buttons, topRecords);
+    container.append(title, text, specs, buttons, topRecords, comments);
 
     return container;
   }
@@ -161,6 +166,111 @@ export class GameDialog {
     }
 
     return container;
+  }
+
+  private createComments(): HTMLElement {
+    const container = createContainer('game-dialog__comments');
+
+    const comments = commentsData.data;
+    const title = createElement('h3', {
+      className: 'game-dialog__comments-title',
+      text: `Comments(${comments.length})`,
+    });
+    const form = this.createCommentInput();
+
+    container.append(title, form);
+
+    for (const comment of comments) {
+      container.append(this.createCommentItem(comment));
+    }
+
+    return container;
+  }
+
+  private createCommentInput(): HTMLFormElement {
+    const form = createElement('form', {
+      className: 'game-dialog__comments-form',
+    });
+    const author = createElement('div', {
+      className: 'game-dialog__comments-avatar',
+      text: 'U',
+    });
+    const textarea = createElement('textarea', {
+      className: 'game-dialog__comments-textarea',
+      attributes: {
+        placeholder: 'Write a comment...',
+      },
+    });
+    const sendButton = createElement('button', {
+      className: 'game-dialog__comments-send',
+      attributes: {
+        type: 'submit',
+      },
+    });
+    const sendIcon = createElement('img', {
+      className: 'game-dialog__comments-icon',
+      attributes: {
+        src: sendIconImg,
+      },
+    });
+
+    sendButton.append(sendIcon);
+
+    form.append(author, textarea, sendButton);
+
+    return form;
+  }
+
+  private createCommentItem(comment: IComment) {
+    const container = createContainer('game-dialog__comment');
+    const header = this.createCommentHeader(comment);
+    const text = createElement('p', {
+      className: 'game-dialog__comment-text',
+      text: comment.text,
+    });
+    const likes = createContainer('game-dialog__comment__likes');
+    const likesIcon = createElement('img', {
+      className: 'game-dialog__comment-like',
+      attributes: {
+        src: likeIcon,
+      },
+    });
+    const likesCount = createElement('span', {
+      className: 'game-dialog__comment-likes-count',
+      text: `${comment.likesCount}`,
+    });
+
+    if (comment.isLikedByCurrentUser) likesIcon.classList.add('active');
+
+    likes.append(likesIcon, likesCount);
+
+    container.append(header, text, likes);
+
+    return container;
+  }
+
+  private createCommentHeader(comment: IComment) {
+    const container = createContainer('game-dialog__comment-header');
+    const authorLetter = createElement('span', {
+      className: 'game-dialog__comment-author__letter',
+      text: this.getFirstLetterOfUsername(comment.authorName),
+    });
+    const authorName = createElement('h5', {
+      className: 'game-dialog__comment-author',
+      text: comment.authorName,
+    });
+    const date = createElement('span', {
+      className: 'game-dialog__comment-date',
+      text: formatRelativeDate(comment.createdAt),
+    });
+
+    container.append(authorLetter, authorName, date);
+
+    return container;
+  }
+
+  private getFirstLetterOfUsername(username: string): string {
+    return username[0].toUpperCase();
   }
 
   private getTopRecordSpan(classname: string, value: string) {

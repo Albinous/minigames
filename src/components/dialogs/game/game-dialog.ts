@@ -266,6 +266,11 @@ export class GameDialog {
 
     form.append(author, textarea, sendButton);
 
+    textarea.addEventListener('input', () => {
+      textarea.style.height = 'auto';
+      textarea.style.height = `${Math.min(textarea.scrollHeight, 88)}px`;
+    });
+
     return form;
   }
 

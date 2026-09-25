@@ -5,6 +5,7 @@ import {
   firstLetterToUppercase,
   formatLikesCount,
   formatRelativeDate,
+  formatTotalScore,
 } from '../../../shared';
 import type { IGameDetails, IGameSpecs, ITopRecord, IComment } from '../../../core';
 import { closeIconImg, likeIconImg, sendIconImg, starIcon } from '../../../assets/icons';
@@ -195,8 +196,8 @@ export class GameDialog {
         topRecordItem = this.getTopRecordSpan(key, this.getPositionIcon(value));
       } else if (key === 'achievedAt') {
         topRecordItem = this.getTopRecordSpan('date', formatRelativeDate(value));
-      } else {
-        topRecordItem = this.getTopRecordSpan(key, value);
+      } else if (key === 'score') {
+        topRecordItem = this.getTopRecordSpan(key, `${formatTotalScore(value)} pts`)
       }
 
       container.append(topRecordItem);

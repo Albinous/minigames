@@ -1,5 +1,5 @@
 import type { ILeaderboard } from '../../core';
-import { formatLikesCount } from '../../shared';
+import { formatLikesCount, formatTotalScore } from '../../shared';
 import './leaderboard.scss';
 
 export function getLeaderBoardView(players: ILeaderboard[]): string {
@@ -62,8 +62,4 @@ function getPlayerInitials(playerName: string): string | undefined {
   const letters = playerName.match(/[A-Z]/g);
   if (!letters) return;
   return letters.join('');
-}
-
-function formatTotalScore(totalScore: number): string {
-  return totalScore.toLocaleString('en-IN');
 }

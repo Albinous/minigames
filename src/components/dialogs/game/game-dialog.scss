@@ -106,16 +106,30 @@
     box-shadow: $shadow-level-1;
     padding: 12.5px 0;
 
-    // &-favourite {
-    //   position: relative;
-    //   &::before {
-    //     content: '';
-    //     position: absolute;
-    //     top: 50%;
-    //     left: 54px;
-    //     transform: translateY(-50%);
-    //     background-image: url(../../../assets/icons/like.svg);
-    //   }
-    // }
+    &-favourite {
+      display: flex;
+      align-items: center;
+      gap: $size-1;
+      svg path {
+        fill: $color-on-primary;
+      }
+    }
+  }
+
+  &__records {
+    &-header {
+      display: flex;
+      align-items: center;
+      gap: $size-1;
+      margin-bottom: $size-2;
+    }
+
+    &-emoji {
+      font-size: $font-size-body-large;
+    }
+
+    &-title {
+      font-size: $font-size-body-medium;
+    }
   }
 }

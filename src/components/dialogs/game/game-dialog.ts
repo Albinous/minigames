@@ -189,19 +189,19 @@ export class GameDialog {
 
   private createTopRecordItem(record: ITopRecord): HTMLElement {
     const container = createContainer('game-dialog__record');
-    let topRecordItem;
+    
+    const position = this.getTopRecordSpan('position', this.getPositionIcon(record.position));
+    const playerName = this.getTopRecordSpan('player', record.playerName);
+    const score = this.getTopRecordSpan('score', `${formatTotalScore(record.score)} pts`);
+    const date =  this.getTopRecordSpan('date', formatRelativeDate(record.achievedAt));
 
-    for (const [key, value] of Object.entries(record)) {
-      if (key === 'position') {
-        topRecordItem = this.getTopRecordSpan(key, this.getPositionIcon(value));
-      } else if (key === 'achievedAt') {
-        topRecordItem = this.getTopRecordSpan('date', formatRelativeDate(value));
-      } else if (key === 'score') {
-        topRecordItem = this.getTopRecordSpan(key, `${formatTotalScore(value)} pts`)
-      }
+    const leftContainer = createContainer('game-dialog__record-left');
+    const rightContainer = createContainer('game-dialog__record-right');
 
-      container.append(topRecordItem);
-    }
+    leftContainer.append(position, playerName);
+    rightContainer.append(score, date)
+
+      container.append(leftContainer, rightContainer);
 
     return container;
   }

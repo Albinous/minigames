@@ -52,6 +52,11 @@ p {
   }
 }
 
+span {
+  font-size: 12px;
+  color: $color-on-bg;
+}
+
 ul {
   list-style: none;
 }
@@ -89,7 +94,7 @@ img {
 }
 
 section {
-  padding: 40px 0;
+  padding: $size-5 0;
 
   @include tablet {
     padding: $size-3 0;
@@ -120,7 +125,7 @@ section {
   border: 2px solid $color-on-primary;
   border-radius: $corner-small;
   color: $color-on-primary;
-  font-size: 14px;
+  font-size: $font-size-label-large;
 
   &-primary {
     background-color: $color-primary;
@@ -131,7 +136,7 @@ section {
   }
 
   @include mobile {
-    font-size: 12px;
+    font-size: $font-size-label-medium;
   }
 }
 

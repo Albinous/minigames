@@ -2,6 +2,7 @@ import './game-dialog.scss';
 import {
   createContainer,
   createElement,
+  firstLetterToUppercase,
   formatLikesCount,
   formatRelativeDate,
 } from '../../../shared';
@@ -113,7 +114,7 @@ export class GameDialog {
     const spec = createContainer('game-dialog__spec');
     const specType = createElement('span', {
       className: 'game-dialog__spec-type',
-      text: type,
+      text: firstLetterToUppercase(type),
     });
     const specValue = createElement('h4', {
       className: 'game-dialog__spec-value',
@@ -127,14 +128,14 @@ export class GameDialog {
   private createDialogButtons(): HTMLElement {
     const container = createContainer('game-dialog__btns');
     const playNow = this.createDialogBtn('play', 'primary', 'Play Now');
-    const addFavourites = this.createDialogBtn('favourite', 'secondary', 'Add to Favourites');
+    const addFavourites = this.createDialogBtn('favourite', 'secondary', 'Add to Favourites', likeIconImg);
 
     container.append(playNow, addFavourites);
 
     return container;
   }
 
-  private createDialogBtn(className: string, buttonType: string, text: string): HTMLButtonElement {
+  private createDialogBtn(className: string, buttonType: string, text: string, icon?: string): HTMLButtonElement {
     const button = createElement('button', {
       className: `btn btn-${buttonType} game-dialog__btn game-dialog__btn-${className}`,
       text,
@@ -143,6 +144,13 @@ export class GameDialog {
         'aria-label': `${text}`,
       },
     });
+
+    if (icon) {
+      const wrapper = createElement('div');
+      wrapper.innerHTML = icon;
+      const iconSvg = wrapper.firstElementChild;
+      if (iconSvg) button.prepend(iconSvg);
+    }
 
     return button;
   }

@@ -76,7 +76,46 @@
   }
 
   &__specs {
-    @include flex-center;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    justify-content: center;
     gap: $size-2;
+  }
+
+  &__spec {
+    border: 1px solid $color-outline-variant;
+    border-radius: $corner-small;
+    padding: $size-1 $size-2;
+    box-shadow: 3px 3px 0 0 $color-on-primary;
+    background: $color-white;
+
+    &-value {
+      margin-top: $size-1;
+      font-size: $font-size-label-large;
+    }
+  }
+
+  &__btns {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: $size-2;
+  }
+
+  &__btn {
+    font-size: $font-size-label-extra-large;
+    box-shadow: $shadow-level-1;
+    padding: 12.5px 0;
+
+    // &-favourite {
+    //   position: relative;
+    //   &::before {
+    //     content: '';
+    //     position: absolute;
+    //     top: 50%;
+    //     left: 54px;
+    //     transform: translateY(-50%);
+    //     background-image: url(../../../assets/icons/like.svg);
+    //   }
+    // }
   }
 }

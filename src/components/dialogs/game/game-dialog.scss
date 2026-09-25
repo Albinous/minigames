@@ -170,4 +170,49 @@
       color: $color-on-bg;
     }
   }
+
+  &__comments {
+    display: flex;
+    flex-direction: column;
+    gap: $size-2;
+    &-title {
+      font-size: $font-size-body-medium;
+    }
+
+    &-form {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      align-items: center;
+      gap: $size-2;
+    }
+
+    &-avatar {
+      background-color: $color-primary;
+    }
+
+    &-send {
+      @include flex-center;
+      border: 1.5px solid $color-on-primary;
+      border-radius: $size-1;
+      width: $size-5;
+      height: $size-5;
+      background: $color-bg-footer-low;
+    }
+
+    &-textarea {
+      width: 100%;
+      min-height: 40px;
+      max-height: 88px;
+      resize: none;
+      overflow-y: auto;
+      padding: $size-1 $size-2;
+      border: 2px solid $color-on-primary;
+      border-radius: $corner-medium;
+
+      &::placeholder {
+        font-size: $font-size-body-small;
+        color: $color-text-placeholder;
+      }
+    }
+  }
 }

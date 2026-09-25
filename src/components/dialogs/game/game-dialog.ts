@@ -240,7 +240,7 @@ export class GameDialog {
       className: 'game-dialog__comments-form',
     });
     const author = createElement('div', {
-      className: 'game-dialog__comments-avatar',
+      className: 'game-dialog__comments-avatar username-circle',
       text: 'U',
     });
     const textarea = createElement('textarea', {
@@ -300,7 +300,7 @@ export class GameDialog {
   private createCommentHeader(comment: IComment) {
     const container = createContainer('game-dialog__comment-header');
     const authorLetter = createElement('span', {
-      className: 'game-dialog__comment-author__letter',
+      className: 'game-dialog__comment-author__letter username-circle',
       text: this.getFirstLetterOfUsername(comment.authorName),
     });
     const authorName = createElement('h5', {

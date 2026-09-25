@@ -156,3 +156,12 @@ section {
     }
   }
 }
+
+.username-circle {
+  @include flex-center;
+  font-size: $font-size-label-large;
+  border: 1.5px solid $color-on-primary;
+  border-radius: $corner-extra-large;
+  width: $size-5;
+  height: $size-5;
+}

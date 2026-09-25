@@ -34,7 +34,7 @@ function getPlayerView(player: ILeaderboard): string {
     <tr class="leaderboard-player">
       <td class="leaderboard-player__item leaderboard-player__rank">#${player.rank}</td>
       <td class="leaderboard-player__item leaderboard-player__name">
-        <div class="leaderboard-player__initials">
+        <div class="leaderboard-player__initials username-circle">
           ${getPlayerInitials(player.playerName)}
         </div>
         <h3 class="leaderboard-player__title">

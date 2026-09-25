@@ -195,13 +195,6 @@
     }
 
     &__initials {
-      @include flex-center;
-      font-size: 14px;
-      border: 1.5px solid $color-on-primary;
-      border-radius: $corner-extra-large;
-      width: 40px;
-      height: 40px;
-
       @include tablet {
         font-size: 10px;
         width: 28px;

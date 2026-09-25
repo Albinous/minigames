@@ -1,2 +1,82 @@
+@use '../../../styles/tokens' as *;
+@use '../../../styles/mixins' as *;
+
 .game-dialog {
+  width: 600px;
+  max-width: 100%;
+  height: 90vh;
+  max-height: 90vh;
+  padding: 0;
+  border: 1px solid $color-outline-variant;
+  box-shadow: $shadow-level-3;
+  background: $color-bg;
+  border-radius: $corner-extra-large;
+  margin: auto;
+  overflow: hidden;
+
+  &__content {
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  &::backdrop {
+    background: rgba(30, 27, 58, 0.7);
+  }
+
+  &__hero {
+    position: relative;
+  }
+
+  &__img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+  }
+
+  &__close {
+    position: absolute;
+    top: $size-2;
+    right: $size-2;
+    border: 2px solid $color-on-primary;
+    border-radius: $corner-full;
+    width: $size-5;
+    height: $size-5;
+    box-shadow: 2px 2px 0 0 $color-black;
+    background: $color-white;
+    @include flex-center;
+  }
+
+  &__info {
+    padding: $size-3;
+    display: flex;
+    flex-direction: column;
+    gap: $size-3;
+  }
+
+  &__header {
+    @include flex-between;
+  }
+
+  &__stats {
+    display: flex;
+    gap: $size-2;
+    align-items: center;
+  }
+
+  &__descr {
+    font-size: $size-2;
+    line-height: 1.25;
+  }
+
+  &__specs {
+    @include flex-center;
+    gap: $size-2;
+  }
 }

@@ -4,7 +4,7 @@ import { createElement, createContainer, setActiveElement } from '../../shared';
 import type { ArrowType, SortOption } from './library-page.types';
 import { GameCard } from '../../components';
 import type { IGame } from '../../core';
-import { arrowLeftIcon, arrowRightIcon} from '../../assets/icons';
+import { arrowLeftIcon, arrowRightIcon } from '../../assets/icons';
 
 export class LibraryPage {
   private readonly sortOptions: {

@@ -1,20 +1,28 @@
-import { createContainer, createElement, formatRelativeDate } from '../../../shared';
-import type {
-  IGameDetails,
-  IGameSpecs,
-  ITopRecord,
-  IComment
-} from '../../../core';
+import './game-dialog.scss';
 import {
-  closeIconImg,
-  likeIconImg,
-  sendIconImg,
-} from '../../../assets/icons';
-import { gameDetailsData, commentsData} from '../../../data';
+  createContainer,
+  createElement,
+  formatLikesCount,
+  formatRelativeDate,
+} from '../../../shared';
+import type { IGameDetails, IGameSpecs, ITopRecord, IComment } from '../../../core';
+import { closeIconImg, likeIconImg, sendIconImg, starIcon } from '../../../assets/icons';
+import { gameDetailsData, commentsData } from '../../../data';
+import { GameStat } from '../../game-stat';
 
 export class GameDialog {
   private dialogElement: HTMLDialogElement | undefined;
   private readonly game: IGameDetails = gameDetailsData.data;
+
+  private createContent(): HTMLElement {
+    const container = createContainer('game-dialog__content');
+    const hero = this.createHero();
+    const info = this.createInfo();
+
+    container.append(hero, info);
+
+    return container;
+  }
 
   private createHero(): HTMLElement {
     const container = createContainer('game-dialog__hero');
@@ -49,10 +57,7 @@ export class GameDialog {
 
   private createInfo(): HTMLElement {
     const container = createContainer('game-dialog__info');
-    const title = createElement('h2', {
-      className: 'game-dialog__title',
-      text: this.game.name,
-    });
+    const header = this.createHeader();
     const text = createElement('p', {
       className: 'game-dialog__descr',
       text: this.game.fullDescription,
@@ -62,13 +67,37 @@ export class GameDialog {
     const topRecords = this.createTopRecords();
     const comments = this.createComments();
 
-    container.append(title, text, specs, buttons, topRecords, comments);
+    container.append(header, text, specs, buttons, topRecords, comments);
+
+    return container;
+  }
+
+  private createHeader(): HTMLElement {
+    const container = createContainer('game-dialog__header');
+    const title = createElement('h2', {
+      className: 'game-dialog__title',
+      text: this.game.name,
+    });
+    const stats = createContainer('game-dialog__stats');
+    const rating = new GameStat({
+      icon: starIcon,
+      value: `${this.game.rating}`,
+      className: 'rating',
+    });
+    const likes = new GameStat({
+      icon: likeIconImg,
+      value: `${formatLikesCount(this.game.likesCount)}`,
+      className: 'likes',
+    });
+    stats.append(rating.render(), likes.render());
+
+    container.append(title, stats);
 
     return container;
   }
 
   private createSpecs(): HTMLElement {
-    const container = createContainer('.game-dialog__specs');
+    const container = createContainer('game-dialog__specs');
     const specData: IGameSpecs = this.game.specs;
 
     for (const [key, value] of Object.entries(specData)) {
@@ -298,10 +327,9 @@ export class GameDialog {
 
     this.dialogElement = root;
 
-    const hero = this.createHero();
-    const info = this.createInfo();
+    const content = this.createContent();
 
-    root.append(hero, info);
+    root.append(content);
 
     return root;
   }

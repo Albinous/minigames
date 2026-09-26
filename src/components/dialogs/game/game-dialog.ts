@@ -364,6 +364,11 @@ export class GameDialog {
       if (event.target === this.dialogElement) {
         this.close();
       }
+     });
+
+     this.dialogElement.addEventListener('cancel', (event) => {
+      event.preventDefault();
+      this.close();
      })
   }
 
@@ -374,7 +379,15 @@ export class GameDialog {
 
   public close(): void {
     if (!this.dialogElement) return;
-    this.dialogElement.close();
+
+    this.dialogElement.classList.add('closing');
+
+    this.dialogElement.addEventListener('transitionend', () => {
+      this.dialogElement?.close();
+      this.dialogElement?.classList.remove('closing');
+    },
+    {once: true}
+    )
   }
 
   public render(): HTMLDialogElement {

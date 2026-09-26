@@ -13,6 +13,32 @@
   border-radius: $corner-extra-large;
   margin: auto;
   overflow: hidden;
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  transition: 0.25s ease;
+
+  @starting-style {
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+  }
+
+  &::backdrop {
+    background: rgba(30, 27, 58, 0.7);
+    transition: 0.25s ease;
+
+    @starting-style {
+      background: rgba(30, 27, 58, 0);
+    }
+  }
+
+  &.closing {
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+
+    &::backdrop {
+      background: rgba(30, 27, 58, 0);
+    }
+  }
 
   &__content {
     height: 100%;
@@ -24,10 +50,6 @@
     &::-webkit-scrollbar {
       display: none;
     }
-  }
-
-  &::backdrop {
-    background: rgba(30, 27, 58, 0.7);
   }
 
   &__hero {

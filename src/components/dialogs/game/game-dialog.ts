@@ -156,12 +156,7 @@ export class GameDialog {
       },
     });
 
-    if (icon) {
-      const wrapper = createElement('div');
-      wrapper.innerHTML = icon;
-      const iconSvg = wrapper.firstElementChild;
-      if (iconSvg) button.prepend(iconSvg);
-    }
+    if (icon) this.iconToSvg(likeIconImg, button);
 
     return button;
   }
@@ -207,6 +202,8 @@ export class GameDialog {
 
     const leftContainer = createContainer('game-dialog__record-left');
     const rightContainer = createContainer('game-dialog__record-right');
+
+    date.classList.add('date');
 
     leftContainer.append(position, playerName);
     rightContainer.append(score, date);
@@ -281,21 +278,16 @@ export class GameDialog {
       className: 'game-dialog__comment-text',
       text: comment.text,
     });
-    const likes = createContainer('game-dialog__comment__likes');
-    const likesIcon = createElement('img', {
-      className: 'game-dialog__comment-like',
-      attributes: {
-        src: likeIconImg,
-      },
-    });
-    const likesCount = createElement('span', {
+    const likes = createContainer('game-dialog__comment-likes');
+    const likesIcon = this.iconToSvg(likeIconImg, likes);
+    const likesCount = createElement('h5', {
       className: 'game-dialog__comment-likes-count',
       text: `${comment.likesCount}`,
     });
 
-    if (comment.isLikedByCurrentUser) likesIcon.classList.add('active');
+    if (comment.isLikedByCurrentUser) likesIcon?.classList.add('active');
 
-    likes.append(likesIcon, likesCount);
+    likes.append(likesCount);
 
     container.append(header, text, likes);
 
@@ -304,20 +296,23 @@ export class GameDialog {
 
   private createCommentHeader(comment: IComment) {
     const container = createContainer('game-dialog__comment-header');
+    const author = createContainer('game-dialog__comment-author');
     const authorLetter = createElement('span', {
       className: 'game-dialog__comment-author__letter username-circle',
       text: this.getFirstLetterOfUsername(comment.authorName),
     });
-    const authorName = createElement('h5', {
-      className: 'game-dialog__comment-author',
+    const authorName = createElement('h4', {
+      className: 'game-dialog__comment-author__name',
       text: comment.authorName,
     });
     const date = createElement('span', {
-      className: 'game-dialog__comment-date',
+      className: 'game-dialog__comment-date date',
       text: formatRelativeDate(comment.createdAt),
     });
 
-    container.append(authorLetter, authorName, date);
+    author.append(authorLetter, authorName);
+
+    container.append(author, date);
 
     return container;
   }
@@ -337,6 +332,20 @@ export class GameDialog {
     const positionIcons = ['🥇', '🥈', '🥉'];
 
     return positionIcons[position - 1] ?? String(position);
+  }
+
+  private iconToSvg(icon: string, container: HTMLElement): SVGElement | undefined {
+    if (!icon) return;
+
+    const wrapper = createElement('div');
+    wrapper.innerHTML = icon;
+    const iconSvg = wrapper.firstElementChild;
+    if (iconSvg instanceof SVGElement) {
+      container.prepend(iconSvg);
+      return iconSvg;
+    }
+
+    return;
   }
 
   public open(): void {

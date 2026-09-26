@@ -164,11 +164,6 @@
       font-weight: $font-weight-bold;
       color: $color-on-primary;
     }
-
-    &-date {
-      font-size: $font-size-label-medium;
-      color: $color-on-bg;
-    }
   }
 
   &__comments {
@@ -214,4 +209,85 @@
       }
     }
   }
+
+  &__comment {
+    border-radius: $corner-medium;
+    padding: $size-2;
+    box-shadow: 3px 3px 0 0 $color-on-primary;
+    background: $color-white;
+    display: flex;
+    flex-direction: column;
+    gap: $size-2;
+    &:first-of-type {
+      .game-dialog__comment-author__letter {
+        background-color: $color-avatar-random-3;
+      }
+    }
+
+    &:nth-of-type(2) {
+      .game-dialog__comment-author__letter {
+        background-color: $color-primary;
+      }
+    }
+
+    &:last-of-type {
+      .game-dialog__comment-author__letter {
+        background-color: $color-avatar-random-1;
+      }
+    }
+    &-header {
+      @include flex-between;
+    }
+
+    &-author {
+      display: flex;
+      align-items: center;
+      gap: $size-1;
+
+      &__letter {
+        background-color: $color-primary;
+      }
+
+      &__name {
+        font-size: $font-size-body-small;
+      }
+    }
+    &-text {
+      font-size: $font-size-body-small;
+      line-height: 1.3;
+      color: $color-on-primary;
+    }
+
+    &-likes {
+      display: flex;
+      align-items: center;
+      gap: $size-05;
+
+      svg {
+        width: $size-2;
+        height: $size-2;
+
+        &.active {
+          path {
+            fill: $color-like;
+          }
+        }
+
+        path {
+          fill: $color-on-bg;
+        }
+      }
+    }
+
+    &-likes {
+      span {
+        font-size: $font-size-label-medium;
+      }
+    }
+  }
+}
+
+.date {
+  font-size: $font-size-label-medium;
+  color: $color-on-bg;
 }

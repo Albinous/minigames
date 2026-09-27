@@ -321,6 +321,8 @@
       display: flex;
       align-items: center;
       gap: $size-05;
+      border-radius: $size-small;
+      width: fit-content;
 
       svg {
         width: $size-2;
@@ -334,6 +336,21 @@
 
         path {
           fill: $color-on-bg;
+        }
+      }
+
+      &:hover {
+        padding: $size-05 $size-1;
+        background: $color-surface;
+      }
+
+      &.active {
+        svg path {
+          fill: $color-like;
+        }
+
+        .game-dialog__comment-likes-count {
+          color: $color-like;
         }
       }
     }

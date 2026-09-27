@@ -282,14 +282,19 @@ export class GameDialog {
       className: 'game-dialog__comment-text',
       text: comment.text,
     });
-    const likes = createContainer('game-dialog__comment-likes');
-    const likesIcon = this.iconToSvg(likeIconImg, likes);
+    const likes = createElement('button', {
+      className: 'game-dialog__comment-likes',
+      attributes: {
+        type: 'button'
+      }
+    });
+    this.iconToSvg(likeIconImg, likes);
     const likesCount = createElement('h5', {
       className: 'game-dialog__comment-likes-count',
       text: `${comment.likesCount}`,
     });
 
-    if (comment.isLikedByCurrentUser) likesIcon?.classList.add('active');
+    if (comment.isLikedByCurrentUser) likes.classList.add('active');
 
     likes.append(likesCount);
 
@@ -393,6 +398,19 @@ export class GameDialog {
     });
   }
 
+  private bindLikeComment(): void {
+     if (!this.dialogElement) return;
+     const comment = this.dialogElement.querySelector('.game-dialog__comments');
+     
+     comment?.addEventListener('click', (event) => {
+      if (!(event.target instanceof Element)) return;
+      const button = event.target.closest<HTMLButtonElement>('.game-dialog__comment-likes');
+      if (!button) return;
+    
+      button.classList.toggle('active');
+     })
+  }
+
   public open(): void {
     if (!this.dialogElement) return;
     this.dialogElement.showModal();
@@ -427,6 +445,7 @@ export class GameDialog {
     this.bindCloseButton();
     this.bindDialogEvents();
     this.bindAddFavourites();
+    this.bindLikeComment();
 
     return root;
   }

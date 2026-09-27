@@ -2,6 +2,8 @@ import { getSliderView } from './slider.view';
 import gamesData from '../../data/all-games-seed.json';
 import type { IGame } from '../../core';
 
+const AUTOPLAY_INTERVAL = 4000;
+
 export class Slider {
   private slider: HTMLElement | undefined = undefined;
   private viewport: HTMLElement | undefined = undefined;
@@ -9,6 +11,9 @@ export class Slider {
   private activeIndex: number = 0;
   private games: IGame[];
   private featuredGames: IGame[];
+  private autoplayId: number | undefined = undefined;
+  private autoplayStartedAt = 0;
+  private remainingTime = AUTOPLAY_INTERVAL;
 
   constructor() {
     this.games = gamesData.data;
@@ -84,6 +89,35 @@ export class Slider {
     this.updateCards();
   }
 
+  private startAutoplay(): void {
+    this.autoplayStartedAt = Date.now();
+
+    this.autoplayId = globalThis.setTimeout(() => {
+      this.next();
+      this.remainingTime = AUTOPLAY_INTERVAL;
+      this.startAutoplay();
+    }, this.remainingTime);
+  }
+
+  private stopAutoplay(): void {
+    if (this.autoplayId === undefined) return;
+
+    globalThis.clearTimeout(this.autoplayId);
+    this.autoplayId = undefined;
+
+    const elapsed = Date.now() - this.autoplayStartedAt;
+
+    this.remainingTime = Math.max(this.remainingTime - elapsed, 0);
+  }
+
+  private pauseAutoplay(): void {
+    this.stopAutoplay();
+  }
+
+  private resumeAutoplay(): void {
+    this.startAutoplay();
+  }
+
   private bindEvents() {
     if (!this.slider) return;
     const previousButton = this.slider.querySelector('.games-arrow__previous');
@@ -95,6 +129,14 @@ export class Slider {
 
     nextButton?.addEventListener('click', () => {
       this.next();
+    });
+
+    this.track?.addEventListener('pointerdown', () => {
+      this.pauseAutoplay();
+    });
+
+    this.track?.addEventListener('pointerup', () => {
+      this.resumeAutoplay();
     });
   }
 
@@ -118,6 +160,7 @@ export class Slider {
 
     this.updateCards();
     this.bindEvents();
+    this.startAutoplay();
 
     return this.slider;
   }

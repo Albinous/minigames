@@ -15,6 +15,7 @@ export class Slider {
   private autoplayStartedAt = 0;
   private remainingTime = AUTOPLAY_INTERVAL;
   private swipeStartX = 0;
+  private isDragging = false;
 
   constructor() {
     this.games = gamesData.data;
@@ -149,8 +150,19 @@ export class Slider {
     this.track.addEventListener(
       'pointerdown',
       (event: PointerEvent) => {
+        this.isDragging = false;
         this.swipeStartX = event.clientX;
         this.pauseAutoplay();
+      },
+      { capture: true },
+    );
+
+    this.track.addEventListener(
+      'pointermove',
+      (event: PointerEvent) => {
+        if (Math.abs(event.clientX - this.swipeStartX) >= 10) {
+          this.isDragging = true;
+        }
       },
       { capture: true },
     );
@@ -174,16 +186,32 @@ export class Slider {
 
         this.resetAutoplay();
       },
+      { capture: true },
     );
 
     this.track.addEventListener(
       'pointercancel',
       () => {
+        this.isDragging = false;
         this.resumeAutoplay();
       },
+      { capture: true },
+    );
+
+    this.track.addEventListener(
+      'click',
+      (event: MouseEvent) => {
+        if (!this.isDragging) return;
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        this.isDragging = false;
+      },
+      { capture: true },
     );
   }
-
+  
   public render(): HTMLElement {
     this.slider = document.createElement('section');
 

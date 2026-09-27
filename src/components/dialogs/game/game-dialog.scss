@@ -92,6 +92,16 @@
 
   &__header {
     @include flex-between;
+
+    @include mobile {
+      gap: $size-1;
+    }
+
+    & .game-stat span {
+      @include mobile {
+        font-size: $font-size-label-large;
+      }
+    }
   }
 
   &__title {
@@ -114,6 +124,10 @@
     grid-template-columns: repeat(4, 1fr);
     justify-content: center;
     gap: $size-2;
+
+    @include mobile {
+      grid-template-columns: repeat(2, 1fr);
+    }
   }
 
   &__spec {
@@ -133,6 +147,10 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: $size-2;
+
+    @include mobile {
+      grid-template-columns: 5fr 1fr;
+    }
   }
 
   &__btn {
@@ -155,6 +173,12 @@
       &.active {
         svg path {
           fill: $color-like;
+        }
+      }
+
+      @include mobile {
+        span {
+          display: none;
         }
       }
     }
@@ -196,6 +220,10 @@
       display: flex;
       align-items: center;
       gap: $size-2;
+
+      @include mobile {
+        gap: $size-1;
+      }
     }
 
     &-position {

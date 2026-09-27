@@ -1,0 +1,220 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/mixins' as *;
+
+.library {
+  &-header {
+    padding-bottom: $size-5;
+
+    @include tablet {
+      padding: $size-9 0 $size-3;
+    }
+
+    @include mobile {
+      padding: $size-8 0 $size-2;
+    }
+  }
+
+  &-title {
+    font-size: $size-7;
+    margin-bottom: $size-1;
+
+    @include tablet {
+      font-size: 36px;
+    }
+
+    @include mobile {
+      font-size: $size-3;
+    }
+  }
+
+  &-text {
+    line-height: 1.1;
+    font-weight: $font-weight-medium;
+
+    @include tablet {
+      font-size: $size-2;
+    }
+  }
+
+  &-controls {
+    @include flex-between;
+    padding: $size-2 0;
+
+    @include tablet {
+      gap: $size-2;
+    }
+  }
+
+  &-categories {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    white-space: nowrap;
+    gap: $size-2;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    @include tablet {
+      gap: $size-1;
+    }
+  }
+
+  &-category {
+    padding: 8px 15px;
+    flex: 0 0 auto;
+    border-radius: $corner-extra-large;
+
+    @include tablet {
+      padding: 6px 14px;
+    }
+
+    &:hover {
+      background-color: $color-surface;
+    }
+
+    &:active {
+      background-color: $color-primary;
+    }
+
+    &.active {
+      background-color: $color-primary;
+    }
+  }
+
+  &-sort {
+    position: relative;
+
+    @include mobile {
+      width: 100%;
+    }
+
+    &.is-open .library-sort__options {
+      display: flex;
+    }
+    &__btn {
+      padding: 13.5px 52px 13.5px 19px;
+      border-radius: $corner-extra-large;
+
+      @include tablet {
+        padding: 10.5px 46px 10.5px 14px;
+      }
+
+      @include mobile {
+        width: 100%;
+        display: block;
+        text-align: left;
+      }
+
+      &:hover {
+        background-color: $color-surface;
+      }
+    }
+
+    &__options {
+      display: none;
+      position: absolute;
+      flex-direction: column;
+      top: 100%;
+      left: 0;
+      max-width: 100%;
+      width: 100%;
+      border: 2px solid $color-on-primary;
+      border-radius: $corner-medium;
+      box-shadow: 4px 4px 0 0 #000;
+      background-color: $color-white;
+      overflow: hidden;
+    }
+
+    &__option {
+      text-align-last: left;
+      padding: 16px 16px 16px 38px;
+      font-size: 14px;
+      font-weight: $font-weight-medium;
+      color: $color-on-primary;
+      border-top: 1px solid $color-outline;
+      border-bottom: 1px solid $color-outline;
+      border-radius: 0;
+      &.active {
+        font-weight: $font-weight-bold;
+        border-top: 1px solid $color-on-primary;
+        border-bottom: 1px solid $color-on-primary;
+        background-color: $color-primary;
+        position: relative;
+
+        &::before {
+          content: '';
+          position: absolute;
+          left: 16px;
+          top: 50%;
+          transform: translate(0, -50%);
+          background-image: url(../../assets/icons/check.svg);
+          width: 14px;
+          height: 14px;
+        }
+      }
+    }
+  }
+
+  &-pagination {
+    @include flex-center;
+    gap: $size-2;
+    padding-top: $size-5;
+
+    @include tablet {
+      gap: $size-1;
+      padding-bottom: $size-2;
+    }
+
+    @include mobile {
+      padding: 24px 0 8px 0;
+    }
+
+    button {
+      width: 40px;
+      height: 40px;
+      border-radius: $corner-full;
+      background-color: $color-white;
+
+      &:not(.active):hover {
+        background-color: $color-surface;
+      }
+
+      &:active {
+        background-color: $color-on-primary;
+        color: $color-white;
+      }
+    }
+
+    &__arrow {
+      padding: 0;
+
+      &:disabled {
+        border: 2px solid $color-outline;
+        background-color: $color-bg;
+        cursor: not-allowed;
+        opacity: 0.5;
+      }
+    }
+
+    &__pages {
+      display: flex;
+      gap: $size-2;
+
+      @include tablet {
+        gap: $size-1;
+      }
+    }
+
+    &__page {
+      &.active {
+        background-color: $color-on-primary;
+        color: $color-white;
+      }
+    }
+  }
+}

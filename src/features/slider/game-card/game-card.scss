@@ -1,7 +1,7 @@
 @use '../../../styles/tokens' as *;
 @use '../../../styles/mixins' as *;
 
-.game-card {
+.slider-game-card {
   position: relative;
   overflow: hidden;
   border: 2.5px solid $color-on-primary;
@@ -9,16 +9,12 @@
   box-shadow: $shadow-level-1;
   flex: 0 0 288px;
   height: 384px;
+  transition:
+    flex-basis 0.3s ease,
+    opacity 0.3s ease;
 
-  @include tablet {
-    flex: 0 0 105px;
-    height: 280px;
-    border-radius: $size-2;
-  }
-
-  @include tablet {
-    flex: 0 0 56px;
-    height: 200px;
+  &.near {
+    flex-basis: 218px;
   }
 
   &.active {
@@ -36,9 +32,30 @@
     }
   }
 
+  &.hidden {
+    flex-basis: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  @include tablet {
+    flex: 0 0 105px;
+    height: 280px;
+    border-radius: $size-2;
+  }
+
+  @include tablet {
+    flex: 0 0 56px;
+    height: 200px;
+  }
+
   &__img {
     height: 100%;
     object-fit: cover;
+
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-drag: none;
   }
 
   &__content {
@@ -55,9 +72,15 @@
       rgba(0, 0, 0, 0.85) 46.15%
     );
 
-    @include tablet {
-      opacity: 0;
-    }
+    display: none;
+
+    // @include tablet {
+    //   opacity: 0;
+    // }
+  }
+
+  &.show-info &__content {
+    display: block;
   }
 
   &__title {

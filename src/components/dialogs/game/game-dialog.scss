@@ -198,6 +198,10 @@
 
     &-list {
       flex-direction: column;
+
+      @include mobile {
+        gap: $size-medium;
+      }
     }
 
     &-emoji {
@@ -298,6 +302,10 @@
       &:focus {
         border: 2px solid $color-on-primary;
       }
+
+      @include mobile {
+        max-width: 215px;
+      }
     }
   }
 
@@ -337,6 +345,8 @@
 
       &__letter {
         background-color: $color-primary;
+        width: 28px;
+        height: 28px;
       }
 
       &__name {

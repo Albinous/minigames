@@ -166,7 +166,7 @@ export class GameDialog {
 
     button.append(textElement);
 
-    if (icon) this.iconToSvg(likeIconImg, button)
+    if (icon) this.iconToSvg(likeIconImg, button);
 
     return button;
   }
@@ -262,14 +262,8 @@ export class GameDialog {
         type: 'submit',
       },
     });
-    const sendIcon = createElement('img', {
-      className: 'game-dialog__comments-icon',
-      attributes: {
-        src: sendIconImg,
-      },
-    });
 
-    sendButton.append(sendIcon);
+    this.iconToSvg(sendIconImg, sendButton);
 
     form.append(author, textarea, sendButton);
 
@@ -289,7 +283,7 @@ export class GameDialog {
       text: comment.text,
     });
     const likes = createContainer('game-dialog__comment-likes');
-    const likesIcon = this.iconToSvg(likeIconImg, likes)
+    const likesIcon = this.iconToSvg(likeIconImg, likes);
     const likesCount = createElement('h5', {
       className: 'game-dialog__comment-likes-count',
       text: `${comment.likesCount}`,
@@ -350,8 +344,8 @@ export class GameDialog {
     const wrapper = createElement('div');
     wrapper.innerHTML = icon;
     const iconSvg = wrapper.firstElementChild;
-    if (iconSvg instanceof SVGElement)  {
-      container.prepend(iconSvg); 
+    if (iconSvg instanceof SVGElement) {
+      container.prepend(iconSvg);
       return iconSvg;
     }
 
@@ -359,43 +353,44 @@ export class GameDialog {
   }
 
   private bindCloseButton(): void {
-     if (!this.dialogElement) return;
+    if (!this.dialogElement) return;
     const closeButton = this.dialogElement.querySelector('.game-dialog__close');
 
     closeButton?.addEventListener('click', () => {
       this.close();
-    })
+    });
   }
 
   private bindDialogEvents(): void {
-     if (!this.dialogElement) return;
+    if (!this.dialogElement) return;
 
-     this.dialogElement.addEventListener('click', (event) => {
+    this.dialogElement.addEventListener('click', (event) => {
       if (event.target === this.dialogElement) {
         this.close();
       }
-     });
+    });
 
-     this.dialogElement.addEventListener('cancel', (event) => {
+    this.dialogElement.addEventListener('cancel', (event) => {
       event.preventDefault();
       this.close();
-     })
+    });
   }
 
   private bindAddFavourites(): void {
     if (!this.dialogElement) return;
     const addFavouritesButton = this.dialogElement.querySelector('.game-dialog__btn-favourite');
-    if (!addFavouritesButton) return
+    if (!addFavouritesButton) return;
     const addFavouritesText = addFavouritesButton.querySelector('.game-dialog__btn-text');
-    
 
     addFavouritesButton?.addEventListener('click', () => {
       this.game.isLikedByCurrentUser = !this.game.isLikedByCurrentUser;
       if (addFavouritesText) {
-        addFavouritesText.textContent = this.game.isLikedByCurrentUser ? 'Remove from favourites' : 'Add to Favourites';
+        addFavouritesText.textContent = this.game.isLikedByCurrentUser
+          ? 'Remove from favourites'
+          : 'Add to Favourites';
       }
       addFavouritesButton.classList.toggle('active');
-    })
+    });
   }
 
   public open(): void {
@@ -408,12 +403,14 @@ export class GameDialog {
 
     this.dialogElement.classList.add('closing');
 
-    this.dialogElement.addEventListener('transitionend', () => {
-      this.dialogElement?.close();
-      this.dialogElement?.classList.remove('closing');
-    },
-    {once: true}
-    )
+    this.dialogElement.addEventListener(
+      'transitionend',
+      () => {
+        this.dialogElement?.close();
+        this.dialogElement?.classList.remove('closing');
+      },
+      { once: true },
+    );
   }
 
   public render(): HTMLDialogElement {

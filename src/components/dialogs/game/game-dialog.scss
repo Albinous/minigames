@@ -231,21 +231,40 @@
       width: $size-5;
       height: $size-5;
       background: $color-bg-footer-low;
+
+      &:hover {
+        background-color: $color-tertiary;
+        border: 1.5px solid $color-tertiary;
+      }
+
+      &:disabled {
+        background: $color-outline-variant;
+        border: 1.5px solid $color-outline-variant;
+        opacity: 0.5;
+
+        svg path {
+          fill: $color-on-bg;
+        }
+      }
     }
 
     &-textarea {
-      width: 100%;
+      width: 440px;
       min-height: 40px;
       max-height: 88px;
       resize: none;
       overflow-y: auto;
       padding: $size-1 $size-2;
-      border: 2px solid $color-on-primary;
+      border: 1px solid $color-on-primary;
       border-radius: $corner-medium;
 
       &::placeholder {
         font-size: $font-size-body-small;
         color: $color-text-placeholder;
+      }
+
+      &:focus {
+        border: 2px solid $color-on-primary;
       }
     }
   }

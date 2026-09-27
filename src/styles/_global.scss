@@ -89,7 +89,7 @@ img {
 }
 
 section {
-  padding: 40px 0;
+  padding: $size-5 0;
 
   @include tablet {
     padding: $size-3 0;
@@ -120,7 +120,7 @@ section {
   border: 2px solid $color-on-primary;
   border-radius: $corner-small;
   color: $color-on-primary;
-  font-size: 14px;
+  font-size: $font-size-label-large;
 
   &-primary {
     background-color: $color-primary;
@@ -131,7 +131,7 @@ section {
   }
 
   @include mobile {
-    font-size: 12px;
+    font-size: $font-size-label-medium;
   }
 }
 
@@ -155,4 +155,13 @@ section {
       height: $size-3;
     }
   }
+}
+
+.username-circle {
+  @include flex-center;
+  font-size: $font-size-label-large;
+  border: 1.5px solid $color-on-primary;
+  border-radius: $corner-extra-large;
+  width: $size-5;
+  height: $size-5;
 }

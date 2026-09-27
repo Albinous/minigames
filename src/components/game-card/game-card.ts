@@ -12,9 +12,11 @@ import likeIcon from '../../assets/icons/like.svg';
 
 export class GameCard {
   private readonly game: IGame;
+  private readonly onDetailsClick: () => void;
 
-  constructor(game: IGame) {
+  constructor(game: IGame, onDetailsClick: () => void) {
     this.game = game;
+    this.onDetailsClick = onDetailsClick;
   }
 
   private createCardInfo(): HTMLElement {
@@ -76,6 +78,10 @@ export class GameCard {
 
     stats.append(rating.render(), likes.render());
     container.append(stats, buttonDetails);
+
+    buttonDetails.addEventListener('click', () => {
+      this.onDetailsClick();
+    });
 
     return container;
   }

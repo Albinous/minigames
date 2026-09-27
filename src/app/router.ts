@@ -5,13 +5,18 @@ export type Route = '/' | '/library';
 export class Router {
   private readonly routes: Record<Route, () => HTMLElement> = {
     '/': () => new HomePage().render(),
-    '/library': () => new LibraryPage().render(),
+    '/library': () => new LibraryPage(this.onDetailsClick).render(),
   };
 
   private readonly onRouteChange: (page: HTMLElement, route: Route) => void;
+  private readonly onDetailsClick: () => void;
 
-  constructor(onRouteChange: (page: HTMLElement, route: Route) => void) {
+  constructor(
+    onDetailsClick: () => void,
+    onRouteChange: (page: HTMLElement, route: Route) => void,
+  ) {
     this.onRouteChange = onRouteChange;
+    this.onDetailsClick = onDetailsClick;
 
     globalThis.addEventListener('popstate', () => {
       this.renderCurrentPage();

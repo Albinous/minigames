@@ -3,3 +3,4 @@ export * from './footer';
 export * from './logo';
 export * from './game-card';
 export * from './game-stat';
+export * from './dialogs';

@@ -1,6 +1,7 @@
 import { Header, Footer } from '../components';
 import { Router } from './router';
 import { AuthDialog } from '../components/dialogs/auth/auth-dialog';
+import { GameDialog } from '../components/dialogs/game/game-dialog';
 
 export class App {
   public render(): void {
@@ -13,14 +14,26 @@ export class App {
         router.navigate(route);
       },
     );
-    const router = new Router((page, route) => {
-      const currentPage = document.querySelector('main');
+    const gameDialog = new GameDialog();
+    const router = new Router(
+      () => {
+        gameDialog.open();
+      },
+      (page, route) => {
+        const currentPage = document.querySelector('main');
 
-      currentPage?.replaceWith(page);
-      header.setActiveRoute(route);
-    });
+        currentPage?.replaceWith(page);
+        header.setActiveRoute(route);
+      },
+    );
     const footer = new Footer();
 
-    document.body.prepend(header.render(), router.render(), footer.render(), authDialog.render());
+    document.body.prepend(
+      header.render(),
+      router.render(),
+      footer.render(),
+      authDialog.render(),
+      gameDialog.render(),
+    );
   }
 }

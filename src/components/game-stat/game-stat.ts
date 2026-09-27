@@ -1,5 +1,5 @@
 import type { IGameStatOptions } from '../../core';
-import { createElement } from '../../shared';
+import { createElement, iconToSvg } from '../../shared';
 
 export class GameStat {
   private readonly options: IGameStatOptions;
@@ -12,20 +12,14 @@ export class GameStat {
       className: `game-stat ${this.options.className ?? ''}`,
     });
 
-    const icon = createElement('img', {
-      className: 'game-stat__img',
-      attributes: {
-        src: this.options.icon,
-        alt: '',
-      },
-    });
+    iconToSvg(this.options.icon, stat);
 
     const value = createElement('span', {
       className: 'game-stat__value',
       text: `${this.options.value}`,
     });
 
-    stat.append(icon, value);
+    stat.append(value);
 
     return stat;
   }

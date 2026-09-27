@@ -1,13 +1,10 @@
 import './library-page.scss';
-import categoriesJson from '../../data/categories.json';
-import gameCardJson from '../../data/all-games-seed.json';
-import { createElement, createContainer } from '../../shared';
+import { categoriesJson, gameCardJson } from '../../data';
+import { createElement, createContainer, setActiveElement } from '../../shared';
 import type { ArrowType, SortOption } from './library-page.types';
 import { GameCard } from '../../components';
 import type { IGame } from '../../core';
-import arrowLeftIcon from '../../assets/icons/pagination_backward.svg';
-import arrowRightIcon from '../../assets/icons/pagination_forward.svg';
-import { setActiveElement } from '../../shared/utils/set-active-element';
+import { arrowLeftIcon, arrowRightIcon } from '../../assets/icons';
 
 export class LibraryPage {
   private readonly sortOptions: {
@@ -24,6 +21,11 @@ export class LibraryPage {
   private readonly gamesPerPage: number = 6;
   private currentPage: number = 1;
   private readonly pageSum: number = Math.ceil(gameCardJson.meta.totalItems / this.gamesPerPage);
+  private readonly onDetailsClick: () => void;
+
+  constructor(onDetailsClick: () => void) {
+    this.onDetailsClick = onDetailsClick;
+  }
 
   private createSection(): HTMLElement {
     const section = createElement('section', { className: 'library' });
@@ -138,7 +140,7 @@ export class LibraryPage {
     const gamesOnPage = this.getGamesPerPage(gameData, this.currentPage);
 
     for (const game of gamesOnPage) {
-      const gameCard = new GameCard(game);
+      const gameCard = new GameCard(game, this.onDetailsClick);
       container.append(gameCard.render());
     }
 

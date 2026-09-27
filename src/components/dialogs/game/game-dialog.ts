@@ -6,6 +6,7 @@ import {
   formatLikesCount,
   formatRelativeDate,
   formatTotalScore,
+  iconToSvg,
 } from '../../../shared';
 import type { IGameDetails, IGameSpecs, ITopRecord, IComment } from '../../../core';
 import { closeIconImg, likeIconImg, sendIconImg, starIcon } from '../../../assets/icons';
@@ -87,11 +88,11 @@ export class GameDialog {
       className: 'rating',
     });
     const likes = new GameStat({
-      icon: likeIconImg,
       value: `${formatLikesCount(this.game.likesCount)}`,
       className: 'likes',
-    });
-    stats.append(rating.render(), likes.render());
+    }).render();
+    iconToSvg(likeIconImg, likes);
+    stats.append(rating.render(), likes);
 
     container.append(title, stats);
 
@@ -166,7 +167,7 @@ export class GameDialog {
 
     button.append(textElement);
 
-    if (icon) this.iconToSvg(likeIconImg, button);
+    if (icon) iconToSvg(likeIconImg, button);
 
     return button;
   }
@@ -263,7 +264,7 @@ export class GameDialog {
       },
     });
 
-    this.iconToSvg(sendIconImg, sendButton);
+    iconToSvg(sendIconImg, sendButton);
 
     form.append(author, textarea, sendButton);
 
@@ -285,10 +286,10 @@ export class GameDialog {
     const likes = createElement('button', {
       className: 'game-dialog__comment-likes',
       attributes: {
-        type: 'button'
-      }
+        type: 'button',
+      },
     });
-    this.iconToSvg(likeIconImg, likes);
+    iconToSvg(likeIconImg, likes);
     const likesCount = createElement('h5', {
       className: 'game-dialog__comment-likes-count',
       text: `${comment.likesCount}`,
@@ -343,20 +344,6 @@ export class GameDialog {
     return positionIcons[position - 1] ?? String(position);
   }
 
-  private iconToSvg(icon: string, container: HTMLElement): SVGElement | undefined {
-    if (!icon) return;
-
-    const wrapper = createElement('div');
-    wrapper.innerHTML = icon;
-    const iconSvg = wrapper.firstElementChild;
-    if (iconSvg instanceof SVGElement) {
-      container.prepend(iconSvg);
-      return iconSvg;
-    }
-
-    return;
-  }
-
   private bindCloseButton(): void {
     if (!this.dialogElement) return;
     const closeButton = this.dialogElement.querySelector('.game-dialog__close');
@@ -399,16 +386,16 @@ export class GameDialog {
   }
 
   private bindLikeComment(): void {
-     if (!this.dialogElement) return;
-     const comment = this.dialogElement.querySelector('.game-dialog__comments');
-     
-     comment?.addEventListener('click', (event) => {
+    if (!this.dialogElement) return;
+    const comment = this.dialogElement.querySelector('.game-dialog__comments');
+
+    comment?.addEventListener('click', (event) => {
       if (!(event.target instanceof Element)) return;
       const button = event.target.closest<HTMLButtonElement>('.game-dialog__comment-likes');
       if (!button) return;
-    
+
       button.classList.toggle('active');
-     })
+    });
   }
 
   public open(): void {

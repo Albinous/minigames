@@ -94,6 +94,10 @@
     @include flex-between;
   }
 
+  &__title {
+    font-size: $font-size-display-medium;
+  }
+
   &__stats {
     display: flex;
     gap: $size-2;

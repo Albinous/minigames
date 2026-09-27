@@ -2,14 +2,15 @@ import './slider.scss';
 import type { IGame } from '../../core';
 import { getGameCardView } from './game-card';
 
-export function getSliderView(featuredGames: IGame[], activeIndex: number): string {
-  const cards = featuredGames
-    .map((_, index) => {
-      const offset = index - Math.floor(featuredGames.length / 2);
-      const gameIndex = (offset + activeIndex + featuredGames.length) % featuredGames.length;
-      return getGameCardView(featuredGames[gameIndex], gameIndex === activeIndex);
-    })
-    .join('');
+export function getSliderView(featuredGames: IGame[]): string {
+  // const cards = featuredGames
+  //   .map((_, index) => {
+  //     const offset = index - Math.floor(featuredGames.length / 2);
+  //     const gameIndex = (offset + activeIndex + featuredGames.length) % featuredGames.length;
+  //     return getGameCardView(featuredGames[gameIndex], gameIndex === activeIndex);
+  //   })
+  //   .join('');
+  const cards = featuredGames.map((game) => getGameCardView(game, false)).join('');
   return `
     <div class="container">
       <div class="games-header">

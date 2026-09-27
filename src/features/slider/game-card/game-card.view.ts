@@ -3,7 +3,7 @@ import { formatLikesCount } from '../../../shared';
 
 export function getGameCardView(game: IGame, isActive: boolean): string {
   return `
-        <div class="slider-game-card ${isActive ? 'active' : ''}">
+        <div class="slider-game-card ${isActive ? 'active' : ''}" data-game-slug="${game.slug}">
           <img src="${game.cardImage}" alt="${game.name}" class="slider-game-card__img" />
           <div class="slider-game-card__content">
             <h3 class="slider-game-card__title">${game.name}</h3>

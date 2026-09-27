@@ -9,16 +9,12 @@
   box-shadow: $shadow-level-1;
   flex: 0 0 288px;
   height: 384px;
+  transition:
+    flex-basis 0.3s ease,
+    opacity 0.3s ease;
 
-  @include tablet {
-    flex: 0 0 105px;
-    height: 280px;
-    border-radius: $size-2;
-  }
-
-  @include tablet {
-    flex: 0 0 56px;
-    height: 200px;
+  &.near {
+    flex-basis: 218px;
   }
 
   &.active {
@@ -34,6 +30,23 @@
     @include tablet {
       flex-basis: 218px;
     }
+  }
+
+  &.hidden {
+    flex-basis: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  @include tablet {
+    flex: 0 0 105px;
+    height: 280px;
+    border-radius: $size-2;
+  }
+
+  @include tablet {
+    flex: 0 0 56px;
+    height: 200px;
   }
 
   &__img {

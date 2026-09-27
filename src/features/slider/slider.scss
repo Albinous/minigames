@@ -49,15 +49,10 @@
       display: flex;
       gap: $size-1;
       align-items: stretch;
-      transform: translate(-44.8%, 0);
-
-      @include tablet {
-        transform: translate(-48.6%, 0);
-      }
-
-      @include tablet {
-        transform: translate(-56.5%, 0);
-      }
+      touch-action: pan-y;
+      user-select: none;
+      -webkit-user-select: none;
+      cursor: grab;
     }
   }
 }

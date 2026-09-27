@@ -15,6 +15,7 @@ export class Slider {
   private remainingTime = AUTOPLAY_INTERVAL;
   private swipeStartX = 0;
   private isDragging = false;
+  private resizeObserver: ResizeObserver | undefined = undefined;
 
   private readonly onDetailsClick: () => void;
 
@@ -43,6 +44,8 @@ export class Slider {
       card.classList.remove('active', 'near', 'far', 'hidden');
 
       card.classList.add(role);
+
+          this.updateCardContent(card);
     }
   }
 
@@ -81,6 +84,32 @@ export class Slider {
     }
   }
 
+private updateCardContent(card: HTMLElement): void {
+  const isShowInfo = card.getBoundingClientRect().width >= 288;
+
+  card.classList.toggle('show-info', isShowInfo);
+}
+
+private observeCards(): void {
+  if (!this.track) return;
+
+  this.resizeObserver = new ResizeObserver((entries) => {
+    for (const entry of entries) {
+      const card = entry.target as HTMLElement;
+
+      const isShowInfo = entry.contentRect.width >= 288;
+
+      card.classList.toggle('show-info', isShowInfo);
+    }
+  });
+
+  const cards = this.getCards();
+
+  for (const card of cards) {
+    this.resizeObserver.observe(card);
+  }
+}
+
   private next(): void {
     this.activeIndex = (this.activeIndex + 1) % this.featuredGames.length;
 
@@ -93,6 +122,8 @@ export class Slider {
 
     this.updateCards();
   }
+
+
 
   private startAutoplay(): void {
     this.autoplayStartedAt = Date.now();
@@ -237,6 +268,7 @@ export class Slider {
     }
 
     this.updateCards();
+    this.observeCards()
     this.bindEvents();
     this.bindSwipe();
     this.startAutoplay();

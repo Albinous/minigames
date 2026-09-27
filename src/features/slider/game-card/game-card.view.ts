@@ -36,7 +36,7 @@ export function getGameCardView(game: IGame, isActive: boolean): string {
                     fill="#FF4B4B"
                   />
                 </svg>
-                <span>${formatLikesCount(game.likesCount)}K</span>
+                <span>${formatLikesCount(game.likesCount)}</span>
               </div>
             </div>
           </div>

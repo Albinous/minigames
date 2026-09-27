@@ -49,6 +49,10 @@
       display: flex;
       gap: $size-1;
       align-items: stretch;
+      touch-action: pan-y;
+      user-select: none;
+      -webkit-user-select: none;
+      cursor: grab;
     }
   }
 }

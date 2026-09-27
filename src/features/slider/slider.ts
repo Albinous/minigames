@@ -14,6 +14,7 @@ export class Slider {
   private autoplayId: number | undefined = undefined;
   private autoplayStartedAt = 0;
   private remainingTime = AUTOPLAY_INTERVAL;
+  private swipeStartX = 0;
 
   constructor() {
     this.games = gamesData.data;
@@ -115,6 +116,14 @@ export class Slider {
   }
 
   private resumeAutoplay(): void {
+    if (this.autoplayId !== undefined) return;
+
+    this.startAutoplay();
+  }
+
+  private resetAutoplay(): void {
+    this.stopAutoplay();
+    this.remainingTime = AUTOPLAY_INTERVAL;
     this.startAutoplay();
   }
 
@@ -125,19 +134,54 @@ export class Slider {
 
     previousButton?.addEventListener('click', () => {
       this.prev();
+      this.resetAutoplay();
     });
 
     nextButton?.addEventListener('click', () => {
       this.next();
+      this.resetAutoplay();
     });
+  }
 
-    this.track?.addEventListener('pointerdown', () => {
-      this.pauseAutoplay();
-    });
+  private bindSwipe(): void {
+    if (!this.track) return;
 
-    this.track?.addEventListener('pointerup', () => {
-      this.resumeAutoplay();
-    });
+    this.track.addEventListener(
+      'pointerdown',
+      (event: PointerEvent) => {
+        this.swipeStartX = event.clientX;
+        this.pauseAutoplay();
+      },
+      { capture: true },
+    );
+
+    this.track.addEventListener(
+      'pointerup',
+      (event: PointerEvent) => {
+        const difference = event.clientX - this.swipeStartX;
+        const swipeThreshold = 50;
+
+        if (Math.abs(difference) < swipeThreshold) {
+          this.resumeAutoplay();
+          return;
+        }
+
+        if (difference < 0) {
+          this.next();
+        } else {
+          this.prev();
+        }
+
+        this.resetAutoplay();
+      },
+    );
+
+    this.track.addEventListener(
+      'pointercancel',
+      () => {
+        this.resumeAutoplay();
+      },
+    );
   }
 
   public render(): HTMLElement {
@@ -160,6 +204,7 @@ export class Slider {
 
     this.updateCards();
     this.bindEvents();
+    this.bindSwipe();
     this.startAutoplay();
 
     return this.slider;

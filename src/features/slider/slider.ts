@@ -45,7 +45,7 @@ export class Slider {
 
       card.classList.add(role);
 
-          this.updateCardContent(card);
+      this.updateCardContent(card);
     }
   }
 
@@ -84,31 +84,31 @@ export class Slider {
     }
   }
 
-private updateCardContent(card: HTMLElement): void {
-  const isShowInfo = card.getBoundingClientRect().width >= 288;
+  private updateCardContent(card: HTMLElement): void {
+    const isShowInfo = card.getBoundingClientRect().width >= 288;
 
-  card.classList.toggle('show-info', isShowInfo);
-}
-
-private observeCards(): void {
-  if (!this.track) return;
-
-  this.resizeObserver = new ResizeObserver((entries) => {
-    for (const entry of entries) {
-      const card = entry.target as HTMLElement;
-
-      const isShowInfo = entry.contentRect.width >= 288;
-
-      card.classList.toggle('show-info', isShowInfo);
-    }
-  });
-
-  const cards = this.getCards();
-
-  for (const card of cards) {
-    this.resizeObserver.observe(card);
+    card.classList.toggle('show-info', isShowInfo);
   }
-}
+
+  private observeCards(): void {
+    if (!this.track) return;
+
+    this.resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const card = entry.target as HTMLElement;
+
+        const isShowInfo = entry.contentRect.width >= 288;
+
+        card.classList.toggle('show-info', isShowInfo);
+      }
+    });
+
+    const cards = this.getCards();
+
+    for (const card of cards) {
+      this.resizeObserver.observe(card);
+    }
+  }
 
   private next(): void {
     this.activeIndex = (this.activeIndex + 1) % this.featuredGames.length;
@@ -122,8 +122,6 @@ private observeCards(): void {
 
     this.updateCards();
   }
-
-
 
   private startAutoplay(): void {
     this.autoplayStartedAt = Date.now();
@@ -268,7 +266,7 @@ private observeCards(): void {
     }
 
     this.updateCards();
-    this.observeCards()
+    this.observeCards();
     this.bindEvents();
     this.bindSwipe();
     this.startAutoplay();

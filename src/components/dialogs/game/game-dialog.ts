@@ -132,9 +132,13 @@ export class GameDialog {
     const addFavourites = this.createDialogBtn(
       'favourite',
       'secondary',
-      'Add to Favourites',
+      this.game.isLikedByCurrentUser ? 'Remove from favourites' : 'Add to Favourites',
       likeIconImg,
     );
+
+    if (this.game.isLikedByCurrentUser) {
+      addFavourites.classList.add('active');
+    }
 
     container.append(playNow, addFavourites);
 
@@ -149,12 +153,18 @@ export class GameDialog {
   ): HTMLButtonElement {
     const button = createElement('button', {
       className: `btn btn-${buttonType} game-dialog__btn game-dialog__btn-${className}`,
-      text,
       attributes: {
         type: 'button',
         'aria-label': `${text}`,
       },
     });
+
+    const textElement = createElement('span', {
+      text,
+      className: 'game-dialog__btn-text',
+    });
+
+    button.append(textElement);
 
     if (icon) this.iconToSvg(likeIconImg, button)
 
@@ -372,6 +382,22 @@ export class GameDialog {
      })
   }
 
+  private bindAddFavourites(): void {
+    if (!this.dialogElement) return;
+    const addFavouritesButton = this.dialogElement.querySelector('.game-dialog__btn-favourite');
+    if (!addFavouritesButton) return
+    const addFavouritesText = addFavouritesButton.querySelector('.game-dialog__btn-text');
+    
+
+    addFavouritesButton?.addEventListener('click', () => {
+      this.game.isLikedByCurrentUser = !this.game.isLikedByCurrentUser;
+      if (addFavouritesText) {
+        addFavouritesText.textContent = this.game.isLikedByCurrentUser ? 'Remove from favourites' : 'Add to Favourites';
+      }
+      addFavouritesButton.classList.toggle('active');
+    })
+  }
+
   public open(): void {
     if (!this.dialogElement) return;
     this.dialogElement.showModal();
@@ -403,6 +429,7 @@ export class GameDialog {
 
     this.bindCloseButton();
     this.bindDialogEvents();
+    this.bindAddFavourites();
 
     return root;
   }

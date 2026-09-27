@@ -147,6 +147,12 @@
       &:hover {
         background-color: $color-surface;
       }
+
+      &.active {
+        svg path {
+          fill: $color-like;
+        }
+      }
     }
   }
 

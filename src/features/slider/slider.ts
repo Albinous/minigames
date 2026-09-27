@@ -17,7 +17,11 @@ export class Slider {
   private swipeStartX = 0;
   private isDragging = false;
 
-  constructor() {
+  private readonly onDetailsClick: () => void;
+
+  constructor(onDetailsClick: () => void) {
+    this.onDetailsClick = onDetailsClick;
+
     this.games = gamesData.data;
     this.featuredGames = this.games.filter((game) => game.featured);
   }
@@ -210,8 +214,18 @@ export class Slider {
       },
       { capture: true },
     );
+
+    const cards = this.getCards();
+
+    for (const card of cards) {
+      card.addEventListener('click', () => {
+        if (this.isDragging) return;
+
+        this.onDetailsClick?.();
+      });
+    }
   }
-  
+
   public render(): HTMLElement {
     this.slider = document.createElement('section');
 

@@ -4,7 +4,7 @@ export type Route = '/' | '/library';
 
 export class Router {
   private readonly routes: Record<Route, () => HTMLElement> = {
-    '/': () => new HomePage().render(),
+    '/': () => new HomePage(this.onDetailsClick).render(),
     '/library': () => new LibraryPage(this.onDetailsClick).render(),
   };
 

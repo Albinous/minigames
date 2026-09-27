@@ -72,9 +72,15 @@
       rgba(0, 0, 0, 0.85) 46.15%
     );
 
-    @include tablet {
-      opacity: 0;
-    }
+    display: none;
+
+    // @include tablet {
+    //   opacity: 0;
+    // }
+  }
+
+  &.show-info &__content {
+    display: block;
   }
 
   &__title {

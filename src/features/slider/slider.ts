@@ -6,7 +6,6 @@ const AUTOPLAY_INTERVAL = 4000;
 
 export class Slider {
   private slider: HTMLElement | undefined = undefined;
-  private viewport: HTMLElement | undefined = undefined;
   private track: HTMLElement | undefined = undefined;
   private activeIndex: number = 0;
   private games: IGame[];
@@ -231,13 +230,6 @@ export class Slider {
 
     this.slider.className = 'games';
     this.slider.innerHTML = getSliderView(this.featuredGames);
-
-    const viewport = this.slider.querySelector<HTMLElement>('.games-slider__viewport');
-
-    if (viewport) {
-      this.viewport = viewport;
-    }
-
     const track = this.slider.querySelector<HTMLElement>('.games-slider__track');
 
     if (track) {

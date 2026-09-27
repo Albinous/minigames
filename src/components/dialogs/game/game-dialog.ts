@@ -16,6 +16,12 @@ import { GameStat } from '../../game-stat';
 export class GameDialog {
   private dialogElement: HTMLDialogElement | undefined;
   private readonly game: IGameDetails = gameDetailsData.data;
+  private readonly comments: IComment[] = commentsData.data;
+  private initialLiked: boolean;
+
+  constructor() {
+    this.initialLiked = this.game.isLikedByCurrentUser;
+  }
 
   private createContent(): HTMLElement {
     const container = createContainer('game-dialog__content');
@@ -88,10 +94,10 @@ export class GameDialog {
       className: 'rating',
     });
     const likes = new GameStat({
+      icon: likeIconImg,
       value: `${formatLikesCount(this.game.likesCount)}`,
       className: 'likes',
     }).render();
-    iconToSvg(likeIconImg, likes);
     stats.append(rating.render(), likes);
 
     container.append(title, stats);
@@ -226,17 +232,15 @@ export class GameDialog {
 
   private createComments(): HTMLElement {
     const container = createContainer('game-dialog__comments');
-
-    const comments = commentsData.data;
     const title = createElement('h3', {
       className: 'game-dialog__comments-title',
-      text: `Comments (${comments.length})`,
+      text: `Comments (${this.comments.length})`,
     });
     const form = this.createCommentInput();
 
     container.append(title, form);
 
-    for (const comment of comments) {
+    for (const comment of this.comments) {
       container.append(this.createCommentItem(comment));
     }
 
@@ -381,7 +385,7 @@ export class GameDialog {
           ? 'Remove from favourites'
           : 'Add to Favourites';
       }
-      addFavouritesButton.classList.toggle('active');
+      addFavouritesButton.classList.toggle('active', this.game.isLikedByCurrentUser);
     });
   }
 
@@ -398,6 +402,29 @@ export class GameDialog {
     });
   }
 
+  private reset(): void {
+    if (!this.dialogElement) return;
+
+    this.game.isLikedByCurrentUser = this.initialLiked;
+
+    const favouriteButton = this.dialogElement.querySelector('.game-dialog__btn-favourite');
+    if (!favouriteButton) return;
+    favouriteButton.classList.remove('active');
+
+    const buttons = this.dialogElement.querySelectorAll('.game-dialog__comment-likes');
+    for (const button of buttons) {
+      button.classList.remove('active');
+    }
+
+    const textarea = this.dialogElement.querySelector<HTMLTextAreaElement>(
+      '.game-dialog__comments-textarea',
+    );
+
+    if (!textarea) return;
+    textarea.value = '';
+    textarea.style.height = '';
+  }
+
   public open(): void {
     if (!this.dialogElement) return;
     this.dialogElement.showModal();
@@ -411,6 +438,7 @@ export class GameDialog {
     this.dialogElement.addEventListener(
       'transitionend',
       () => {
+        this.reset();
         this.dialogElement?.close();
         this.dialogElement?.classList.remove('closing');
       },

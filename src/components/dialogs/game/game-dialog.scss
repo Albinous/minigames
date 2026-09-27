@@ -162,6 +162,7 @@
       display: flex;
       align-items: center;
       gap: $size-1;
+      background-color: $color-white;
       svg path {
         fill: $color-on-primary;
       }

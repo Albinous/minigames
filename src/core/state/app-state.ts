@@ -1,4 +1,9 @@
-import type { CategoriesResponse, CommentsResponse, GamesResponse, LeaderboardResponse } from "../types";
+import type {
+  CategoriesResponse,
+  CommentsResponse,
+  GamesResponse,
+  LeaderboardResponse,
+} from '../types';
 
 export interface ResourceState<T> {
   data: T | undefined;
@@ -6,10 +11,9 @@ export interface ResourceState<T> {
   error: string | undefined;
 }
 
-
 export interface AppState {
-  games: ResourceState<GamesResponse>,
-  categories: ResourceState<CategoriesResponse>,
-  comments: ResourceState<CommentsResponse>,
-  leaderboard: ResourceState<LeaderboardResponse>
+  games: ResourceState<GamesResponse>;
+  categories: ResourceState<CategoriesResponse>;
+  comments: ResourceState<CommentsResponse>;
+  leaderboard: ResourceState<LeaderboardResponse>;
 }

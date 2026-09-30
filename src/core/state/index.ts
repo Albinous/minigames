@@ -1,2 +1,2 @@
-export * from './app-state'
-export * from './store'
+export * from './app-state';
+export * from './store';

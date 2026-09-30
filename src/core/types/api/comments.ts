@@ -1,13 +1,13 @@
-import type { IComment } from "../../services";
+import type { IComment } from '../../services';
 
 export interface CommentsResponse {
-  items: IComment[],
+  items: IComment[];
   meta: CommentsMeta | undefined;
 }
 
 export interface CommentsMeta {
-  totalComments: number,
-  returnedCount: number
+  totalComments: number;
+  returnedCount: number;
 }
 
 export type CommentsSortOption = 'newest' | 'oldest';

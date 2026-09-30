@@ -1,6 +1,11 @@
-import type { CategoriesResponse, CommentsResponse, GamesResponse, LeaderboardResponse } from "../types";
-import type { AppState, ResourceState } from "./app-state";
-import { initialState } from "./initial-state";
+import type {
+  CategoriesResponse,
+  CommentsResponse,
+  GamesResponse,
+  LeaderboardResponse,
+} from '../types';
+import type { AppState, ResourceState } from './app-state';
+import { initialState } from './initial-state';
 
 export class Store {
   private state: AppState = initialState;

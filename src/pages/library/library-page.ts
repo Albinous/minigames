@@ -1,9 +1,9 @@
 import './library-page.scss';
 import { categoriesJson, gameCardJson } from '../../data';
 import { createElement, createContainer, setActiveElement } from '../../shared';
-import type { ArrowType, SortOption } from './library-page.types';
+import type { ArrowType } from './library-page.types';
 import { GameCard } from '../../components';
-import type { IGame } from '../../core';
+import type { IGame, SortOption } from '../../core';
 import { arrowLeftIcon, arrowRightIcon } from '../../assets/icons';
 
 export class LibraryPage {

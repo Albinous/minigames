@@ -6,7 +6,7 @@ export interface CommentsResponse {
 }
 
 export interface CommentsMeta {
-  totalItems: number,
+  totalComments: number,
   returnedCount: number
 }
 

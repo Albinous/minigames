@@ -1,17 +1,13 @@
 import type { Category } from '../category';
+import type { ListMeta } from '../meta';
 
 export interface CategoriesResponse {
   items: CategoryData[];
-  meta: CategoriesMeta;
+  meta: ListMeta;
 }
 
 export interface CategoryData {
   slug: Category;
   label: string;
   isDefault: boolean;
-}
-
-export interface CategoriesMeta {
-  totalItems: number;
-  description: string;
 }

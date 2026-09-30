@@ -1,1 +1,1 @@
-export type Category = 'all' | 'puzzle' | 'card' | 'match' | 'farm' | 'strategy' | 'arcade'
+export type Category = 'all' | 'puzzle' | 'card' | 'match' | 'farm' | 'strategy' | 'arcade';

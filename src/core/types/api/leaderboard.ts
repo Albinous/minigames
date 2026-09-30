@@ -3,5 +3,5 @@ import type { ListMeta } from "../meta";
 
 export interface LeaderboardResponse {
   items: ILeaderboard[];
-  meta: ListMeta
+  meta: ListMeta | undefined;
 }

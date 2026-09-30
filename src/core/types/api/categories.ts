@@ -3,7 +3,7 @@ import type { ListMeta } from '../meta';
 
 export interface CategoriesResponse {
   items: CategoryData[];
-  meta: ListMeta;
+  meta: ListMeta | undefined;
 }
 
 export interface CategoryData {

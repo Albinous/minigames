@@ -4,7 +4,7 @@ import type { SortOption } from '../sort';
 
 export interface GamesResponse {
   items: IGame[];
-  meta: GamesMeta;
+  meta: GamesMeta | undefined;
 }
 
 export interface GamesMeta {

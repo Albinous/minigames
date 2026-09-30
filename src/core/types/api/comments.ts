@@ -2,7 +2,7 @@ import type { IComment } from "../../services";
 
 export interface CommentsResponse {
   items: IComment[],
-  meta: CommentsMeta
+  meta: CommentsMeta | undefined;
 }
 
 export interface CommentsMeta {

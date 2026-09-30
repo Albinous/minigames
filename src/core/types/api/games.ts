@@ -16,7 +16,7 @@ export interface GamesMeta {
 }
 
 export interface AppliedFilter {
-  category: IGame['category'];
+  category: Category;
   sort: SortOption;
 }
 

@@ -1,4 +1,5 @@
 import type { GamesQuery, GamesResponse } from '../../types';
+import type { IGame } from '../models';
 import { Api } from './api';
 
 export class GamesApi extends Api {
@@ -18,5 +19,9 @@ export class GamesApi extends Api {
       featured: 'true',
     });
     return this.get(`/games?${parameters.toString()}`);
+  }
+
+  public async getGameDetails(gameSlug: string): Promise<IGame> {
+    return this.get(`/games/${gameSlug}`);
   }
 }

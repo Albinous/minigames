@@ -1,14 +1,22 @@
 import './library-page.scss';
-import { categoriesJson, gameCardJson } from '../../data';
 import { createElement, createContainer, setActiveElement } from '../../shared';
 import type { ArrowType } from './library-page.types';
 import { GameCard } from '../../components';
-import type { Category, GamesService, IGame, SortOption, Store } from '../../core';
+import {
+  CategoriesService,
+  type Category,
+  type CategoryData,
+  type GamesService,
+  type IGame,
+  type SortOption,
+  type Store,
+} from '../../core';
 import { arrowLeftIcon, arrowRightIcon } from '../../assets/icons';
 
 export class LibraryPage {
-  private readonly gamesService: GamesService;
   private readonly store: Store;
+  private readonly gamesService: GamesService;
+  private readonly categoriesService: CategoriesService;
   private readonly sortOptions: {
     value: SortOption;
     label: string;
@@ -23,12 +31,17 @@ export class LibraryPage {
   private sortSelected: SortOption = 'rating-desc';
   private readonly gamesPerPage: number = 6;
   private currentPage: number = 1;
-  private readonly pageSum: number = Math.ceil(gameCardJson.meta.totalItems / this.gamesPerPage);
   private readonly onDetailsClick: () => void;
 
-  constructor(store: Store, gamesService: GamesService, onDetailsClick: () => void) {
+  constructor(
+    store: Store,
+    gamesService: GamesService,
+    categoriesService: CategoriesService,
+    onDetailsClick: () => void,
+  ) {
     this.store = store;
     this.gamesService = gamesService;
+    this.categoriesService = categoriesService;
     this.onDetailsClick = onDetailsClick;
   }
 
@@ -71,8 +84,7 @@ export class LibraryPage {
 
   private createCategories(): HTMLElement {
     const categories = createElement('div', { className: 'library-categories' });
-    const categoriesData = categoriesJson.data;
-    for (const category of categoriesData) {
+    for (const category of this.categoriesData) {
       const categoryButton = createElement('button', {
         className: 'btn btn-secondary library-category',
         text: category.label,
@@ -140,10 +152,9 @@ export class LibraryPage {
 
   private createGameCards(): HTMLElement {
     const container = createContainer('game-cards');
-    const gameData = this.store.games.data?.data ?? [];
-    console.log(gameData);
+    const gamesData = this.store.games.data?.data ?? [];
 
-    const gamesOnPage = this.getGamesPerPage(gameData, this.currentPage);
+    const gamesOnPage = this.getGamesPerPage(gamesData, this.currentPage);
 
     for (const game of gamesOnPage) {
       const gameCard = new GameCard(game, this.onDetailsClick);
@@ -345,7 +356,16 @@ export class LibraryPage {
   }
 
   private isCategoryOption(value: string): value is Category {
-    return categoriesJson.data.some((option) => option.label === value);
+    return this.categoriesData.some((option) => option.label === value);
+  }
+
+  private get categoriesData(): CategoryData[] {
+    return this.store.categories.data?.data ?? [];
+  }
+
+  private get pageSum(): number {
+    const totalItems = Math.ceil(this.store.games.data?.meta?.totalItems ?? 0);
+    return totalItems / this.gamesPerPage;
   }
 
   public async load(): Promise<void> {
@@ -355,7 +375,11 @@ export class LibraryPage {
       category: this.categorySelected,
       sort: this.sortSelected,
     };
-    await this.gamesService.loadGames(query);
+
+    await Promise.all([
+      this.gamesService.loadGames(query),
+      this.categoriesService.loadCategories(),
+    ]);
   }
 
   public async render(): Promise<HTMLElement> {

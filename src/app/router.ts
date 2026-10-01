@@ -1,4 +1,4 @@
-import type { GamesService, Store } from '../core';
+import { CategoriesApi, CategoriesService, type GamesService, type Store } from '../core';
 import { HomePage, LibraryPage } from '../pages';
 
 export type Route = '/' | '/library';
@@ -8,7 +8,15 @@ export class Router {
   private readonly gamesService: GamesService;
   private readonly routes: Record<Route, () => Promise<HTMLElement>> = {
     '/': () => new HomePage(this.onDetailsClick).render(),
-    '/library': () => new LibraryPage(this.store, this.gamesService, this.onDetailsClick).render(),
+    '/library': () => {
+      const categoriesService = new CategoriesService(this.store, new CategoriesApi());
+      return new LibraryPage(
+        this.store,
+        this.gamesService,
+        categoriesService,
+        this.onDetailsClick,
+      ).render();
+    },
   };
 
   private readonly onRouteChange: (page: HTMLElement, route: Route) => void;

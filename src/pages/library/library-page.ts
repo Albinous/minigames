@@ -141,7 +141,7 @@ export class LibraryPage {
   private createGameCards(): HTMLElement {
     const container = createContainer('game-cards');
     const gameData = this.store.games.data?.data ?? [];
-    console.log(gameData)
+    console.log(gameData);
 
     const gamesOnPage = this.getGamesPerPage(gameData, this.currentPage);
 
@@ -348,18 +348,18 @@ export class LibraryPage {
     return categoriesJson.data.some((option) => option.label === value);
   }
 
-    public async load(): Promise<void> {
+  public async load(): Promise<void> {
     const query = {
       page: this.currentPage,
       limit: this.gamesPerPage,
       category: this.categorySelected,
-      sort: this.sortSelected
-    }
-    await this.gamesService.loadGames(query);  
+      sort: this.sortSelected,
+    };
+    await this.gamesService.loadGames(query);
   }
 
   public async render(): Promise<HTMLElement> {
-        await this.load();
+    await this.load();
 
     const main = createElement('main', { className: 'main' });
     const section = this.createSection();

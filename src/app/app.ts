@@ -7,7 +7,7 @@ import { GamesApi, GamesService, Store } from '../core';
 export class App {
   public async render(): Promise<void> {
     const store = new Store();
-    const gamesApi = new GamesApi()
+    const gamesApi = new GamesApi();
     const gamesService = new GamesService(store, gamesApi);
     const authDialog = new AuthDialog();
     const header = new Header(

@@ -21,17 +21,15 @@ import { commentsData } from '../../../data';
 import { GameStat } from '../../game-stat';
 
 export class GameDialog {
-  private dialogElement: HTMLDialogElement | undefined;
+  private dialogElement: HTMLDialogElement;
   private store: Store;
   private gamesService: GamesService;
-  // private readonly game: IGameDetails;
   private readonly comments: IComment[] = commentsData.data;
-  private initialLiked: boolean;
 
   constructor(store: Store, gamesService: GamesService) {
     this.store = store;
     this.gamesService = gamesService;
-    this.initialLiked = this.game.isLikedByCurrentUser;
+    this.dialogElement = this.render();
   }
 
   private createContent(): HTMLElement {
@@ -46,13 +44,11 @@ export class GameDialog {
 
   private createHero(): HTMLElement {
     const container = createContainer('game-dialog__hero');
+
     const img = createElement('img', {
       className: 'game-dialog__img',
-      attributes: {
-        src: this.game.heroImage,
-        alt: this.game.name,
-      },
     });
+
     const closeButton = createElement('button', {
       className: 'game-dialog__close',
       attributes: {
@@ -77,56 +73,50 @@ export class GameDialog {
 
   private createInfo(): HTMLElement {
     const container = createContainer('game-dialog__info');
+
     const header = this.createHeader();
-    const text = createElement('p', {
+    const description = createElement('p', {
       className: 'game-dialog__descr',
-      text: this.game.fullDescription,
     });
     const specs = this.createSpecs();
     const buttons = this.createDialogButtons();
     const topRecords = this.createTopRecords();
     const comments = this.createComments();
 
-    container.append(header, text, specs, buttons, topRecords, comments);
+    container.append(header, description, specs, buttons, topRecords, comments);
 
     return container;
   }
 
   private createHeader(): HTMLElement {
     const container = createContainer('game-dialog__header');
+
     const title = createElement('h2', {
       className: 'game-dialog__title',
-      text: this.game.name,
     });
+
     const stats = createContainer('game-dialog__stats');
+
     const rating = new GameStat({
       icon: starIcon,
-      value: `${this.game.rating}`,
+      value: '',
       className: 'rating',
-    });
+    }).render();
+
     const likes = new GameStat({
       icon: likeIconImg,
-      value: `${formatLikesCount(this.game.likesCount)}`,
+      value: '',
       className: 'likes',
     }).render();
-    stats.append(rating.render(), likes);
 
+    stats.append(rating, likes);
     container.append(title, stats);
 
     return container;
   }
 
   private createSpecs(): HTMLElement {
-    const container = createContainer('game-dialog__specs');
-    const specData: IGameSpecs = this.game.specs;
-
-    for (const [key, value] of Object.entries(specData)) {
-      const specElement = this.createSpec(key, value);
-
-      container.append(specElement);
-    }
-
-    return container;
+    return createContainer('game-dialog__specs');
   }
 
   private createSpec(type: string, value: string): HTMLElement {
@@ -146,17 +136,15 @@ export class GameDialog {
 
   private createDialogButtons(): HTMLElement {
     const container = createContainer('game-dialog__btns');
+
     const playNow = this.createDialogBtn('play', 'primary', 'Play Now');
+
     const addFavourites = this.createDialogBtn(
       'favourite',
       'secondary',
-      this.game.isLikedByCurrentUser ? 'Remove from favourites' : 'Add to Favourites',
+      'Add to Favourites',
       likeIconImg,
     );
-
-    if (this.game.isLikedByCurrentUser) {
-      addFavourites.classList.add('active');
-    }
 
     container.append(playNow, addFavourites);
 
@@ -173,7 +161,7 @@ export class GameDialog {
       className: `btn btn-${buttonType} game-dialog__btn game-dialog__btn-${className}`,
       attributes: {
         type: 'button',
-        'aria-label': `${text}`,
+        'aria-label': text,
       },
     });
 
@@ -184,20 +172,18 @@ export class GameDialog {
 
     button.append(textElement);
 
-    if (icon) iconToSvg(likeIconImg, button);
+    if (icon) {
+      iconToSvg(icon, button);
+    }
 
     return button;
   }
 
   private createTopRecords(): HTMLElement {
     const container = createContainer('game-dialog__records');
+
     const header = this.createTopRecordsTitle();
     const records = createContainer('game-dialog__records-list');
-    const recordsData = this.game.topRecords;
-
-    for (const record of recordsData) {
-      records.append(this.createTopRecordItem(record));
-    }
 
     container.append(header, records);
 
@@ -359,6 +345,99 @@ export class GameDialog {
     return positionIcons[position - 1] ?? String(position);
   }
 
+  // RENDER DATA
+
+  private renderHero(): void {
+    const image = this.dialogElement.querySelector<HTMLImageElement>('.game-dialog__img');
+
+    if (!image) return;
+
+    image.src = this.game.heroImage;
+    image.alt = this.game.name;
+  }
+
+  private renderHeader(): void {
+    const title = this.dialogElement.querySelector<HTMLHeadingElement>('.game-dialog__title');
+
+    if (title) {
+      title.textContent = this.game.name;
+    }
+
+    const ratingValue = this.dialogElement.querySelector<HTMLElement>(
+      ':scope .rating .game-stat__value',
+    );
+
+    const likesValue = this.dialogElement.querySelector<HTMLElement>(
+      ':scope .likes .game-stat__value',
+    );
+
+    if (ratingValue) {
+      ratingValue.textContent = String(this.game.rating);
+    }
+
+    if (likesValue) {
+      likesValue.textContent = formatLikesCount(this.game.likesCount);
+    }
+  }
+
+  private renderDescription(): void {
+    const description =
+      this.dialogElement.querySelector<HTMLParagraphElement>('.game-dialog__descr');
+
+    if (description) {
+      description.textContent = this.game.fullDescription;
+    }
+  }
+
+  private renderSpecs(specs: IGameSpecs): void {
+    const container = this.dialogElement.querySelector('.game-dialog__specs');
+
+    if (!container) return;
+
+    container.replaceChildren();
+
+    for (const [key, value] of Object.entries(specs)) {
+      container.append(this.createSpec(key, value));
+    }
+  }
+
+  private renderFavouriteState(isLiked: boolean): void {
+    const button = this.dialogElement.querySelector<HTMLButtonElement>(
+      '.game-dialog__btn-favourite',
+    );
+
+    if (!button) return;
+
+    const text = button.querySelector('.game-dialog__btn-text');
+
+    if (text) {
+      text.textContent = isLiked ? 'Remove from favourites' : 'Add to Favourites';
+    }
+
+    button.classList.toggle('active', isLiked);
+  }
+
+  private renderTopRecords(recordsData: ITopRecord[]): void {
+    const records = this.dialogElement.querySelector('.game-dialog__records-list');
+
+    if (!records) return;
+
+    records.replaceChildren();
+
+    for (const record of recordsData) {
+      records.append(this.createTopRecordItem(record));
+    }
+  }
+
+  private renderGameData(): void {
+    this.renderHero();
+    this.renderHeader();
+    this.renderDescription();
+    this.renderSpecs(this.game.specs);
+    this.renderFavouriteState(this.game.isLikedByCurrentUser);
+    this.renderTopRecords(this.game.topRecords);
+  }
+
   private bindCloseButton(): void {
     if (!this.dialogElement) return;
     const closeButton = this.dialogElement.querySelector('.game-dialog__close');
@@ -385,6 +464,7 @@ export class GameDialog {
 
   private bindAddFavourites(): void {
     if (!this.dialogElement) return;
+
     const addFavouritesButton = this.dialogElement.querySelector('.game-dialog__btn-favourite');
     if (!addFavouritesButton) return;
     const addFavouritesText = addFavouritesButton.querySelector('.game-dialog__btn-text');
@@ -402,6 +482,7 @@ export class GameDialog {
 
   private bindLikeComment(): void {
     if (!this.dialogElement) return;
+
     const comment = this.dialogElement.querySelector('.game-dialog__comments');
 
     comment?.addEventListener('click', (event) => {
@@ -414,8 +495,6 @@ export class GameDialog {
   }
 
   private reset(): void {
-    if (!this.dialogElement) return;
-
     this.game.isLikedByCurrentUser = this.initialLiked;
 
     const favouriteButton = this.dialogElement.querySelector('.game-dialog__btn-favourite');
@@ -436,13 +515,17 @@ export class GameDialog {
     textarea.style.height = '';
   }
 
+  private get initialLiked() {
+    return this.game.isLikedByCurrentUser;
+  }
+
   private async load(slug: string): Promise<void> {
     await this.gamesService.loadGame(slug);
   }
 
   public async open(slug: string): Promise<void> {
     await this.load(slug);
-    if (!this.dialogElement) return;
+    this.renderGameData();
     this.dialogElement.showModal();
   }
 

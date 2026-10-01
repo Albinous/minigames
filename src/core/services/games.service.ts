@@ -24,4 +24,18 @@ export class GamesService {
       this.store.games.isLoading = false;
     }
   }
+
+  public async loadGame(slug: string): Promise<void> {
+    this.store.game.isLoading = true;
+
+    try {
+      const response = await this.api.getGameDetails(slug);
+
+      this.store.game.data = response;
+    } catch {
+      this.store.games.error = 'Failed to load games';
+    } finally {
+      this.store.games.isLoading = false;
+    }
+  }
 }

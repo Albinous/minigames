@@ -7,8 +7,7 @@ import {
 } from '../../shared';
 import type { IGame } from '../../core';
 import { GameStat } from '../game-stat';
-import starIcon from '../../assets/icons/star.svg';
-import likeIcon from '../../assets/icons/like.svg';
+import { starIcon, likeIconImg } from '../../assets/icons';
 
 export class GameCard {
   private readonly game: IGame;
@@ -64,7 +63,7 @@ export class GameCard {
       className: 'rating',
     });
     const likes = new GameStat({
-      icon: likeIcon,
+      icon: likeIconImg,
       value: formatLikesCount(this.game.likesCount),
       className: 'likes',
     });

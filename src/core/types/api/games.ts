@@ -3,7 +3,7 @@ import type { Category } from '../category';
 import type { SortOption } from '../sort';
 
 export interface GamesResponse {
-  items: IGame[];
+  data: IGame[];
   meta: GamesMeta | undefined;
 }
 

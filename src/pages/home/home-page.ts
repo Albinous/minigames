@@ -8,7 +8,7 @@ export class HomePage {
     this.onDetailsClick = onDetailsClick;
   }
 
-  public render(): HTMLElement {
+  public async render(): Promise<HTMLElement> {
     const main: HTMLElement = document.createElement('main');
 
     main.className = 'main';

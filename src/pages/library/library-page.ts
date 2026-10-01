@@ -3,10 +3,12 @@ import { categoriesJson, gameCardJson } from '../../data';
 import { createElement, createContainer, setActiveElement } from '../../shared';
 import type { ArrowType } from './library-page.types';
 import { GameCard } from '../../components';
-import type { IGame, SortOption } from '../../core';
+import type { Category, GamesService, IGame, SortOption, Store } from '../../core';
 import { arrowLeftIcon, arrowRightIcon } from '../../assets/icons';
 
 export class LibraryPage {
+  private readonly gamesService: GamesService;
+  private readonly store: Store;
   private readonly sortOptions: {
     value: SortOption;
     label: string;
@@ -17,13 +19,16 @@ export class LibraryPage {
     { value: 'name-desc', label: 'Name Z→A' },
   ];
 
+  private categorySelected: Category = 'all';
   private sortSelected: SortOption = 'rating-desc';
   private readonly gamesPerPage: number = 6;
   private currentPage: number = 1;
   private readonly pageSum: number = Math.ceil(gameCardJson.meta.totalItems / this.gamesPerPage);
   private readonly onDetailsClick: () => void;
 
-  constructor(onDetailsClick: () => void) {
+  constructor(store: Store, gamesService: GamesService, onDetailsClick: () => void) {
+    this.store = store;
+    this.gamesService = gamesService;
     this.onDetailsClick = onDetailsClick;
   }
 
@@ -135,7 +140,8 @@ export class LibraryPage {
 
   private createGameCards(): HTMLElement {
     const container = createContainer('game-cards');
-    const gameData = gameCardJson.data;
+    const gameData = this.store.games.data?.data ?? [];
+    console.log(gameData)
 
     const gamesOnPage = this.getGamesPerPage(gameData, this.currentPage);
 
@@ -325,6 +331,11 @@ export class LibraryPage {
 
       if (!button) return;
 
+      const category = button.dataset.category;
+      if (!category || !this.isCategoryOption(category)) return;
+
+      this.categorySelected = category;
+
       const buttons = categories.querySelectorAll<HTMLButtonElement>('[data-category]');
 
       for (const categoryButton of buttons) {
@@ -333,9 +344,24 @@ export class LibraryPage {
     });
   }
 
-  public render(): HTMLElement {
-    const main = createElement('main', { className: 'main' });
+  private isCategoryOption(value: string): value is Category {
+    return categoriesJson.data.some((option) => option.label === value);
+  }
 
+    public async load(): Promise<void> {
+    const query = {
+      page: this.currentPage,
+      limit: this.gamesPerPage,
+      category: this.categorySelected,
+      sort: this.sortSelected
+    }
+    await this.gamesService.loadGames(query);  
+  }
+
+  public async render(): Promise<HTMLElement> {
+        await this.load();
+
+    const main = createElement('main', { className: 'main' });
     const section = this.createSection();
     main.append(section);
 

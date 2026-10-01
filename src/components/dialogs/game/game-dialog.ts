@@ -15,20 +15,21 @@ import type {
   IComment,
   GamesService,
   Store,
+  CommentsService,
 } from '../../../core';
 import { closeIconImg, likeIconImg, sendIconImg, starIcon } from '../../../assets/icons';
-import { commentsData } from '../../../data';
 import { GameStat } from '../../game-stat';
 
 export class GameDialog {
   private dialogElement: HTMLDialogElement;
   private store: Store;
   private gamesService: GamesService;
-  private readonly comments: IComment[] = commentsData.data;
+  private commentsService: CommentsService;
 
-  constructor(store: Store, gamesService: GamesService) {
+  constructor(store: Store, gamesService: GamesService, commentsService: CommentsService) {
     this.store = store;
     this.gamesService = gamesService;
+    this.commentsService = commentsService;
     this.dialogElement = this.render();
   }
 
@@ -229,17 +230,16 @@ export class GameDialog {
 
   private createComments(): HTMLElement {
     const container = createContainer('game-dialog__comments');
+
     const title = createElement('h3', {
       className: 'game-dialog__comments-title',
-      text: `Comments (${this.comments.length})`,
     });
+
     const form = this.createCommentInput();
 
-    container.append(title, form);
+    const comments = createContainer('game-dialog__comments-list');
 
-    for (const comment of this.comments) {
-      container.append(this.createCommentItem(comment));
-    }
+    container.append(title, form, comments);
 
     return container;
   }
@@ -277,29 +277,35 @@ export class GameDialog {
     return form;
   }
 
-  private createCommentItem(comment: IComment) {
+  private createCommentItem(comment: IComment): HTMLElement {
     const container = createContainer('game-dialog__comment');
+
     const header = this.createCommentHeader(comment);
+
     const text = createElement('p', {
       className: 'game-dialog__comment-text',
       text: comment.text,
     });
+
     const likes = createElement('button', {
       className: 'game-dialog__comment-likes',
       attributes: {
         type: 'button',
       },
     });
+
     iconToSvg(likeIconImg, likes);
-    const likesCount = createElement('h5', {
+
+    const likesCount = createElement('span', {
       className: 'game-dialog__comment-likes-count',
-      text: `${comment.likesCount}`,
+      text: String(comment.likesCount),
     });
 
-    if (comment.isLikedByCurrentUser) likes.classList.add('active');
+    if (comment.isLikedByCurrentUser) {
+      likes.classList.add('active');
+    }
 
     likes.append(likesCount);
-
     container.append(header, text, likes);
 
     return container;
@@ -429,6 +435,22 @@ export class GameDialog {
     }
   }
 
+  private renderCommentsData(): void {
+    const title = this.dialogElement.querySelector('.game-dialog__comments-title');
+
+    const commentsList = this.dialogElement.querySelector('.game-dialog__comments-list');
+
+    if (!title || !commentsList) return;
+
+    title.textContent = `Comments (${this.comments.length})`;
+
+    commentsList.replaceChildren();
+
+    for (const comment of this.comments) {
+      commentsList.append(this.createCommentItem(comment));
+    }
+  }
+
   private renderGameData(): void {
     this.renderHero();
     this.renderHeader();
@@ -436,6 +458,7 @@ export class GameDialog {
     this.renderSpecs(this.game.specs);
     this.renderFavouriteState(this.game.isLikedByCurrentUser);
     this.renderTopRecords(this.game.topRecords);
+    this.renderCommentsData();
   }
 
   private bindCloseButton(): void {
@@ -519,12 +542,17 @@ export class GameDialog {
     return this.game.isLikedByCurrentUser;
   }
 
-  private async load(slug: string): Promise<void> {
+  private async loadGame(slug: string): Promise<void> {
     await this.gamesService.loadGame(slug);
   }
 
+  private async loadComments(slug: string): Promise<void> {
+    await this.commentsService.loadComments(slug);
+  }
+
   public async open(slug: string): Promise<void> {
-    await this.load(slug);
+    await this.loadGame(slug);
+    await this.loadComments(slug);
     this.renderGameData();
     this.dialogElement.showModal();
   }
@@ -551,6 +579,14 @@ export class GameDialog {
     }
 
     return this.store.game.data.data;
+  }
+
+  public get comments(): IComment[] {
+    if (!this.store.comments.data?.data) {
+      throw new Error('Game comments is not loaded');
+    }
+
+    return this.store.comments.data.data;
   }
 
   public render(): HTMLDialogElement {

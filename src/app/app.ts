@@ -2,13 +2,15 @@ import { Header, Footer } from '../components';
 import { Router } from './router';
 import { AuthDialog } from '../components/dialogs/auth/auth-dialog';
 import { GameDialog } from '../components/dialogs/game/game-dialog';
-import { GamesApi, GamesService, Store } from '../core';
+import { CommentsApi, CommentsService, GamesApi, GamesService, Store } from '../core';
 
 export class App {
   public async render(): Promise<void> {
     const store = new Store();
     const gamesApi = new GamesApi();
     const gamesService = new GamesService(store, gamesApi);
+    const commentsApi = new CommentsApi();
+    const commentsService = new CommentsService(store, commentsApi);
     const authDialog = new AuthDialog();
     const header = new Header(
       (mode) => {
@@ -18,7 +20,7 @@ export class App {
         router.navigate(route);
       },
     );
-    const gameDialog = new GameDialog(store, gamesService);
+    const gameDialog = new GameDialog(store, gamesService, commentsService);
     const router = new Router(
       store,
       gamesService,

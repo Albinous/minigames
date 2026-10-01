@@ -12,9 +12,9 @@ import likeIcon from '../../assets/icons/like.svg';
 
 export class GameCard {
   private readonly game: IGame;
-  private readonly onDetailsClick: () => void;
+  private readonly onDetailsClick: (gameSelected: string) => void;
 
-  constructor(game: IGame, onDetailsClick: () => void) {
+  constructor(game: IGame, onDetailsClick: (gameSelected: string) => void) {
     this.game = game;
     this.onDetailsClick = onDetailsClick;
   }
@@ -80,7 +80,7 @@ export class GameCard {
     container.append(stats, buttonDetails);
 
     buttonDetails.addEventListener('click', () => {
-      this.onDetailsClick();
+      this.onDetailsClick(this.game.slug);
     });
 
     return container;

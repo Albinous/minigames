@@ -20,12 +20,12 @@ export class Router {
   };
 
   private readonly onRouteChange: (page: HTMLElement, route: Route) => void;
-  private readonly onDetailsClick: () => void;
+  private readonly onDetailsClick: (slug: string) => void;
 
   constructor(
     store: Store,
     gamesService: GamesService,
-    onDetailsClick: () => void,
+    onDetailsClick: (slug: string) => void,
     onRouteChange: (page: HTMLElement, route: Route) => void,
   ) {
     this.store = store;

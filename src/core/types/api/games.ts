@@ -1,10 +1,14 @@
-import type { IGame } from '../../services';
+import type { IGame, IGameDetails } from '../../services';
 import type { Category } from '../category';
 import type { SortOption } from '../sort';
 
 export interface GamesResponse {
   data: IGame[];
   meta: GamesMeta | undefined;
+}
+
+export interface GameResponse {
+  data: IGameDetails;
 }
 
 export interface GamesMeta {

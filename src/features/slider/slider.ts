@@ -17,9 +17,9 @@ export class Slider {
   private isDragging = false;
   private resizeObserver: ResizeObserver | undefined = undefined;
 
-  private readonly onDetailsClick: () => void;
+  private readonly onDetailsClick: (slug: string) => void;
 
-  constructor(onDetailsClick: () => void) {
+  constructor(onDetailsClick: (slug: string) => void) {
     this.onDetailsClick = onDetailsClick;
 
     this.games = gamesData.data;
@@ -248,8 +248,10 @@ export class Slider {
     for (const card of cards) {
       card.addEventListener('click', () => {
         if (this.isDragging) return;
+        const slug = card.querySelector('.slider-game-card__title')?.textContent;
+        if (!slug) return;
 
-        this.onDetailsClick?.();
+        this.onDetailsClick?.(slug);
       });
     }
   }

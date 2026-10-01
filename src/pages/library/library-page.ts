@@ -31,13 +31,13 @@ export class LibraryPage {
   private sortSelected: SortOption = 'rating-desc';
   private readonly gamesPerPage: number = 6;
   private currentPage: number = 1;
-  private readonly onDetailsClick: () => void;
+  private readonly onDetailsClick: (slug: string) => void;
 
   constructor(
     store: Store,
     gamesService: GamesService,
     categoriesService: CategoriesService,
-    onDetailsClick: () => void,
+    onDetailsClick: (slug: string) => void,
   ) {
     this.store = store;
     this.gamesService = gamesService;

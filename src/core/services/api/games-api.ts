@@ -1,6 +1,5 @@
 import { GAMES_BASE_URL } from '../../constants';
-import type { GamesQuery, GamesResponse } from '../../types';
-import type { IGame } from '../models';
+import type { GameResponse, GamesQuery, GamesResponse } from '../../types';
 import { Api } from './api';
 
 export class GamesApi extends Api {
@@ -22,7 +21,7 @@ export class GamesApi extends Api {
     return this.get(`${GAMES_BASE_URL}?${parameters.toString()}`);
   }
 
-  public async getGameDetails(gameSlug: string): Promise<IGame> {
+  public async getGameDetails(gameSlug: string): Promise<GameResponse> {
     return this.get(`${GAMES_BASE_URL}/${gameSlug}`);
   }
 }

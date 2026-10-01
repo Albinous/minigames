@@ -2,9 +2,9 @@ import { LeaderBoard, Slider } from '../../features';
 import { getHomePageView } from './home-page.view';
 
 export class HomePage {
-  private readonly onDetailsClick: () => void;
+  private readonly onDetailsClick: (slug: string) => void;
 
-  constructor(onDetailsClick: () => void) {
+  constructor(onDetailsClick: (slug: string) => void) {
     this.onDetailsClick = onDetailsClick;
   }
 

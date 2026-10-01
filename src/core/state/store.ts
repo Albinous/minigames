@@ -1,6 +1,7 @@
 import type {
   CategoriesResponse,
   CommentsResponse,
+  GameResponse,
   GamesResponse,
   LeaderboardResponse,
 } from '../types';
@@ -12,6 +13,10 @@ export class Store {
 
   public get games(): ResourceState<GamesResponse> {
     return this.state.games;
+  }
+
+  public get game(): ResourceState<GameResponse> {
+    return this.state.game;
   }
 
   public get categories(): ResourceState<CategoriesResponse> {

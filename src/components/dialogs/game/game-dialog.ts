@@ -8,18 +8,29 @@ import {
   formatTotalScore,
   iconToSvg,
 } from '../../../shared';
-import type { IGameDetails, IGameSpecs, ITopRecord, IComment } from '../../../core';
+import type {
+  IGameDetails,
+  IGameSpecs,
+  ITopRecord,
+  IComment,
+  GamesService,
+  Store,
+} from '../../../core';
 import { closeIconImg, likeIconImg, sendIconImg, starIcon } from '../../../assets/icons';
-import { gameDetailsData, commentsData } from '../../../data';
+import { commentsData } from '../../../data';
 import { GameStat } from '../../game-stat';
 
 export class GameDialog {
   private dialogElement: HTMLDialogElement | undefined;
-  private readonly game: IGameDetails = gameDetailsData.data;
+  private store: Store;
+  private gamesService: GamesService;
+  // private readonly game: IGameDetails;
   private readonly comments: IComment[] = commentsData.data;
   private initialLiked: boolean;
 
-  constructor() {
+  constructor(store: Store, gamesService: GamesService) {
+    this.store = store;
+    this.gamesService = gamesService;
     this.initialLiked = this.game.isLikedByCurrentUser;
   }
 
@@ -425,7 +436,12 @@ export class GameDialog {
     textarea.style.height = '';
   }
 
-  public open(): void {
+  private async load(slug: string): Promise<void> {
+    await this.gamesService.loadGame(slug);
+  }
+
+  public async open(slug: string): Promise<void> {
+    await this.load(slug);
     if (!this.dialogElement) return;
     this.dialogElement.showModal();
   }
@@ -444,6 +460,14 @@ export class GameDialog {
       },
       { once: true },
     );
+  }
+
+  public get game(): IGameDetails {
+    if (!this.store.game.data?.data) {
+      throw new Error('Game data is not loaded');
+    }
+
+    return this.store.game.data.data;
   }
 
   public render(): HTMLDialogElement {

@@ -18,12 +18,12 @@ export class App {
         router.navigate(route);
       },
     );
-    const gameDialog = new GameDialog();
+    const gameDialog = new GameDialog(store, gamesService);
     const router = new Router(
       store,
       gamesService,
-      () => {
-        gameDialog.open();
+      (slug: string) => {
+        gameDialog.open(slug);
       },
       (page, route) => {
         const currentPage = document.querySelector('main');

@@ -5,7 +5,7 @@ const AUTOPLAY_INTERVAL = 4000;
 
 export class Slider {
   private readonly store: Store;
-  private readonly gamesService: GamesService
+  private readonly gamesService: GamesService;
   private slider: HTMLElement | undefined = undefined;
   private track: HTMLElement | undefined = undefined;
   private activeIndex: number = 0;
@@ -256,7 +256,7 @@ export class Slider {
   }
 
   private async loadFeaturedGames(): Promise<void> {
-    await this.gamesService.loadGames({featured: true});
+    await this.gamesService.loadGames({ featured: true });
   }
 
   private get featuredGames(): IGame[] {

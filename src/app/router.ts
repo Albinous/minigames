@@ -1,4 +1,11 @@
-import { CategoriesApi, CategoriesService, type GamesService, type Store } from '../core';
+import {
+  CategoriesApi,
+  CategoriesService,
+  LeaderboardApi,
+  LeaderboardService,
+  type GamesService,
+  type Store,
+} from '../core';
 import { HomePage, LibraryPage } from '../pages';
 
 export type Route = '/' | '/library';
@@ -7,7 +14,15 @@ export class Router {
   private readonly store: Store;
   private readonly gamesService: GamesService;
   private readonly routes: Record<Route, () => Promise<HTMLElement>> = {
-    '/': () => new HomePage(this.store, this.gamesService, this.onDetailsClick).render(),
+    '/': () => {
+      const leaderboardService = new LeaderboardService(this.store, new LeaderboardApi());
+      return new HomePage(
+        this.store,
+        this.gamesService,
+        leaderboardService,
+        this.onDetailsClick,
+      ).render();
+    },
     '/library': () => {
       const categoriesService = new CategoriesService(this.store, new CategoriesApi());
       return new LibraryPage(

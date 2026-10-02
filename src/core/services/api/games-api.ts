@@ -3,7 +3,13 @@ import type { GameResponse, GamesQuery, GamesResponse } from '../../types';
 import { Api } from './api';
 
 export class GamesApi extends Api {
-  public async getGames({ page, limit, category, sort, featured }: GamesQuery): Promise<GamesResponse> {
+  public async getGames({
+    page,
+    limit,
+    category,
+    sort,
+    featured,
+  }: GamesQuery): Promise<GamesResponse> {
     const parameters = new URLSearchParams({
       ...(page !== undefined && { page: String(page) }),
       ...(limit !== undefined && { limit: String(limit) }),

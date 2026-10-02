@@ -7,7 +7,7 @@ export class Router {
   private readonly store: Store;
   private readonly gamesService: GamesService;
   private readonly routes: Record<Route, () => Promise<HTMLElement>> = {
-    '/': () => new HomePage(this.onDetailsClick).render(),
+    '/': () => new HomePage(this.store, this.gamesService, this.onDetailsClick).render(),
     '/library': () => {
       const categoriesService = new CategoriesService(this.store, new CategoriesApi());
       return new LibraryPage(

@@ -29,4 +29,5 @@ export interface GamesQuery {
   limit?: number;
   category?: Category;
   sort?: SortOption;
+  featured?: boolean;
 }

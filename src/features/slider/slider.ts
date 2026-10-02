@@ -246,7 +246,8 @@ export class Slider {
     for (const card of cards) {
       card.addEventListener('click', () => {
         if (this.isDragging) return;
-        const slug = card.querySelector('.slider-game-card__title')?.textContent;
+        const slug = card.dataset.gameSlug;
+
         if (!slug) return;
 
         this.onDetailsClick?.(slug);

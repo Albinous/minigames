@@ -44,7 +44,7 @@ function getPlayerView(player: ILeaderboard): string {
       <td class="leaderboard-player__item leaderboard-player__games">${player.gamesPlayed}</td>
       <td class="leaderboard-player__item leaderboard-player__score">
         <span class="full">${formatTotalScore(player.totalScore)}</span>
-        <span class="short">${formatLikesCount(player.totalScore)}K</span>
+        <span class="short">${formatLikesCount(player.totalScore)}</span>
       </td>
       <td class="leaderboard-player__item leaderboard-player__streak">
         <span class="leaderboard-player__streak-value">🔥 ${player.streakDays}</span>

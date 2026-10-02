@@ -1,12 +1,22 @@
 import './library-page.scss';
-import { categoriesJson, gameCardJson } from '../../data';
 import { createElement, createContainer, setActiveElement } from '../../shared';
-import type { ArrowType, SortOption } from './library-page.types';
+import type { ArrowType } from './library-page.types';
 import { GameCard } from '../../components';
-import type { IGame } from '../../core';
+import {
+  CategoriesService,
+  type Category,
+  type CategoryData,
+  type GamesService,
+  type IGame,
+  type SortOption,
+  type Store,
+} from '../../core';
 import { arrowLeftIcon, arrowRightIcon } from '../../assets/icons';
 
 export class LibraryPage {
+  private readonly store: Store;
+  private readonly gamesService: GamesService;
+  private readonly categoriesService: CategoriesService;
   private readonly sortOptions: {
     value: SortOption;
     label: string;
@@ -17,13 +27,21 @@ export class LibraryPage {
     { value: 'name-desc', label: 'Name Z→A' },
   ];
 
+  private categorySelected: Category = 'all';
   private sortSelected: SortOption = 'rating-desc';
   private readonly gamesPerPage: number = 6;
   private currentPage: number = 1;
-  private readonly pageSum: number = Math.ceil(gameCardJson.meta.totalItems / this.gamesPerPage);
-  private readonly onDetailsClick: () => void;
+  private readonly onDetailsClick: (slug: string) => void;
 
-  constructor(onDetailsClick: () => void) {
+  constructor(
+    store: Store,
+    gamesService: GamesService,
+    categoriesService: CategoriesService,
+    onDetailsClick: (slug: string) => void,
+  ) {
+    this.store = store;
+    this.gamesService = gamesService;
+    this.categoriesService = categoriesService;
     this.onDetailsClick = onDetailsClick;
   }
 
@@ -66,8 +84,7 @@ export class LibraryPage {
 
   private createCategories(): HTMLElement {
     const categories = createElement('div', { className: 'library-categories' });
-    const categoriesData = categoriesJson.data;
-    for (const category of categoriesData) {
+    for (const category of this.categoriesData) {
       const categoryButton = createElement('button', {
         className: 'btn btn-secondary library-category',
         text: category.label,
@@ -135,9 +152,9 @@ export class LibraryPage {
 
   private createGameCards(): HTMLElement {
     const container = createContainer('game-cards');
-    const gameData = gameCardJson.data;
+    const gamesData = this.store.games.data?.data ?? [];
 
-    const gamesOnPage = this.getGamesPerPage(gameData, this.currentPage);
+    const gamesOnPage = this.getGamesPerPage(gamesData, this.currentPage);
 
     for (const game of gamesOnPage) {
       const gameCard = new GameCard(game, this.onDetailsClick);
@@ -325,6 +342,11 @@ export class LibraryPage {
 
       if (!button) return;
 
+      const category = button.dataset.category;
+      if (!category || !this.isCategoryOption(category)) return;
+
+      this.categorySelected = category;
+
       const buttons = categories.querySelectorAll<HTMLButtonElement>('[data-category]');
 
       for (const categoryButton of buttons) {
@@ -333,9 +355,37 @@ export class LibraryPage {
     });
   }
 
-  public render(): HTMLElement {
-    const main = createElement('main', { className: 'main' });
+  private isCategoryOption(value: string): value is Category {
+    return this.categoriesData.some((option) => option.label === value);
+  }
 
+  private get categoriesData(): CategoryData[] {
+    return this.store.categories.data?.data ?? [];
+  }
+
+  private get pageSum(): number {
+    const totalItems = Math.ceil(this.store.games.data?.meta?.totalItems ?? 0);
+    return totalItems / this.gamesPerPage;
+  }
+
+  public async load(): Promise<void> {
+    const query = {
+      page: this.currentPage,
+      limit: this.gamesPerPage,
+      category: this.categorySelected,
+      sort: this.sortSelected,
+    };
+
+    await Promise.all([
+      this.gamesService.loadGames(query),
+      this.categoriesService.loadCategories(),
+    ]);
+  }
+
+  public async render(): Promise<HTMLElement> {
+    await this.load();
+
+    const main = createElement('main', { className: 'main' });
     const section = this.createSection();
     main.append(section);
 

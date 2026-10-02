@@ -308,6 +308,12 @@
         max-width: 215px;
       }
     }
+
+    &-list {
+      display: flex;
+      flex-direction: column;
+      gap: $size-2;
+    }
   }
 
   &__comment {

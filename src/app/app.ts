@@ -2,9 +2,15 @@ import { Header, Footer } from '../components';
 import { Router } from './router';
 import { AuthDialog } from '../components/dialogs/auth/auth-dialog';
 import { GameDialog } from '../components/dialogs/game/game-dialog';
+import { CommentsApi, CommentsService, GamesApi, GamesService, Store } from '../core';
 
 export class App {
-  public render(): void {
+  public async render(): Promise<void> {
+    const store = new Store();
+    const gamesApi = new GamesApi();
+    const gamesService = new GamesService(store, gamesApi);
+    const commentsApi = new CommentsApi();
+    const commentsService = new CommentsService(store, commentsApi);
     const authDialog = new AuthDialog();
     const header = new Header(
       (mode) => {
@@ -14,10 +20,12 @@ export class App {
         router.navigate(route);
       },
     );
-    const gameDialog = new GameDialog();
+    const gameDialog = new GameDialog(store, gamesService, commentsService);
     const router = new Router(
-      () => {
-        gameDialog.open();
+      store,
+      gamesService,
+      (slug: string) => {
+        gameDialog.open(slug);
       },
       (page, route) => {
         const currentPage = document.querySelector('main');
@@ -30,7 +38,7 @@ export class App {
 
     document.body.prepend(
       header.render(),
-      router.render(),
+      await router.render(),
       footer.render(),
       authDialog.render(),
       gameDialog.render(),

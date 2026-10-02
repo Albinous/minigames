@@ -1,15 +1,14 @@
 import { getSliderView } from './slider.view';
-import gamesData from '../../data/all-games-seed.json';
-import type { IGame } from '../../core';
+import type { GamesService, IGame, Store } from '../../core';
 
 const AUTOPLAY_INTERVAL = 4000;
 
 export class Slider {
+  private readonly store: Store;
+  private readonly gamesService: GamesService;
   private slider: HTMLElement | undefined = undefined;
   private track: HTMLElement | undefined = undefined;
   private activeIndex: number = 0;
-  private games: IGame[];
-  private featuredGames: IGame[];
   private autoplayId: number | undefined = undefined;
   private autoplayStartedAt = 0;
   private remainingTime = AUTOPLAY_INTERVAL;
@@ -17,13 +16,12 @@ export class Slider {
   private isDragging = false;
   private resizeObserver: ResizeObserver | undefined = undefined;
 
-  private readonly onDetailsClick: () => void;
+  private readonly onDetailsClick: (slug: string) => void;
 
-  constructor(onDetailsClick: () => void) {
+  constructor(store: Store, gamesService: GamesService, onDetailsClick: (slug: string) => void) {
+    this.store = store;
+    this.gamesService = gamesService;
     this.onDetailsClick = onDetailsClick;
-
-    this.games = gamesData.data;
-    this.featuredGames = this.games.filter((game) => game.featured);
   }
 
   private getCards(): HTMLElement[] {
@@ -248,14 +246,27 @@ export class Slider {
     for (const card of cards) {
       card.addEventListener('click', () => {
         if (this.isDragging) return;
+        const slug = card.dataset.gameSlug;
 
-        this.onDetailsClick?.();
+        if (!slug) return;
+
+        this.onDetailsClick?.(slug);
       });
     }
   }
 
-  public render(): HTMLElement {
+  private async loadFeaturedGames(): Promise<void> {
+    await this.gamesService.loadGames({ featured: true });
+  }
+
+  private get featuredGames(): IGame[] {
+    return this.store.games.data?.data ?? [];
+  }
+
+  public async render(): Promise<HTMLElement> {
     this.slider = document.createElement('section');
+
+    await this.loadFeaturedGames();
 
     this.slider.className = 'games';
     this.slider.innerHTML = getSliderView(this.featuredGames);

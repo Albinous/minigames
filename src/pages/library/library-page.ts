@@ -6,6 +6,7 @@ import {
   CategoriesService,
   type Category,
   type CategoryData,
+  type GamesQuery,
   type GamesService,
   type IGame,
   type SortOption,
@@ -152,11 +153,8 @@ export class LibraryPage {
 
   private createGameCards(): HTMLElement {
     const container = createContainer('game-cards');
-    const gamesData = this.store.games.data?.data ?? [];
 
-    const gamesOnPage = this.getGamesPerPage(gamesData, this.currentPage);
-
-    for (const game of gamesOnPage) {
+    for (const game of this.gamesData) {
       const gameCard = new GameCard(game, this.onDetailsClick);
       container.append(gameCard.render());
     }
@@ -164,12 +162,6 @@ export class LibraryPage {
     return container;
   }
 
-  private getGamesPerPage(games: IGame[], page: number): IGame[] {
-    const start = (page - 1) * this.gamesPerPage;
-    const end = this.gamesPerPage + start;
-
-    return games.slice(start, end);
-  }
 
   private createPagination(): HTMLElement {
     const container = createContainer('library-pagination');
@@ -326,41 +318,48 @@ export class LibraryPage {
 
       const options = sortContainer.querySelectorAll<HTMLButtonElement>('.library-sort__option');
 
-      for (const option of options) {
-        option.classList.toggle('active', option === optionSelected);
-      }
+      setActiveElement(options, optionSelected);
 
       sortContainer.classList.remove('is-open');
     });
   }
 
-  private bindCategoryEvents(main: HTMLElement): void {
+  private async bindCategoryEvents(main: HTMLElement): Promise<void> {
     const categories = main.querySelector('.library-categories');
-    categories?.addEventListener('click', (event) => {
+    categories?.addEventListener('click', async (event) => {
       if (!(event.target instanceof Element)) return;
       const button = event.target.closest<HTMLButtonElement>('[data-category]');
-
       if (!button) return;
 
       const category = button.dataset.category;
       if (!category || !this.isCategoryOption(category)) return;
 
       this.categorySelected = category;
+      this.currentPage = 1;
 
       const buttons = categories.querySelectorAll<HTMLButtonElement>('[data-category]');
 
-      for (const categoryButton of buttons) {
-        categoryButton.classList.toggle('active', categoryButton === button);
-      }
+      setActiveElement(buttons, button);
+
+      await this.gamesService.loadGames(this.gamesQuery);
+
+      const gameCardsContainer = main.querySelector('.game-cards');
+      const newGameCards = this.createGameCards()
+
+      gameCardsContainer?.replaceWith(newGameCards);
     });
   }
 
   private isCategoryOption(value: string): value is Category {
-    return this.categoriesData.some((option) => option.label === value);
+    return this.categoriesData.some((option) => option.slug === value);
   }
 
   private get categoriesData(): CategoryData[] {
     return this.store.categories.data?.data ?? [];
+  }
+
+  private get gamesData(): IGame[] {
+    return this.store.games.data?.data ?? [];
   }
 
   private get pageSum(): number {
@@ -368,16 +367,19 @@ export class LibraryPage {
     return totalItems / this.gamesPerPage;
   }
 
-  public async load(): Promise<void> {
-    const query = {
+  private get gamesQuery(): GamesQuery {
+    return {
       page: this.currentPage,
       limit: this.gamesPerPage,
       category: this.categorySelected,
       sort: this.sortSelected,
     };
+  }
+
+  public async load(): Promise<void> {
 
     await Promise.all([
-      this.gamesService.loadGames(query),
+      this.gamesService.loadGames(this.gamesQuery),
       this.categoriesService.loadCategories(),
     ]);
   }

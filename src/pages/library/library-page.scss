@@ -157,6 +157,10 @@
           height: 14px;
         }
       }
+
+      &:not(.active):hover {
+        background-color: $color-surface;
+      }
     }
   }
 

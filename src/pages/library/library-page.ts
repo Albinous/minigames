@@ -162,7 +162,6 @@ export class LibraryPage {
     return container;
   }
 
-
   private createPagination(): HTMLElement {
     const container = createContainer('library-pagination');
     const previousButton = this.createArrowButton('prev', 'Previous', arrowLeftIcon);
@@ -344,7 +343,7 @@ export class LibraryPage {
       await this.gamesService.loadGames(this.gamesQuery);
 
       const gameCardsContainer = main.querySelector('.game-cards');
-      const newGameCards = this.createGameCards()
+      const newGameCards = this.createGameCards();
 
       gameCardsContainer?.replaceWith(newGameCards);
     });
@@ -377,7 +376,6 @@ export class LibraryPage {
   }
 
   public async load(): Promise<void> {
-
     await Promise.all([
       this.gamesService.loadGames(this.gamesQuery),
       this.categoriesService.loadCategories(),

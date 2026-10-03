@@ -392,8 +392,7 @@ export class LibraryPage {
   }
 
   private get pageSum(): number {
-    const totalItems = this.store.games.data?.meta?.totalItems ?? 0;
-    return Math.ceil(totalItems / this.gamesPerPage);
+    return this.store.games.data?.meta?.totalPages ?? 0;
   }
 
   private get gamesQuery(): GamesQuery {

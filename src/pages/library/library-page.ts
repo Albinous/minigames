@@ -291,6 +291,18 @@ export class LibraryPage {
     this.setDisabledArrow(previousButton, nextButton);
   }
 
+  private updatePageButtons(main: HTMLElement): void {
+    const pageButtons = main.querySelector('.library-pagination__pages');
+    if (!pageButtons) return;
+    const newPageButtons = this.createPageButtons();
+    const previousButton = main.querySelector<HTMLButtonElement>('.library-pagination__arrow-prev');
+    const nextButton = main.querySelector<HTMLButtonElement>('.library-pagination__arrow-next');
+
+    pageButtons?.replaceWith(newPageButtons);
+    if (!previousButton || !nextButton) return;
+    this.setDisabledArrow(previousButton, nextButton);
+  }
+
   private bindSortButtonEvents(main: HTMLElement): void {
     const sortContainer = main.querySelector('.library-sort');
     const sortButton = main.querySelector('.library-sort__btn');
@@ -352,6 +364,7 @@ export class LibraryPage {
       setActiveElement(buttons, button);
 
       await this.updateCards(main);
+      this.updatePageButtons(main);
       this.setCurrentPage(main, this.currentPage);
     });
   }
@@ -364,6 +377,7 @@ export class LibraryPage {
     await this.gamesService.loadGames(this.gamesQuery);
 
     const gameCardsContainer = main.querySelector('.game-cards');
+    if (!gameCardsContainer) return;
     const newGameCards = this.createGameCards();
 
     gameCardsContainer?.replaceWith(newGameCards);
@@ -378,8 +392,8 @@ export class LibraryPage {
   }
 
   private get pageSum(): number {
-    const totalItems = Math.ceil(this.store.games.data?.meta?.totalItems ?? 0);
-    return totalItems / this.gamesPerPage;
+    const totalItems = this.store.games.data?.meta?.totalItems ?? 0;
+    return Math.ceil(totalItems / this.gamesPerPage);
   }
 
   private get gamesQuery(): GamesQuery {

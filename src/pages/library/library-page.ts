@@ -226,6 +226,43 @@ export class LibraryPage {
     return button;
   }
 
+  private bindPaginationEvents(main: HTMLElement): void {
+    const pagesContainer = main.querySelector('.library-pagination');
+    if (!pagesContainer) return;
+
+    pagesContainer.addEventListener('click', (event) => {
+      if (!(event.target instanceof Element)) return;
+      const button = event.target.closest<HTMLButtonElement>('[data-page]');
+      if (!button) return;
+
+      const pageNumber = Number(button.dataset.page);
+      if (!pageNumber) return;
+
+      const previousButton = pagesContainer.querySelector<HTMLButtonElement>(
+        '.library-pagination__arrow-prev',
+      );
+      const nextButton = pagesContainer.querySelector<HTMLButtonElement>(
+        '.library-pagination__arrow-next',
+      );
+
+      if (!previousButton || !nextButton) return;
+      this.changePage(main, pageNumber, previousButton, nextButton);
+    });
+  }
+
+  private bindPaginationArrowEvents(main: HTMLElement): void {
+    const previousButton = main.querySelector<HTMLButtonElement>('.library-pagination__arrow-prev');
+    const nextButton = main.querySelector<HTMLButtonElement>('.library-pagination__arrow-next');
+    if (!previousButton || !nextButton) return;
+
+    previousButton.addEventListener('click', () => {
+      this.changePage(main, this.currentPage - 1, previousButton, nextButton);
+    });
+    nextButton.addEventListener('click', () => {
+      this.changePage(main, this.currentPage + 1, previousButton, nextButton);
+    });
+  }
+
   private setCurrentPage(main: HTMLElement, page: number) {
     this.currentPage = page;
 
@@ -243,45 +280,15 @@ export class LibraryPage {
     next.disabled = this.currentPage === this.pageSum;
   }
 
-  private bindPaginationEvents(main: HTMLElement): void {
-    const pagesContainer = main.querySelector('.library-pagination');
-    if (!pagesContainer) return;
-
-    pagesContainer.addEventListener('click', (event) => {
-      if (!(event.target instanceof Element)) return;
-      const button = event.target.closest<HTMLButtonElement>('[data-page]');
-      if (!button) return;
-
-      const pageNumber = Number(button.dataset.page);
-      if (!pageNumber) return;
-
-      this.setCurrentPage(main, pageNumber);
-
-      const previousButton = pagesContainer.querySelector<HTMLButtonElement>(
-        '.library-pagination__arrow-prev',
-      );
-      const nextButton = pagesContainer.querySelector<HTMLButtonElement>(
-        '.library-pagination__arrow-next',
-      );
-
-      if (!previousButton || !nextButton) return;
-      this.setDisabledArrow(previousButton, nextButton);
-    });
-  }
-
-  private bindPaginationArrowEvents(main: HTMLElement): void {
-    const previousButton = main.querySelector<HTMLButtonElement>('.library-pagination__arrow-prev');
-    const nextButton = main.querySelector<HTMLButtonElement>('.library-pagination__arrow-next');
-    if (!previousButton || !nextButton) return;
-
-    previousButton.addEventListener('click', () => {
-      this.setCurrentPage(main, this.currentPage - 1);
-      this.setDisabledArrow(previousButton, nextButton);
-    });
-    nextButton.addEventListener('click', () => {
-      this.setCurrentPage(main, this.currentPage + 1);
-      this.setDisabledArrow(previousButton, nextButton);
-    });
+  private async changePage(
+    main: HTMLElement,
+    page: number,
+    previousButton: HTMLButtonElement,
+    nextButton: HTMLButtonElement,
+  ): Promise<void> {
+    this.setCurrentPage(main, page);
+    await this.updateCards(main);
+    this.setDisabledArrow(previousButton, nextButton);
   }
 
   private bindSortButtonEvents(main: HTMLElement): void {
@@ -323,6 +330,7 @@ export class LibraryPage {
       sortContainer.classList.remove('is-open');
 
       await this.updateCards(main);
+      this.setCurrentPage(main, this.currentPage);
     });
   }
 
@@ -344,6 +352,7 @@ export class LibraryPage {
       setActiveElement(buttons, button);
 
       await this.updateCards(main);
+      this.setCurrentPage(main, this.currentPage);
     });
   }
 

@@ -298,7 +298,7 @@ export class LibraryPage {
   private bindSortOptionsEvents(main: HTMLElement): void {
     const sortContainer = main.querySelector('.library-sort');
 
-    sortContainer?.addEventListener('click', (event) => {
+    sortContainer?.addEventListener('click', async (event) => {
       if (!(event.target instanceof Element)) return;
       const optionSelected = event.target.closest<HTMLButtonElement>('[data-sort]');
 
@@ -309,6 +309,7 @@ export class LibraryPage {
       if (!sort || !this.isSortOption(sort)) return;
 
       this.sortSelected = sort;
+      this.currentPage = 1;
 
       const sortButton = sortContainer.querySelector<HTMLButtonElement>('.library-sort__btn');
       if (sortButton) {
@@ -320,10 +321,12 @@ export class LibraryPage {
       setActiveElement(options, optionSelected);
 
       sortContainer.classList.remove('is-open');
+
+      await this.updateCards(main);
     });
   }
 
-  private async bindCategoryEvents(main: HTMLElement): Promise<void> {
+  private bindCategoryEvents(main: HTMLElement): void {
     const categories = main.querySelector('.library-categories');
     categories?.addEventListener('click', async (event) => {
       if (!(event.target instanceof Element)) return;
@@ -340,17 +343,21 @@ export class LibraryPage {
 
       setActiveElement(buttons, button);
 
-      await this.gamesService.loadGames(this.gamesQuery);
-
-      const gameCardsContainer = main.querySelector('.game-cards');
-      const newGameCards = this.createGameCards();
-
-      gameCardsContainer?.replaceWith(newGameCards);
+      await this.updateCards(main);
     });
   }
 
   private isCategoryOption(value: string): value is Category {
     return this.categoriesData.some((option) => option.slug === value);
+  }
+
+  private async updateCards(main: HTMLElement): Promise<void> {
+    await this.gamesService.loadGames(this.gamesQuery);
+
+    const gameCardsContainer = main.querySelector('.game-cards');
+    const newGameCards = this.createGameCards();
+
+    gameCardsContainer?.replaceWith(newGameCards);
   }
 
   private get categoriesData(): CategoryData[] {

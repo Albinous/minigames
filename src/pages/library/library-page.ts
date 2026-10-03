@@ -375,7 +375,7 @@ export class LibraryPage {
   }
 
   private get totalPages(): number {
-    return this.store.games.data?.meta?.totalPages ?? 1;
+    return Math.max(this.store.games.data?.meta?.totalPages ?? 0, 1);
   }
 
   private get gamesQuery(): GamesQuery {

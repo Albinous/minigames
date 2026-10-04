@@ -12,6 +12,7 @@ export class CategoriesService {
 
   public async loadCategories(): Promise<void> {
     this.store.categories.isLoading = true;
+    this.store.games.error = undefined;
 
     try {
       // const shouldFail = true;

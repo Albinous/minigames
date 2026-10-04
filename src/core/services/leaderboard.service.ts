@@ -12,6 +12,7 @@ export class LeaderboardService {
 
   public async loadLeaderboard(): Promise<void> {
     this.store.leaderboard.isLoading = true;
+    this.store.games.error = undefined;
 
     try {
       const response = await this.api.getLeaderboard();

@@ -19,12 +19,18 @@ import type {
 } from '../../../core';
 import { closeIconImg, likeIconImg, sendIconImg, starIcon } from '../../../assets/icons';
 import { GameStat } from '../../game-stat';
+import { ErrorState } from '../../error-state';
+import { EmptyState } from '../../empty-state';
+import { GameDetailsSkeleton } from './game-dialog-skeleton';
 
 export class GameDialog {
   private dialogElement: HTMLDialogElement;
   private store: Store;
   private gamesService: GamesService;
   private commentsService: CommentsService;
+  private readonly errorState = new ErrorState();
+  private readonly emptyState = new EmptyState();
+  private currentSlug = '';
 
   constructor(store: Store, gamesService: GamesService, commentsService: CommentsService) {
     this.store = store;
@@ -550,11 +556,58 @@ export class GameDialog {
     await this.commentsService.loadComments(slug);
   }
 
-  public async open(slug: string): Promise<void> {
-    await this.loadGame(slug);
-    await this.loadComments(slug);
+  private renderLoadingState(): void {
+    const content = this.dialogElement.querySelector('.game-dialog__content');
+
+    if (!content) return;
+
+    content.replaceChildren(new GameDetailsSkeleton().render());
+  }
+
+  private renderGameState(): void {
+    const content = this.dialogElement.querySelector('.game-dialog__content');
+
+    if (!content) return;
+
+    if (this.store.game.error) {
+      content.replaceChildren(
+        this.errorState.render(this.store.game.error, () => this.retryLoadGame()),
+      );
+
+      return;
+    }
+
+    if (!this.store.game.data?.data) {
+      content.replaceChildren(this.emptyState.render());
+
+      return;
+    }
+
+    content.replaceChildren(this.createContent());
+
     this.renderGameData();
+  }
+
+  private async retryLoadGame(): Promise<void> {
+    const loadPromise = this.loadGame(this.currentSlug);
+
+    this.renderLoadingState();
+
+    await loadPromise;
+
+    this.renderGameState();
+  }
+
+  public async open(slug: string): Promise<void> {
+    this.currentSlug = slug;
+
     this.dialogElement.showModal();
+
+    this.renderLoadingState();
+
+    await Promise.all([this.loadGame(slug), this.loadComments(slug)]);
+
+    this.renderGameState();
   }
 
   public close(): void {

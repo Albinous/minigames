@@ -31,6 +31,7 @@ export class GamesService {
 
     try {
       const response = await this.api.getGameDetails(slug);
+      await new Promise((resolve) => setTimeout(resolve, 2000));
 
       this.store.game.data = response;
     } catch {

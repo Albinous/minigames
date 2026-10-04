@@ -199,7 +199,7 @@ export class LibraryPage {
   private createPageButtons(): HTMLElement {
     const pageButtons = createContainer('library-pagination__pages');
 
-    const maxVisiblePages = window.innerWidth < 768 ? 3 : this.totalPages;
+    const maxVisiblePages = window.innerWidth < 768 ? 3 : 4;
 
     for (let index = 1; index <= Math.min(maxVisiblePages, this.totalPages); index++) {
       const pageButton = this.createPageButton(index);
@@ -224,6 +224,29 @@ export class LibraryPage {
     }
 
     return button;
+  }
+
+    private setDisabledArrow(previous: HTMLButtonElement, next: HTMLButtonElement) {
+    previous.disabled = this.currentPage === 1;
+    next.disabled = this.currentPage === this.totalPages;
+  }
+
+  private async changePage(main: HTMLElement, page: number): Promise<void> {
+    await this.gamesService.loadGames({ ...this.gamesQuery, page });
+    this.updateCards(main);
+    this.updatePageButtons(main);
+  }
+
+  private updatePageButtons(main: HTMLElement): void {
+    const pageButtons = main.querySelector('.library-pagination__pages');
+    if (!pageButtons) return;
+    const newPageButtons = this.createPageButtons();
+    const previousButton = main.querySelector<HTMLButtonElement>('.library-pagination__arrow-prev');
+    const nextButton = main.querySelector<HTMLButtonElement>('.library-pagination__arrow-next');
+
+    pageButtons?.replaceWith(newPageButtons);
+    if (!previousButton || !nextButton) return;
+    this.setDisabledArrow(previousButton, nextButton);
   }
 
   private bindPaginationEvents(main: HTMLElement): void {
@@ -263,27 +286,10 @@ export class LibraryPage {
     });
   }
 
-  private setDisabledArrow(previous: HTMLButtonElement, next: HTMLButtonElement) {
-    previous.disabled = this.currentPage === 1;
-    next.disabled = this.currentPage === this.totalPages;
-  }
-
-  private async changePage(main: HTMLElement, page: number): Promise<void> {
-    await this.gamesService.loadGames({ ...this.gamesQuery, page });
-    this.updateCards(main);
-    this.updatePageButtons(main);
-  }
-
-  private updatePageButtons(main: HTMLElement): void {
-    const pageButtons = main.querySelector('.library-pagination__pages');
-    if (!pageButtons) return;
-    const newPageButtons = this.createPageButtons();
-    const previousButton = main.querySelector<HTMLButtonElement>('.library-pagination__arrow-prev');
-    const nextButton = main.querySelector<HTMLButtonElement>('.library-pagination__arrow-next');
-
-    pageButtons?.replaceWith(newPageButtons);
-    if (!previousButton || !nextButton) return;
-    this.setDisabledArrow(previousButton, nextButton);
+  private bindResizeEvent(main: HTMLElement): void {
+    window.addEventListener('resize', () => {
+      this.updatePageButtons(main);
+    });
   }
 
   private bindSortButtonEvents(main: HTMLElement): void {
@@ -406,6 +412,7 @@ export class LibraryPage {
     this.bindSortOptionsEvents(main);
     this.bindPaginationEvents(main);
     this.bindPaginationArrowEvents(main);
+    this.bindResizeEvent(main);
 
     return main;
   }

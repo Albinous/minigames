@@ -22,6 +22,7 @@ import { GameStat } from '../../game-stat';
 import { ErrorState } from '../../error-state';
 import { EmptyState } from '../../empty-state';
 import { GameDetailsSkeleton } from './game-dialog-skeleton';
+import { CommentSkeleton } from './comments-skeleton';
 
 export class GameDialog {
   private dialogElement: HTMLDialogElement;
@@ -243,11 +244,51 @@ export class GameDialog {
 
     const form = this.createCommentInput();
 
-    const comments = createContainer('game-dialog__comments-list');
+    const comments = this.createCommentsList();
 
     container.append(title, form, comments);
 
     return container;
+  }
+
+  private createCommentsList(): HTMLElement {
+    const comments = createContainer('game-dialog__comments-list');
+
+    if (this.store.comments.isLoading) {
+      comments.append(new CommentSkeleton().render());
+      return comments;
+    }
+
+    if (this.store.comments.error) {
+      comments.append(
+        this.errorState.render(this.store.comments.error, () => this.retryLoadComments()),
+      );
+
+      return comments;
+    }
+
+    const commentsData = this.store.comments.data?.data;
+
+    if (!commentsData || commentsData.length === 0) {
+      comments.append(this.emptyState.render());
+      return comments;
+    }
+
+    for (const comment of commentsData) {
+      comments.append(this.createCommentItem(comment));
+    }
+
+    return comments;
+  }
+
+  private async retryLoadComments(): Promise<void> {
+    const loadPromise = this.loadComments(this.currentSlug);
+
+    this.renderCommentsState();
+
+    await loadPromise;
+
+    this.renderCommentsState();
   }
 
   private createCommentInput(): HTMLFormElement {
@@ -441,20 +482,50 @@ export class GameDialog {
     }
   }
 
-  private renderCommentsData(): void {
+  private renderCommentsState(): void {
     const title = this.dialogElement.querySelector('.game-dialog__comments-title');
 
-    const commentsList = this.dialogElement.querySelector('.game-dialog__comments-list');
+    const list = this.dialogElement.querySelector('.game-dialog__comments-list');
 
-    if (!title || !commentsList) return;
+    if (!title || !list) return;
 
-    title.textContent = `Comments (${this.comments.length})`;
+    if (this.store.comments.isLoading) {
+      title.textContent = 'Comments';
 
-    commentsList.replaceChildren();
+      const skeleton = new CommentSkeleton();
 
-    for (const comment of this.comments) {
-      commentsList.append(this.createCommentItem(comment));
+      list.replaceChildren(skeleton.render());
+
+      return;
     }
+
+    if (this.store.comments.error) {
+      title.textContent = 'Comments';
+
+      const errorState = this.errorState.render(this.store.comments.error, () =>
+        this.retryLoadComments(),
+      );
+
+      list.replaceChildren(errorState);
+
+      return;
+    }
+
+    const comments = this.store.comments.data?.data;
+
+    if (!comments || comments.length === 0) {
+      title.textContent = 'Comments';
+
+      list.replaceChildren(this.emptyState.render());
+
+      return;
+    }
+
+    title.textContent = `Comments (${comments.length})`;
+
+    const commentElements = comments.map((comment) => this.createCommentItem(comment));
+
+    list.replaceChildren(...commentElements);
   }
 
   private renderGameData(): void {
@@ -464,7 +535,6 @@ export class GameDialog {
     this.renderSpecs(this.game.specs);
     this.renderFavouriteState(this.game.isLikedByCurrentUser);
     this.renderTopRecords(this.game.topRecords);
-    this.renderCommentsData();
   }
 
   private bindCloseButton(): void {
@@ -586,6 +656,7 @@ export class GameDialog {
     content.replaceChildren(this.createContent());
 
     this.renderGameData();
+    this.renderCommentsState();
   }
 
   private async retryLoadGame(): Promise<void> {

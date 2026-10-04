@@ -419,6 +419,7 @@
 
 .game-details-skeleton {
   display: flex;
+  flex-direction: column;
   gap: $size-4;
 
   @include mobile {
@@ -466,5 +467,32 @@
   &__button {
     width: 130px;
     height: $size-5;
+  }
+}
+
+.comment-skeleton-list {
+  display: flex;
+  flex-direction: column;
+  gap: $size-3;
+}
+
+.comment-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: $size-2;
+
+  &__author {
+    width: 140px;
+    height: 20px;
+  }
+
+  &__text {
+    width: 100%;
+    height: 50px;
+  }
+
+  &__meta {
+    width: 100px;
+    height: 16px;
   }
 }

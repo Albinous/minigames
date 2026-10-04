@@ -18,6 +18,8 @@ export class GamesService {
     try {
       const response = await this.api.getGames(query);
 
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
       this.store.games.data = response;
     } catch {
       this.store.games.error = 'Failed to load games';
@@ -31,7 +33,7 @@ export class GamesService {
 
     try {
       const response = await this.api.getGameDetails(slug);
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       this.store.game.data = response;
     } catch {

@@ -1,7 +1,7 @@
 import './library-page.scss';
 import { createElement, createContainer, setActiveElement } from '../../shared';
 import type { ArrowType } from './library-page.types';
-import { ErrorState, GameCard, GameCardSkeleton } from '../../components';
+import { EmptyState, ErrorState, GameCard, GameCardSkeleton } from '../../components';
 import {
   CategoriesService,
   type Category,
@@ -33,6 +33,7 @@ export class LibraryPage {
   private readonly gamesPerPage: number = 6;
   private readonly onDetailsClick: (slug: string) => void;
   private readonly errorState = new ErrorState();
+  private readonly emptyState = new EmptyState();
 
   constructor(
     store: Store,
@@ -179,6 +180,14 @@ export class LibraryPage {
       container.append(errorState);
       return container;
     }
+
+    if (this.gamesData.length === 0) {
+      const emptyState = this.emptyState.render();
+
+      container.append(emptyState);
+      return container;
+    }
+
     for (const game of this.gamesData) {
       const gameCard = new GameCard(game, this.onDetailsClick);
       container.append(gameCard.render());

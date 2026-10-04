@@ -13,6 +13,7 @@ import {
   type Store,
 } from '../../core';
 import { arrowLeftIcon, arrowRightIcon } from '../../assets/icons';
+import { CategorySkeleton } from './category-skeleton/category-skeleton';
 
 export class LibraryPage {
   private readonly store: Store;
@@ -58,11 +59,21 @@ export class LibraryPage {
     this.updatePageButtons(main);
   }
 
+  private async retryLoadCategories(main: HTMLElement): Promise<void> {
+    const loadPromise = this.categoriesService.loadCategories();
+
+    this.updateCategories(main);
+
+    await loadPromise;
+
+    this.updateCategories(main);
+  }
+
   private createSection(main: HTMLElement): HTMLElement {
     const section = createElement('section', { className: 'library' });
     const container = createContainer('container');
     const header = this.createHeader();
-    const controls = this.createControls();
+    const controls = this.createControls(main);
     const gameCards = this.createGameCards(main);
     const pagination = this.createPagination();
 
@@ -85,9 +96,9 @@ export class LibraryPage {
     return container;
   }
 
-  private createControls(): HTMLElement {
+  private createControls(main: HTMLElement): HTMLElement {
     const container = createContainer('library-controls');
-    const categories = this.createCategories();
+    const categories = this.createCategories(main);
     const sorting = this.createSorting();
 
     container.append(categories, sorting);
@@ -95,8 +106,34 @@ export class LibraryPage {
     return container;
   }
 
-  private createCategories(): HTMLElement {
-    const categories = createElement('div', { className: 'library-categories' });
+  private createCategories(main: HTMLElement): HTMLElement {
+    const container = createElement('div', { className: 'library-categories' });
+    if (this.store.categories.isLoading) {
+      const skeleton = new CategorySkeleton();
+
+      container.append(skeleton.render());
+
+      return container;
+    }
+
+    if (this.store.categories.error) {
+      const errorState = this.errorState.render(this.store.categories.error, () =>
+        this.retryLoadCategories(main),
+      );
+
+      container.append(errorState);
+
+      return container;
+    }
+
+    if (this.categoriesData.length === 0) {
+      const emptyState = this.emptyState.render();
+
+      container.append(emptyState);
+
+      return container;
+    }
+
     for (const category of this.categoriesData) {
       const categoryButton = createElement('button', {
         className: 'btn btn-secondary library-category',
@@ -111,10 +148,20 @@ export class LibraryPage {
         categoryButton.classList.add('active');
       }
 
-      categories.append(categoryButton);
+      container.append(categoryButton);
     }
 
-    return categories;
+    return container;
+  }
+
+  private updateCategories(main: HTMLElement): void {
+    const categories = main.querySelector('.library-categories');
+
+    if (!categories) return;
+
+    const newCategories = this.createCategories(main);
+
+    categories.replaceWith(newCategories);
   }
 
   private createSorting(): HTMLElement {
@@ -454,6 +501,7 @@ export class LibraryPage {
 
     void loadPromise.then(() => {
       this.updateCards(main);
+      this.updateCategories(main);
       this.updatePageButtons(main);
     });
 

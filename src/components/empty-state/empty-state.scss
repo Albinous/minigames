@@ -1,0 +1,16 @@
+@use '../../styles/tokens' as *;
+
+.empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  padding: $size-4;
+  text-align: center;
+
+  &__message {
+    margin: 0;
+    font-size: $size-3;
+    font-weight: $font-weight-bold;
+  }
+}

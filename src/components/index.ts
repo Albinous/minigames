@@ -6,3 +6,4 @@ export * from './game-stat';
 export * from './dialogs';
 export * from './skeleton';
 export * from './error-state';
+export * from './empty-state';

@@ -1,3 +1,5 @@
+@use '../../styles/tokens' as *;
+
 .snackbar {
   position: fixed;
   right: $size-3;

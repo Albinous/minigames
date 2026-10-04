@@ -256,3 +256,31 @@
     display: block;
   }
 }
+
+.leaderboard-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: $size-2;
+
+  &__row {
+    display: grid;
+    grid-template-columns: 50px 1fr 100px;
+    gap: $size-3;
+    align-items: center;
+  }
+
+  &__rank {
+    width: 30px;
+    height: 20px;
+  }
+
+  &__name {
+    width: 150px;
+    height: 20px;
+  }
+
+  &__score {
+    width: 80px;
+    height: 20px;
+  }
+}

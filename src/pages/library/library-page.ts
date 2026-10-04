@@ -162,6 +162,8 @@ export class LibraryPage {
     const newCategories = this.createCategories(main);
 
     categories.replaceWith(newCategories);
+
+    this.bindCategoryEvents(main);
   }
 
   private createSorting(): HTMLElement {

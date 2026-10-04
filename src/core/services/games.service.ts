@@ -13,6 +13,7 @@ export class GamesService {
 
   public async loadGames(query: GamesQuery): Promise<void> {
     this.store.games.isLoading = true;
+    this.store.games.error = undefined;
 
     try {
       const response = await this.api.getGames(query);
@@ -33,9 +34,9 @@ export class GamesService {
 
       this.store.game.data = response;
     } catch {
-      this.store.games.error = 'Failed to load games';
+      this.store.game.error = 'Failed to load games';
     } finally {
-      this.store.games.isLoading = false;
+      this.store.game.isLoading = false;
     }
   }
 }

@@ -16,9 +16,11 @@ export class GamesService {
     this.store.games.error = undefined;
 
     try {
-      const response = await this.api.getGames(query);
+      // to check error and skeleton:
+      //   await new Promise((resolve) => setTimeout(resolve, 2000));
 
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // throw new Error('Test error');
+      const response = await this.api.getGames(query);
 
       this.store.games.data = response;
     } catch {

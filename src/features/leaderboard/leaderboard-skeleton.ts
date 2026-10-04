@@ -1,6 +1,5 @@
-import { Skeleton } from "../../components";
-import { createElement } from "../../shared";
-
+import { Skeleton } from '../../components';
+import { createElement } from '../../shared';
 
 export class LeaderboardSkeleton {
   private readonly skeleton = new Skeleton();

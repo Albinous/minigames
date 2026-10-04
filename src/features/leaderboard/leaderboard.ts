@@ -28,10 +28,7 @@ export class LeaderBoard {
 
     if (this.store.leaderboard.error) {
       container.replaceChildren(
-        this.errorState.render(
-          this.store.leaderboard.error,
-          () => this.retryLoad(container),
-        ),
+        this.errorState.render(this.store.leaderboard.error, () => this.retryLoad(container)),
       );
       return;
     }
@@ -56,22 +53,22 @@ export class LeaderBoard {
     this.renderState(container);
   }
 
-public async render(): Promise<HTMLElement> {
-  const leaderboard = document.createElement('section');
+  public async render(): Promise<HTMLElement> {
+    const leaderboard = document.createElement('section');
 
-  leaderboard.className = 'leaderboard';
+    leaderboard.className = 'leaderboard';
 
-  const loadPromise = this.load();
+    const loadPromise = this.load();
 
-  this.store.leaderboard.isLoading = true;
-  this.renderState(leaderboard);
-
-  void loadPromise.then(() => {
+    this.store.leaderboard.isLoading = true;
     this.renderState(leaderboard);
-  });
 
-  return leaderboard;
-}
+    void loadPromise.then(() => {
+      this.renderState(leaderboard);
+    });
+
+    return leaderboard;
+  }
 
   public get players(): ILeaderboard[] {
     return this.store.leaderboard.data?.data ?? [];

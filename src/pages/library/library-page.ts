@@ -13,6 +13,7 @@ import {
   type Store,
 } from '../../core';
 import { arrowLeftIcon, arrowRightIcon } from '../../assets/icons';
+import { GameCardSkeleton } from '../../components/game-card/game-card-skeleton';
 
 export class LibraryPage {
   private readonly store: Store;
@@ -31,7 +32,6 @@ export class LibraryPage {
   private categorySelected: Category = 'all';
   private sortSelected: SortOption = 'rating-desc';
   private readonly gamesPerPage: number = 6;
-  // private currentPage: number = 1;
   private readonly onDetailsClick: (slug: string) => void;
 
   constructor(
@@ -44,6 +44,18 @@ export class LibraryPage {
     this.gamesService = gamesService;
     this.categoriesService = categoriesService;
     this.onDetailsClick = onDetailsClick;
+  }
+
+  private createGameCardsSkeleton(): HTMLElement {
+    const container = createContainer('game-cards');
+
+    const skeleton = new GameCardSkeleton();
+
+    for (let index = 0; index < this.gamesPerPage; index += 1) {
+      container.append(skeleton.render());
+    }
+
+    return container;
   }
 
   private createSection(): HTMLElement {
@@ -148,6 +160,9 @@ export class LibraryPage {
   }
 
   private createGameCards(): HTMLElement {
+    if (this.store.games.isLoading) {
+      return this.createGameCardsSkeleton();
+    }
     const container = createContainer('game-cards');
 
     for (const game of this.gamesData) {
@@ -401,7 +416,7 @@ export class LibraryPage {
   }
 
   public async render(): Promise<HTMLElement> {
-    await this.load();
+    const loadPromise = this.load();
 
     const main = createElement('main', { className: 'main' });
     const section = this.createSection();
@@ -413,6 +428,11 @@ export class LibraryPage {
     this.bindPaginationEvents(main);
     this.bindPaginationArrowEvents(main);
     this.bindResizeEvent(main);
+
+    void loadPromise.then(() => {
+      this.updateCards(main);
+      this.updatePageButtons(main);
+    });
 
     return main;
   }

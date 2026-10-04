@@ -23,6 +23,7 @@ import { ErrorState } from '../../error-state';
 import { EmptyState } from '../../empty-state';
 import { GameDetailsSkeleton } from './game-dialog-skeleton';
 import { CommentSkeleton } from './comments-skeleton';
+import { Snackbar } from '../../snackbar/snackbar';
 
 export class GameDialog {
   private dialogElement: HTMLDialogElement;
@@ -32,6 +33,7 @@ export class GameDialog {
   private readonly errorState = new ErrorState();
   private readonly emptyState = new EmptyState();
   private currentSlug = '';
+  private readonly snackbar = new Snackbar();
 
   constructor(store: Store, gamesService: GamesService, commentsService: CommentsService) {
     this.store = store;
@@ -287,7 +289,6 @@ export class GameDialog {
     this.renderCommentsState();
 
     await loadPromise;
-
     this.renderCommentsState();
   }
 
@@ -620,10 +621,22 @@ export class GameDialog {
 
   private async loadGame(slug: string): Promise<void> {
     await this.gamesService.loadGame(slug);
+
+    if (this.store.game.error) {
+      this.snackbar.show('Failed to load game details', 'error');
+    } else {
+      this.snackbar.show('Game details loaded successfully', 'success');
+    }
   }
 
   private async loadComments(slug: string): Promise<void> {
     await this.commentsService.loadComments(slug);
+
+    if (this.store.comments.error) {
+      this.snackbar.show('Failed to load comments', 'error');
+    } else {
+      this.snackbar.show('Comments loaded successfully', 'success');
+    }
   }
 
   private renderLoadingState(): void {
@@ -665,6 +678,12 @@ export class GameDialog {
     this.renderLoadingState();
 
     await loadPromise;
+
+    if (this.store.game.error) {
+      this.snackbar.show('Failed to load game details', 'error');
+    } else {
+      this.snackbar.show('Game details loaded successfully', 'success');
+    }
 
     this.renderGameState();
   }

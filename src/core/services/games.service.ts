@@ -36,7 +36,7 @@ export class GamesService {
 
       this.store.game.data = response;
     } catch {
-      this.store.game.error = 'Failed to load games';
+      this.store.game.error = 'Failed to load game details';
     } finally {
       this.store.game.isLoading = false;
     }

@@ -5,3 +5,4 @@ export * from './game-card';
 export * from './game-stat';
 export * from './dialogs';
 export * from './skeleton';
+export * from './error-state';

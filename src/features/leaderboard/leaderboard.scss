@@ -284,3 +284,21 @@
     height: 20px;
   }
 }
+
+.leaderboard-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: $size-2;
+
+  &__row {
+    display: grid;
+    grid-template-columns: 50px 1fr 100px;
+    gap: $size-3;
+    align-items: center;
+  }
+
+  &__rank {
+    width: 30px;
+    height: 20px;
+  }
+}

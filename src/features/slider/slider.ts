@@ -2,6 +2,7 @@ import { getSliderView } from './slider.view';
 import type { GamesService, IGame, Store } from '../../core';
 import { EmptyState, ErrorState } from '../../components';
 import { SliderSkeleton } from './slider-skeleton';
+import { Snackbar } from '../../components/snackbar/snackbar';
 
 const AUTOPLAY_INTERVAL = 4000;
 
@@ -11,6 +12,8 @@ export class Slider {
   private readonly errorState = new ErrorState();
   private readonly emptyState = new EmptyState();
   private readonly skeleton = new SliderSkeleton();
+  private readonly snackbar = new Snackbar();
+
   private slider: HTMLElement | undefined = undefined;
   private track: HTMLElement | undefined = undefined;
   private activeIndex: number = 0;
@@ -262,6 +265,13 @@ export class Slider {
 
   private async loadFeaturedGames(): Promise<void> {
     await this.gamesService.loadGames({ featured: true });
+
+    if (this.store.games.error) {
+      this.snackbar.show('Failed to load featured games', 'error');
+      return;
+    }
+
+    this.snackbar.show('Featured games loaded successfully', 'success');
   }
 
   private get featuredGames(): IGame[] {

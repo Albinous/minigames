@@ -14,6 +14,7 @@ import {
 } from '../../core';
 import { arrowLeftIcon, arrowRightIcon } from '../../assets/icons';
 import { CategorySkeleton } from './category-skeleton/category-skeleton';
+import { Snackbar } from '../../components/snackbar/snackbar';
 
 export class LibraryPage {
   private readonly store: Store;
@@ -35,6 +36,7 @@ export class LibraryPage {
   private readonly onDetailsClick: (slug: string) => void;
   private readonly errorState = new ErrorState();
   private readonly emptyState = new EmptyState();
+  private readonly snackbar = new Snackbar();
 
   constructor(
     store: Store,
@@ -55,6 +57,10 @@ export class LibraryPage {
 
     await loadPromise;
 
+    if (this.store.games.error) {
+      this.snackbar.show('Failed to load games', 'error');
+    }
+
     this.updateCards(main);
     this.updatePageButtons(main);
   }
@@ -65,6 +71,12 @@ export class LibraryPage {
     this.updateCategories(main);
 
     await loadPromise;
+
+    if (this.store.categories.error) {
+      this.snackbar.show('Failed to load categories', 'error');
+    } else {
+      this.snackbar.show('Categories loaded successfully', 'success');
+    }
 
     this.updateCategories(main);
   }
@@ -262,6 +274,12 @@ export class LibraryPage {
       setActiveElement(buttons, button);
 
       await this.gamesService.loadGames({ ...this.gamesQuery, page: 1 });
+
+      if (this.store.games.error) {
+        this.snackbar.show('Failed to load games', 'error');
+      } else {
+        this.snackbar.show('Games loaded successfully', 'success');
+      }
       this.updateCards(main);
       this.updatePageButtons(main);
     });
@@ -308,6 +326,12 @@ export class LibraryPage {
       sortContainer.classList.remove('is-open');
 
       await this.gamesService.loadGames({ ...this.gamesQuery, page: 1 });
+
+      if (this.store.games.error) {
+        this.snackbar.show('Failed to load games', 'error');
+      } else {
+        this.snackbar.show('Games loaded successfully', 'success');
+      }
       this.updateCards(main);
       this.updatePageButtons(main);
     });
@@ -485,6 +509,18 @@ export class LibraryPage {
       this.gamesService.loadGames(this.gamesQuery),
       this.categoriesService.loadCategories(),
     ]);
+
+    if (this.store.games.error) {
+      this.snackbar.show('Failed to load games', 'error');
+    } else {
+      this.snackbar.show('Games loaded successfully', 'success');
+    }
+
+    if (this.store.categories.error) {
+      this.snackbar.show('Failed to load categories', 'error');
+    } else {
+      this.snackbar.show('Categories loaded successfully', 'success');
+    }
   }
 
   public async render(): Promise<HTMLElement> {

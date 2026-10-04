@@ -2,6 +2,7 @@ import { getLeaderBoardView } from './leaderboard.view';
 import type { ILeaderboard, LeaderboardService, Store } from '../../core';
 import { LeaderboardSkeleton } from './leaderboard-skeleton';
 import { EmptyState, ErrorState } from '../../components';
+import { Snackbar } from '../../components/snackbar/snackbar';
 
 export class LeaderBoard {
   private readonly store: Store;
@@ -10,6 +11,7 @@ export class LeaderBoard {
   private readonly errorState = new ErrorState();
   private readonly emptyState = new EmptyState();
   private readonly skeleton = new LeaderboardSkeleton();
+  private readonly snackbar = new Snackbar();
 
   constructor(store: Store, leaderboardService: LeaderboardService) {
     this.store = store;
@@ -18,6 +20,12 @@ export class LeaderBoard {
 
   private async load(): Promise<void> {
     await this.leaderboardService.loadLeaderboard();
+
+    if (this.store.leaderboard.error) {
+      this.snackbar.show('Failed to load leaderboard', 'error');
+    } else {
+      this.snackbar.show('Leaderboard loaded successfully', 'success');
+    }
   }
 
   private renderState(container: HTMLElement): void {

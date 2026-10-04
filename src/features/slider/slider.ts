@@ -1,11 +1,16 @@
 import { getSliderView } from './slider.view';
 import type { GamesService, IGame, Store } from '../../core';
+import { EmptyState, ErrorState } from '../../components';
+import { SliderSkeleton } from './slider-skeleton';
 
 const AUTOPLAY_INTERVAL = 4000;
 
 export class Slider {
   private readonly store: Store;
   private readonly gamesService: GamesService;
+  private readonly errorState = new ErrorState();
+  private readonly emptyState = new EmptyState();
+  private readonly skeleton = new SliderSkeleton();
   private slider: HTMLElement | undefined = undefined;
   private track: HTMLElement | undefined = undefined;
   private activeIndex: number = 0;
@@ -263,24 +268,73 @@ export class Slider {
     return this.store.games.data?.data ?? [];
   }
 
-  public async render(): Promise<HTMLElement> {
-    this.slider = document.createElement('section');
+  private renderState(): void {
+    if (!this.slider) return;
 
-    await this.loadFeaturedGames();
+    if (this.store.games.isLoading) {
+      this.stopAutoplay();
+      this.track = undefined;
 
-    this.slider.className = 'games';
+      this.slider.replaceChildren(this.skeleton.render());
+      return;
+    }
+
+    if (this.store.games.error) {
+      this.stopAutoplay();
+      this.track = undefined;
+
+      this.slider.replaceChildren(
+        this.errorState.render(this.store.games.error, () => this.retryLoad()),
+      );
+
+      return;
+    }
+
+    if (this.featuredGames.length === 0) {
+      this.stopAutoplay();
+      this.track = undefined;
+
+      this.slider.replaceChildren(this.emptyState.render());
+      return;
+    }
+
     this.slider.innerHTML = getSliderView(this.featuredGames);
     const track = this.slider.querySelector<HTMLElement>('.games-slider__track');
 
-    if (track) {
-      this.track = track;
-    }
+    if (!track) return;
+
+    this.track = track;
+
+    this.activeIndex = 0;
 
     this.updateCards();
     this.observeCards();
     this.bindEvents();
     this.bindSwipe();
     this.startAutoplay();
+  }
+
+  private async retryLoad(): Promise<void> {
+    const loadPromise = this.loadFeaturedGames();
+
+    this.renderState();
+
+    await loadPromise;
+
+    this.renderState();
+  }
+
+  public async render(): Promise<HTMLElement> {
+    this.slider = document.createElement('section');
+    this.slider.className = 'games';
+
+    const loadPromise = this.loadFeaturedGames();
+
+    this.renderState();
+
+    await loadPromise;
+
+    this.renderState();
 
     return this.slider;
   }

@@ -1,9 +1,15 @@
 import { getLeaderBoardView } from './leaderboard.view';
 import type { ILeaderboard, LeaderboardService, Store } from '../../core';
+import { LeaderboardSkeleton } from './leaderboard-skeleton';
+import { EmptyState, ErrorState } from '../../components';
 
 export class LeaderBoard {
   private readonly store: Store;
   private readonly leaderboardService: LeaderboardService;
+
+  private readonly errorState = new ErrorState();
+  private readonly emptyState = new EmptyState();
+  private readonly skeleton = new LeaderboardSkeleton();
 
   constructor(store: Store, leaderboardService: LeaderboardService) {
     this.store = store;
@@ -14,18 +20,57 @@ export class LeaderBoard {
     await this.leaderboardService.loadLeaderboard();
   }
 
-  public get players(): ILeaderboard[] {
-    return this.store.leaderboard.data?.data ?? [];
+  private renderState(container: HTMLElement): void {
+    if (this.store.leaderboard.isLoading) {
+      container.replaceChildren(this.skeleton.render());
+      return;
+    }
+
+    if (this.store.leaderboard.error) {
+      container.replaceChildren(
+        this.errorState.render(this.store.leaderboard.error, () => this.retryLoad(container)),
+      );
+      return;
+    }
+
+    const players = this.store.leaderboard.data?.data;
+
+    if (!players || players.length === 0) {
+      container.replaceChildren(this.emptyState.render());
+      return;
+    }
+
+    container.innerHTML = getLeaderBoardView(players);
+  }
+
+  private async retryLoad(container: HTMLElement): Promise<void> {
+    const loadPromise = this.load();
+
+    this.renderState(container);
+
+    await loadPromise;
+
+    this.renderState(container);
   }
 
   public async render(): Promise<HTMLElement> {
-    await this.load();
-    const leaderboard: HTMLElement = document.createElement('section');
-    const template: string = getLeaderBoardView(this.players);
+    const leaderboard = document.createElement('section');
 
     leaderboard.className = 'leaderboard';
-    leaderboard.innerHTML = template;
+
+    const loadPromise = this.load();
+
+    this.store.leaderboard.isLoading = true;
+    this.renderState(leaderboard);
+
+    void loadPromise.then(() => {
+      this.renderState(leaderboard);
+    });
 
     return leaderboard;
+  }
+
+  public get players(): ILeaderboard[] {
+    return this.store.leaderboard.data?.data ?? [];
   }
 }

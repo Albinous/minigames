@@ -56,3 +56,43 @@
     }
   }
 }
+
+.slider-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: $size-4;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__title {
+    width: 180px;
+    height: $size-4;
+  }
+
+  &__arrows {
+    display: flex;
+    gap: $size-2;
+  }
+
+  &__arrow {
+    width: $size-5;
+    height: $size-5;
+    border-radius: $corner-extra-large;
+  }
+
+  &__cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: $size-3;
+    overflow: hidden;
+  }
+
+  &__card {
+    width: 100%;
+    height: 300px;
+  }
+}

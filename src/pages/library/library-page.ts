@@ -31,7 +31,7 @@ export class LibraryPage {
   private categorySelected: Category = 'all';
   private sortSelected: SortOption = 'rating-desc';
   private readonly gamesPerPage: number = 6;
-  private currentPage: number = 1;
+  // private currentPage: number = 1;
   private readonly onDetailsClick: (slug: string) => void;
 
   constructor(
@@ -147,10 +147,6 @@ export class LibraryPage {
     return container;
   }
 
-  private isSortOption(value: string): value is SortOption {
-    return this.sortOptions.some((option) => option.value === value);
-  }
-
   private createGameCards(): HTMLElement {
     const container = createContainer('game-cards');
 
@@ -162,126 +158,30 @@ export class LibraryPage {
     return container;
   }
 
-  private createPagination(): HTMLElement {
-    const container = createContainer('library-pagination');
-    const previousButton = this.createArrowButton('prev', 'Previous', arrowLeftIcon);
-    const nextButton = this.createArrowButton('next', 'Next', arrowRightIcon);
-    const pageButtons = this.createPageButtons();
-
-    container.append(previousButton, pageButtons, nextButton);
-    return container;
-  }
-
-  private createArrowButton(type: ArrowType, label: string, iconSource: string): HTMLButtonElement {
-    const isDisabled =
-      (type === 'prev' && this.currentPage === 1) ||
-      (type === 'next' && this.currentPage === this.pageSum);
-    const button = createElement('button', {
-      className: `btn btn-secondary library-pagination__arrow library-pagination__arrow-${type}`,
-      attributes: {
-        type: 'button',
-        'aria-label': `${label} page`,
-        disabled: isDisabled,
-      },
-    });
-    const icon = createElement('img', {
-      className: 'library-pagination__icon',
-      attributes: {
-        src: iconSource,
-        alt: '',
-      },
-    });
-    button.append(icon);
-
-    return button;
-  }
-
-  private createPageButtons(): HTMLElement {
-    const pageButtons = createContainer('library-pagination__pages');
-
-    const maxVisiblePages = window.innerWidth < 768 ? 3 : this.pageSum;
-
-    for (let index = 1; index <= Math.min(maxVisiblePages, this.pageSum); index++) {
-      const pageButton = this.createPageButton(index);
-      pageButtons.append(pageButton);
-    }
-
-    return pageButtons;
-  }
-
-  private createPageButton(page: number): HTMLButtonElement {
-    const button = createElement('button', {
-      className: 'btn btn-secondary library-pagination__page',
-      text: `${page}`,
-      attributes: {
-        type: 'button',
-        'data-page': `${page}`,
-      },
-    });
-
-    if (button.textContent === `${this.currentPage}`) {
-      button.classList.add('active');
-    }
-
-    return button;
-  }
-
-  private setCurrentPage(main: HTMLElement, page: number) {
-    this.currentPage = page;
-
-    const pageButtons = main.querySelectorAll<HTMLButtonElement>('.library-pagination__page');
-    const pageButton = main.querySelector<HTMLButtonElement>(
-      `[data-page="${CSS.escape(String(this.currentPage))}"]`,
-    );
-    if (!pageButton) return;
-
-    setActiveElement(pageButtons, pageButton);
-  }
-
-  private setDisabledArrow(previous: HTMLButtonElement, next: HTMLButtonElement) {
-    previous.disabled = this.currentPage === 1;
-    next.disabled = this.currentPage === this.pageSum;
-  }
-
-  private bindPaginationEvents(main: HTMLElement): void {
-    const pagesContainer = main.querySelector('.library-pagination');
-    if (!pagesContainer) return;
-
-    pagesContainer.addEventListener('click', (event) => {
+  private bindCategoryEvents(main: HTMLElement): void {
+    const categories = main.querySelector('.library-categories');
+    categories?.addEventListener('click', async (event) => {
       if (!(event.target instanceof Element)) return;
-      const button = event.target.closest<HTMLButtonElement>('[data-page]');
+      const button = event.target.closest<HTMLButtonElement>('[data-category]');
       if (!button) return;
 
-      const pageNumber = Number(button.dataset.page);
-      if (!pageNumber) return;
+      const category = button.dataset.category;
+      if (!category || !this.isCategoryOption(category)) return;
 
-      this.setCurrentPage(main, pageNumber);
+      this.categorySelected = category;
 
-      const previousButton = pagesContainer.querySelector<HTMLButtonElement>(
-        '.library-pagination__arrow-prev',
-      );
-      const nextButton = pagesContainer.querySelector<HTMLButtonElement>(
-        '.library-pagination__arrow-next',
-      );
+      const buttons = categories.querySelectorAll<HTMLButtonElement>('[data-category]');
 
-      if (!previousButton || !nextButton) return;
-      this.setDisabledArrow(previousButton, nextButton);
+      setActiveElement(buttons, button);
+
+      await this.gamesService.loadGames({ ...this.gamesQuery, page: 1 });
+      this.updateCards(main);
+      this.updatePageButtons(main);
     });
   }
 
-  private bindPaginationArrowEvents(main: HTMLElement): void {
-    const previousButton = main.querySelector<HTMLButtonElement>('.library-pagination__arrow-prev');
-    const nextButton = main.querySelector<HTMLButtonElement>('.library-pagination__arrow-next');
-    if (!previousButton || !nextButton) return;
-
-    previousButton.addEventListener('click', () => {
-      this.setCurrentPage(main, this.currentPage - 1);
-      this.setDisabledArrow(previousButton, nextButton);
-    });
-    nextButton.addEventListener('click', () => {
-      this.setCurrentPage(main, this.currentPage + 1);
-      this.setDisabledArrow(previousButton, nextButton);
-    });
+  private isCategoryOption(value: string): value is Category {
+    return this.categoriesData.some((option) => option.slug === value);
   }
 
   private bindSortButtonEvents(main: HTMLElement): void {
@@ -309,8 +209,6 @@ export class LibraryPage {
       if (!sort || !this.isSortOption(sort)) return;
 
       this.sortSelected = sort;
-      this.currentPage = 1;
-
       const sortButton = sortContainer.querySelector<HTMLButtonElement>('.library-sort__btn');
       if (sortButton) {
         sortButton.textContent = `Sort by: ${optionSelected.textContent}`;
@@ -322,39 +220,149 @@ export class LibraryPage {
 
       sortContainer.classList.remove('is-open');
 
-      await this.updateCards(main);
+      await this.gamesService.loadGames({ ...this.gamesQuery, page: 1 });
+      this.updateCards(main);
+      this.updatePageButtons(main);
     });
   }
 
-  private bindCategoryEvents(main: HTMLElement): void {
-    const categories = main.querySelector('.library-categories');
-    categories?.addEventListener('click', async (event) => {
+  private isSortOption(value: string): value is SortOption {
+    return this.sortOptions.some((option) => option.value === value);
+  }
+
+  private createPagination(): HTMLElement {
+    const container = createContainer('library-pagination');
+    const previousButton = this.createArrowButton('prev', 'Previous', arrowLeftIcon);
+    const nextButton = this.createArrowButton('next', 'Next', arrowRightIcon);
+    const pageButtons = this.createPageButtons();
+
+    container.append(previousButton, pageButtons, nextButton);
+    return container;
+  }
+
+  private createArrowButton(type: ArrowType, label: string, iconSource: string): HTMLButtonElement {
+    const isDisabled =
+      (type === 'prev' && this.currentPage === 1) ||
+      (type === 'next' && this.currentPage === this.totalPages);
+    const button = createElement('button', {
+      className: `btn btn-secondary library-pagination__arrow library-pagination__arrow-${type}`,
+      attributes: {
+        type: 'button',
+        'aria-label': `${label} page`,
+        disabled: isDisabled,
+      },
+    });
+    const icon = createElement('img', {
+      className: 'library-pagination__icon',
+      attributes: {
+        src: iconSource,
+        alt: '',
+      },
+    });
+    button.append(icon);
+
+    return button;
+  }
+
+  private createPageButtons(): HTMLElement {
+    const pageButtons = createContainer('library-pagination__pages');
+
+    const maxVisiblePages = window.innerWidth < 768 ? 3 : 4;
+
+    for (let index = 1; index <= Math.min(maxVisiblePages, this.totalPages); index++) {
+      const pageButton = this.createPageButton(index);
+      pageButtons.append(pageButton);
+    }
+
+    return pageButtons;
+  }
+
+  private createPageButton(page: number): HTMLButtonElement {
+    const button = createElement('button', {
+      className: 'btn btn-secondary library-pagination__page',
+      text: `${page}`,
+      attributes: {
+        type: 'button',
+        'data-page': `${page}`,
+      },
+    });
+
+    if (button.textContent === `${this.currentPage}`) {
+      button.classList.add('active');
+    }
+
+    return button;
+  }
+
+  private setDisabledArrow(previous: HTMLButtonElement, next: HTMLButtonElement) {
+    previous.disabled = this.currentPage === 1;
+    next.disabled = this.currentPage === this.totalPages;
+  }
+
+  private async changePage(main: HTMLElement, page: number): Promise<void> {
+    await this.gamesService.loadGames({ ...this.gamesQuery, page });
+    this.updateCards(main);
+    this.updatePageButtons(main);
+  }
+
+  private updatePageButtons(main: HTMLElement): void {
+    const pageButtons = main.querySelector('.library-pagination__pages');
+    if (!pageButtons) return;
+    const newPageButtons = this.createPageButtons();
+    const previousButton = main.querySelector<HTMLButtonElement>('.library-pagination__arrow-prev');
+    const nextButton = main.querySelector<HTMLButtonElement>('.library-pagination__arrow-next');
+
+    pageButtons?.replaceWith(newPageButtons);
+    if (!previousButton || !nextButton) return;
+    this.setDisabledArrow(previousButton, nextButton);
+  }
+
+  private bindPaginationEvents(main: HTMLElement): void {
+    const pagesContainer = main.querySelector('.library-pagination');
+    if (!pagesContainer) return;
+
+    pagesContainer.addEventListener('click', (event) => {
       if (!(event.target instanceof Element)) return;
-      const button = event.target.closest<HTMLButtonElement>('[data-category]');
+      const button = event.target.closest<HTMLButtonElement>('[data-page]');
       if (!button) return;
 
-      const category = button.dataset.category;
-      if (!category || !this.isCategoryOption(category)) return;
+      const pageNumber = Number(button.dataset.page);
+      if (!pageNumber) return;
 
-      this.categorySelected = category;
-      this.currentPage = 1;
+      const previousButton = pagesContainer.querySelector<HTMLButtonElement>(
+        '.library-pagination__arrow-prev',
+      );
+      const nextButton = pagesContainer.querySelector<HTMLButtonElement>(
+        '.library-pagination__arrow-next',
+      );
 
-      const buttons = categories.querySelectorAll<HTMLButtonElement>('[data-category]');
-
-      setActiveElement(buttons, button);
-
-      await this.updateCards(main);
+      if (!previousButton || !nextButton) return;
+      this.changePage(main, pageNumber);
     });
   }
 
-  private isCategoryOption(value: string): value is Category {
-    return this.categoriesData.some((option) => option.slug === value);
+  private bindPaginationArrowEvents(main: HTMLElement): void {
+    const previousButton = main.querySelector<HTMLButtonElement>('.library-pagination__arrow-prev');
+    const nextButton = main.querySelector<HTMLButtonElement>('.library-pagination__arrow-next');
+    if (!previousButton || !nextButton) return;
+
+    previousButton.addEventListener('click', () => {
+      this.changePage(main, this.currentPage - 1);
+    });
+    nextButton.addEventListener('click', () => {
+      this.changePage(main, this.currentPage + 1);
+    });
+  }
+
+  private bindResizeEvent(main: HTMLElement): void {
+    window.addEventListener('resize', () => {
+      this.updatePageButtons(main);
+    });
   }
 
   private async updateCards(main: HTMLElement): Promise<void> {
-    await this.gamesService.loadGames(this.gamesQuery);
-
     const gameCardsContainer = main.querySelector('.game-cards');
+    if (!gameCardsContainer) return;
     const newGameCards = this.createGameCards();
 
     gameCardsContainer?.replaceWith(newGameCards);
@@ -368,9 +376,12 @@ export class LibraryPage {
     return this.store.games.data?.data ?? [];
   }
 
-  private get pageSum(): number {
-    const totalItems = Math.ceil(this.store.games.data?.meta?.totalItems ?? 0);
-    return totalItems / this.gamesPerPage;
+  private get currentPage(): number {
+    return this.store.games.data?.meta?.page ?? 1;
+  }
+
+  private get totalPages(): number {
+    return Math.max(this.store.games.data?.meta?.totalPages ?? 0, 1);
   }
 
   private get gamesQuery(): GamesQuery {
@@ -401,6 +412,7 @@ export class LibraryPage {
     this.bindSortOptionsEvents(main);
     this.bindPaginationEvents(main);
     this.bindPaginationArrowEvents(main);
+    this.bindResizeEvent(main);
 
     return main;
   }

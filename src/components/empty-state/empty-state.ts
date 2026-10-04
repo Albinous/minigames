@@ -1,4 +1,4 @@
-import { createElement } from "../../shared";
+import { createElement } from '../../shared';
 
 export class EmptyState {
   public render(message = 'Data Not Found'): HTMLDivElement {

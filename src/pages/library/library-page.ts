@@ -147,10 +147,6 @@ export class LibraryPage {
     return container;
   }
 
-  private isSortOption(value: string): value is SortOption {
-    return this.sortOptions.some((option) => option.value === value);
-  }
-
   private createGameCards(): HTMLElement {
     const container = createContainer('game-cards');
 
@@ -160,6 +156,78 @@ export class LibraryPage {
     }
 
     return container;
+  }
+
+  private bindCategoryEvents(main: HTMLElement): void {
+    const categories = main.querySelector('.library-categories');
+    categories?.addEventListener('click', async (event) => {
+      if (!(event.target instanceof Element)) return;
+      const button = event.target.closest<HTMLButtonElement>('[data-category]');
+      if (!button) return;
+
+      const category = button.dataset.category;
+      if (!category || !this.isCategoryOption(category)) return;
+
+      this.categorySelected = category;
+
+      const buttons = categories.querySelectorAll<HTMLButtonElement>('[data-category]');
+
+      setActiveElement(buttons, button);
+
+      await this.gamesService.loadGames({ ...this.gamesQuery, page: 1 });
+      this.updateCards(main);
+      this.updatePageButtons(main);
+    });
+  }
+
+  private isCategoryOption(value: string): value is Category {
+    return this.categoriesData.some((option) => option.slug === value);
+  }
+
+  private bindSortButtonEvents(main: HTMLElement): void {
+    const sortContainer = main.querySelector('.library-sort');
+    const sortButton = main.querySelector('.library-sort__btn');
+
+    if (!sortContainer || !sortButton) return;
+
+    sortButton.addEventListener('click', () => {
+      sortContainer.classList.toggle('is-open');
+    });
+  }
+
+  private bindSortOptionsEvents(main: HTMLElement): void {
+    const sortContainer = main.querySelector('.library-sort');
+
+    sortContainer?.addEventListener('click', async (event) => {
+      if (!(event.target instanceof Element)) return;
+      const optionSelected = event.target.closest<HTMLButtonElement>('[data-sort]');
+
+      if (!optionSelected) return;
+
+      const sort = optionSelected.dataset.sort;
+
+      if (!sort || !this.isSortOption(sort)) return;
+
+      this.sortSelected = sort;
+      const sortButton = sortContainer.querySelector<HTMLButtonElement>('.library-sort__btn');
+      if (sortButton) {
+        sortButton.textContent = `Sort by: ${optionSelected.textContent}`;
+      }
+
+      const options = sortContainer.querySelectorAll<HTMLButtonElement>('.library-sort__option');
+
+      setActiveElement(options, optionSelected);
+
+      sortContainer.classList.remove('is-open');
+
+      await this.gamesService.loadGames({ ...this.gamesQuery, page: 1 });
+      this.updateCards(main);
+      this.updatePageButtons(main);
+    });
+  }
+
+  private isSortOption(value: string): value is SortOption {
+    return this.sortOptions.some((option) => option.value === value);
   }
 
   private createPagination(): HTMLElement {
@@ -226,7 +294,7 @@ export class LibraryPage {
     return button;
   }
 
-    private setDisabledArrow(previous: HTMLButtonElement, next: HTMLButtonElement) {
+  private setDisabledArrow(previous: HTMLButtonElement, next: HTMLButtonElement) {
     previous.disabled = this.currentPage === 1;
     next.disabled = this.currentPage === this.totalPages;
   }
@@ -290,74 +358,6 @@ export class LibraryPage {
     window.addEventListener('resize', () => {
       this.updatePageButtons(main);
     });
-  }
-
-  private bindSortButtonEvents(main: HTMLElement): void {
-    const sortContainer = main.querySelector('.library-sort');
-    const sortButton = main.querySelector('.library-sort__btn');
-
-    if (!sortContainer || !sortButton) return;
-
-    sortButton.addEventListener('click', () => {
-      sortContainer.classList.toggle('is-open');
-    });
-  }
-
-  private bindSortOptionsEvents(main: HTMLElement): void {
-    const sortContainer = main.querySelector('.library-sort');
-
-    sortContainer?.addEventListener('click', async (event) => {
-      if (!(event.target instanceof Element)) return;
-      const optionSelected = event.target.closest<HTMLButtonElement>('[data-sort]');
-
-      if (!optionSelected) return;
-
-      const sort = optionSelected.dataset.sort;
-
-      if (!sort || !this.isSortOption(sort)) return;
-
-      this.sortSelected = sort;
-      const sortButton = sortContainer.querySelector<HTMLButtonElement>('.library-sort__btn');
-      if (sortButton) {
-        sortButton.textContent = `Sort by: ${optionSelected.textContent}`;
-      }
-
-      const options = sortContainer.querySelectorAll<HTMLButtonElement>('.library-sort__option');
-
-      setActiveElement(options, optionSelected);
-
-      sortContainer.classList.remove('is-open');
-
-      await this.gamesService.loadGames({ ...this.gamesQuery, page: 1 });
-      this.updateCards(main);
-      this.updatePageButtons(main);
-    });
-  }
-
-  private bindCategoryEvents(main: HTMLElement): void {
-    const categories = main.querySelector('.library-categories');
-    categories?.addEventListener('click', async (event) => {
-      if (!(event.target instanceof Element)) return;
-      const button = event.target.closest<HTMLButtonElement>('[data-category]');
-      if (!button) return;
-
-      const category = button.dataset.category;
-      if (!category || !this.isCategoryOption(category)) return;
-
-      this.categorySelected = category;
-
-      const buttons = categories.querySelectorAll<HTMLButtonElement>('[data-category]');
-
-      setActiveElement(buttons, button);
-
-      await this.gamesService.loadGames({ ...this.gamesQuery, page: 1 });
-      this.updateCards(main);
-      this.updatePageButtons(main);
-    });
-  }
-
-  private isCategoryOption(value: string): value is Category {
-    return this.categoriesData.some((option) => option.slug === value);
   }
 
   private async updateCards(main: HTMLElement): Promise<void> {

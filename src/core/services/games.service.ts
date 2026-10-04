@@ -17,7 +17,7 @@ export class GamesService {
 
     try {
       // to check error and skeleton:
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       // throw new Error('Test error');
       const response = await this.api.getGames(query);

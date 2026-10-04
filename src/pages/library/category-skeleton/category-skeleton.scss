@@ -6,8 +6,8 @@
   overflow: hidden;
 
   &__item {
-    width: 90px;
-    height: 40px;
+    width: $skeleton-category-w;
+    height: $skeleton-category-h;
     flex-shrink: 0;
     border-radius: $corner-extra-large;
   }

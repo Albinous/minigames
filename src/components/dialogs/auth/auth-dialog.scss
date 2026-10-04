@@ -164,19 +164,19 @@
 
 @media (max-width: 480px) {
   .auth-dialog-backdrop {
-    padding: 16px;
+    padding: $size-2;
   }
 
   .auth-dialog {
     width: 100%;
     max-width: none;
 
-    padding: 20px;
+    padding: $size-large;
   }
 }
 
 @media (max-width: 375px) {
   .auth-dialog {
-    padding: 16px;
+    padding: $size-2;
   }
 }

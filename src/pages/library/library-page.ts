@@ -15,6 +15,7 @@ import {
 import { arrowLeftIcon, arrowRightIcon } from '../../assets/icons';
 import { CategorySkeleton } from './category-skeleton/category-skeleton';
 import { Snackbar } from '../../components/snackbar/snackbar';
+import { updateUrl } from '../../shared/utils/update-url';
 
 export class LibraryPage {
   private readonly store: Store;
@@ -156,7 +157,7 @@ export class LibraryPage {
         },
       });
 
-      if (category.isDefault) {
+      if (category.slug === this.categorySelected) {
         categoryButton.classList.add('active');
       }
 
@@ -282,11 +283,16 @@ export class LibraryPage {
       }
       this.updateCards(main);
       this.updatePageButtons(main);
+
+      updateUrl({
+        category,
+        page: 1,
+      });
     });
   }
 
   private isCategoryOption(value: string): value is Category {
-    return this.categoriesData.some((option) => option.slug === value);
+    return ['all', 'puzzle', 'card', 'match', 'farm', 'strategy', 'arcade'].includes(value);
   }
 
   private bindSortButtonEvents(main: HTMLElement): void {
@@ -334,6 +340,8 @@ export class LibraryPage {
       }
       this.updateCards(main);
       this.updatePageButtons(main);
+
+      updateUrl({ sort, page: 1 });
     });
   }
 
@@ -412,6 +420,7 @@ export class LibraryPage {
 
   private async changePage(main: HTMLElement, page: number): Promise<void> {
     await this.gamesService.loadGames({ ...this.gamesQuery, page });
+
     this.updateCards(main);
     this.updatePageButtons(main);
   }
@@ -448,7 +457,8 @@ export class LibraryPage {
       );
 
       if (!previousButton || !nextButton) return;
-      this.changePage(main, pageNumber);
+      void this.changePage(main, pageNumber);
+      updateUrl({ page: pageNumber });
     });
   }
 
@@ -458,10 +468,14 @@ export class LibraryPage {
     if (!previousButton || !nextButton) return;
 
     previousButton.addEventListener('click', () => {
-      this.changePage(main, this.currentPage - 1);
+      const page = this.currentPage - 1;
+      void this.changePage(main, page);
+      updateUrl({ page });
     });
     nextButton.addEventListener('click', () => {
-      this.changePage(main, this.currentPage + 1);
+      const page = this.currentPage + 1;
+      void this.changePage(main, page);
+      updateUrl({ page });
     });
   }
 
@@ -504,9 +518,12 @@ export class LibraryPage {
     };
   }
 
-  public async load(): Promise<void> {
+  public async load(page: number = 1): Promise<void> {
     await Promise.all([
-      this.gamesService.loadGames(this.gamesQuery),
+      this.gamesService.loadGames({
+        ...this.gamesQuery,
+        page,
+      }),
       this.categoriesService.loadCategories(),
     ]);
 
@@ -524,7 +541,23 @@ export class LibraryPage {
   }
 
   public async render(): Promise<HTMLElement> {
-    const loadPromise = this.load();
+    const parameters = new URLSearchParams(globalThis.location.search);
+
+    const category = parameters.get('category');
+    const sort = parameters.get('sort');
+    const page = Number(parameters.get('page') ?? '1');
+
+    if (category && this.isCategoryOption(category)) {
+      this.categorySelected = category;
+      this.gamesQuery.category = category;
+    }
+
+    if (sort && this.isSortOption(sort)) {
+      this.sortSelected = sort;
+      this.gamesQuery.sort = sort;
+    }
+
+    const loadPromise = this.load(page);
 
     const main = createElement('main', { className: 'main' });
     const section = this.createSection(main);

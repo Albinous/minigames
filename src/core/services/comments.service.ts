@@ -17,7 +17,6 @@ export class CommentsService {
 
     try {
       const response = await this.api.getComments(slug, sort);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       this.store.comments.data = response;
     } catch {

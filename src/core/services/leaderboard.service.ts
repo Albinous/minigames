@@ -16,9 +16,6 @@ export class LeaderboardService {
 
     try {
       const response = await this.api.getLeaderboard();
-
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
       this.store.leaderboard.data = response;
     } catch {
       this.store.leaderboard.error = 'Failed to load leaderboard';

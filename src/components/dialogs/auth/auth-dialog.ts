@@ -1,3 +1,4 @@
+import { updateUrlAuth } from '../../../shared/utils/update-url';
 import type { AuthMode } from './auth-dialog.types';
 import { getAuthDialogContentView, getAuthDialogView } from './auth-dialog.view';
 
@@ -38,10 +39,12 @@ export class AuthDialog {
 
     loginButton?.addEventListener('click', () => {
       this.open('login');
+      updateUrlAuth(globalThis.location.pathname, 'login');
     });
 
     registerButton?.addEventListener('click', () => {
       this.open('register');
+      updateUrlAuth(globalThis.location.pathname, 'register');
     });
   }
 
@@ -50,12 +53,14 @@ export class AuthDialog {
 
     registerButton?.addEventListener('click', () => {
       this.open('register');
+      updateUrlAuth(globalThis.location.pathname, 'register');
     });
 
     const loginButton = this.dialogElement?.querySelector('.auth-form__login');
 
     loginButton?.addEventListener('click', () => {
       this.open('login');
+      updateUrlAuth(globalThis.location.pathname, 'login');
     });
   }
 
@@ -74,10 +79,13 @@ export class AuthDialog {
     backdrop?.classList.add('auth-dialog-backdrop--open');
   }
 
-  public close(): void {
+  public close(isUpdateUrl = true): void {
     const backdrop = this.dialogElement?.querySelector('.auth-dialog-backdrop');
 
     backdrop?.classList.remove('auth-dialog-backdrop--open');
+    if (isUpdateUrl) {
+      updateUrlAuth(globalThis.location.pathname, undefined);
+    }
   }
 
   public render(): HTMLElement {

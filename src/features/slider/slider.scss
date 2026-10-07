@@ -47,6 +47,7 @@
 
     &__track {
       display: flex;
+      justify-content: center;
       gap: $size-1;
       align-items: stretch;
       touch-action: pan-y;

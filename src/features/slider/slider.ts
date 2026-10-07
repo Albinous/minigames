@@ -334,7 +334,7 @@ export class Slider {
     this.renderState();
   }
 
-  public async render(): Promise<HTMLElement> {
+  public render(): HTMLElement {
     this.slider = document.createElement('section');
     this.slider.className = 'games';
 
@@ -342,7 +342,9 @@ export class Slider {
 
     this.renderState();
 
-    await loadPromise;
+    void loadPromise.then(() => {
+      this.renderState();
+    });
 
     this.renderState();
 

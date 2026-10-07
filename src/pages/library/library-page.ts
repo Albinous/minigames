@@ -388,8 +388,18 @@ export class LibraryPage {
 
     const maxVisiblePages = window.innerWidth < 768 ? 3 : 4;
 
-    for (let index = 1; index <= Math.min(maxVisiblePages, this.totalPages); index++) {
-      const pageButton = this.createPageButton(index);
+    const startPage = Math.max(
+      1,
+      Math.min(
+        this.currentPage - Math.floor(maxVisiblePages / 2),
+        this.totalPages - maxVisiblePages + 1,
+      ),
+    );
+
+    const endPage = Math.min(startPage + maxVisiblePages - 1, this.totalPages);
+
+    for (let page = startPage; page <= endPage; page += 1) {
+      const pageButton = this.createPageButton(page);
       pageButtons.append(pageButton);
     }
 

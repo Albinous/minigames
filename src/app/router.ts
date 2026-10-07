@@ -85,7 +85,7 @@ export class Router {
     if (!route) {
       const page = new NotFound().render(() => {
         this.navigate('/');
-      })
+      });
 
       this.onRouteChange(page, undefined);
       return;
@@ -101,7 +101,7 @@ export class Router {
     if (!route) {
       return new NotFound().render(() => {
         this.navigate('/');
-      })
+      });
     }
 
     return await this.createPage(route);

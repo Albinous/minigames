@@ -1,3 +1,4 @@
+import './error-state.scss';
 import { createElement } from '../../shared';
 
 export class ErrorState {

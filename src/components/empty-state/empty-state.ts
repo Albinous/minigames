@@ -1,3 +1,4 @@
+import './empty-state.scss';
 import { createElement } from '../../shared';
 
 export class EmptyState {

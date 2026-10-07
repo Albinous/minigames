@@ -273,7 +273,7 @@ export class GameDialog {
     const commentsData = this.store.comments.data?.data;
 
     if (!commentsData || commentsData.length === 0) {
-      const message = 'No comments yet'
+      const message = 'No comments yet';
       comments.append(this.emptyState.render(message));
       return comments;
     }
@@ -518,7 +518,7 @@ export class GameDialog {
 
     if (!comments || comments.length === 0) {
       title.textContent = 'Comments';
-       const message = 'No comments yet'
+      const message = 'No comments yet';
 
       list.replaceChildren(this.emptyState.render(message));
 

@@ -108,6 +108,13 @@ $btn-icon-padding: 8px;
 $shadow-level-1: 4px 4px 0 $color-on-primary;
 $shadow-level-2: 6px 6px 0 $color-on-primary;
 $shadow-level-3: 8px 8px 0 $color-on-primary;
+$shadow-bottom: 0 4px 0 0 $color-on-primary;
+// Borders
+
+$border-level-1: 1px solid $color-on-primary;
+$border-level-2: 1.5px solid $color-on-primary;
+$border-level-3: 2px solid $color-on-primary;
+$border-level-4: 2.5px solid $color-on-primary;
 
 $game-dialog-width: 600px;
 $game-dialog-image: 220px;

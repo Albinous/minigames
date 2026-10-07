@@ -44,7 +44,7 @@
 
   background-color: $color-bg;
 
-  border: 2px solid $color-on-primary;
+  border: $border-level-3;
   border-radius: $corner-large;
 
   box-shadow: $shadow-level-3;
@@ -56,41 +56,26 @@
     opacity 0.2s ease,
     transform 0.2s ease;
 
-  &__close {
-    position: absolute;
-    top: $size-1;
-    right: $size-1;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    width: 40px;
-    height: 40px;
-
-    background: transparent;
-    border: 0;
-
-    font-size: 28px;
-
-    cursor: pointer;
-  }
-
   &__switcher {
     display: flex;
-    gap: $size-1;
-
-    margin-bottom: $size-2;
+    border: $border-level-4;
+    margin-bottom: $size-3;
+    border-radius: $corner-medium;
+    background-color: $color-white;
 
     button {
       flex: 1;
-
-      padding: $size-1;
-
-      background: transparent;
+      padding: $btn-large-padding;
+      border-radius: $size-1;
       border: 0;
 
       cursor: pointer;
+
+      &.active {
+        background-color: $color-bg-footer-low;
+        color: $color-white;
+        font-size: $font-size-label-extra-large;
+      }
     }
   }
 
@@ -100,6 +85,15 @@
     &--switching {
       opacity: 0;
     }
+
+    p {
+      font-size: $font-size-body-small;
+      margin-bottom: $size-2;
+    }
+  }
+
+  &__title {
+    font-size: $font-size-headline-medium;
   }
 }
 
@@ -111,24 +105,44 @@
   &__field {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: $size-1;
+    margin-bottom: $size-1;
+
+    label {
+      font-size: $font-size-label-large;
+      color: $color-on-primary;
+      font-weight: $font-weight-bold;
+    }
+
+    input {
+      border: $border-level-3;
+      border-radius: $corner-small;
+      padding: $size-2 $size-2 $size-2 52px;
+      font-size: $font-size-label-large;
+      background-repeat: no-repeat;
+      background-position: $size-2 center;
+    }
+  }
+
+  &__email {
+    background-image: url('../../../assets/icons/mail.svg');
   }
 
   &__password {
     position: relative;
-
     display: flex;
     align-items: center;
 
     input {
       width: 100%;
       padding-right: 60px;
+      background-image: url(../../../assets/icons/lock.svg);
     }
   }
 
   &__password-toggle {
     position: absolute;
-    right: 8px;
+    right: $size-2;
 
     background: transparent;
     border: 0;
@@ -140,10 +154,27 @@
     align-self: flex-end;
   }
 
+  &__underline {
+    font-size: $font-size-label-large;
+    text-decoration: underline;
+    color: $color-on-primary;
+    font-weight: $font-weight-bold;
+  }
+
+  &__submit-btn {
+    margin-top: $size-2;
+    box-shadow: $shadow-bottom;
+    border: $border-level-4;
+  }
+
   &__divider {
     display: flex;
     align-items: center;
-    gap: $size-1;
+    gap: $size-2;
+    font-weight: $font-weight-bold;
+    font-size: $font-size-label-medium;
+    color: $color-on-bg;
+    margin: $size-1 0;
 
     &::before,
     &::after {
@@ -159,6 +190,25 @@
 
   &__google {
     width: 100%;
+    background-color: $color-white;
+    display: flex;
+    gap: $size-2;
+    align-items: center;
+    margin-bottom: $size-2;
+  }
+
+  &__btn {
+    padding: $btn-large-padding;
+    border-radius: $corner-medium;
+    font-size: $font-size-body-medium;
+  }
+
+  &__switcher {
+    text-align: center;
+  }
+
+  &__username {
+    background-image: url(../../../assets/icons/person.svg);
   }
 }
 

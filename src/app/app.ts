@@ -35,7 +35,9 @@ export class App {
         const currentPage = document.querySelector('main');
 
         currentPage?.replaceWith(page);
-        header.setActiveRoute(route);
+        if (route) {
+          header.setActiveRoute(route);
+        }
       },
       () => {
         const parameters = new URLSearchParams(globalThis.location.search);

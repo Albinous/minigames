@@ -1,0 +1,29 @@
+@use '../../styles/tokens' as *;
+
+.not-found {
+  &__wrapper {
+    display: flex;
+    min-height: 60vh;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: $size-3;
+    padding: $size-4;
+    text-align: center;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: $size-12;
+    font-weight: $font-weight-bold;
+  }
+
+  &__message {
+    margin: 0;
+    font-size: $size-3;
+  }
+
+  &__button {
+    margin-top: $size-2;
+  }
+}

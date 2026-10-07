@@ -36,20 +36,29 @@ export class Router {
 
   private readonly onRouteChange: (page: HTMLElement, route: Route) => void;
   private readonly onDetailsClick: (slug: string) => void;
+  private readonly onGameChange: () => void;
+  private readonly onAuthChange: () => void;
 
   constructor(
     store: Store,
     gamesService: GamesService,
     onDetailsClick: (slug: string) => void,
     onRouteChange: (page: HTMLElement, route: Route) => void,
+    onGameChange: () => void,
+    onAuthChange: () => void,
   ) {
     this.store = store;
     this.gamesService = gamesService;
     this.onRouteChange = onRouteChange;
     this.onDetailsClick = onDetailsClick;
+    this.onGameChange = onGameChange;
+    this.onAuthChange = onAuthChange;
 
     globalThis.addEventListener('popstate', () => {
       this.renderCurrentPage();
+      this.onGameChange();
+      this.onGameChange();
+      this.onAuthChange();
     });
   }
 
@@ -58,7 +67,13 @@ export class Router {
   }
 
   private getCurrentRoute(): Route {
-    return globalThis.location.pathname === '/library' ? '/library' : '/';
+    const { pathname } = globalThis.location;
+
+    if (pathname === '/library') {
+      return '/library';
+    }
+
+    return '/';
   }
 
   private async renderCurrentPage(): Promise<void> {
@@ -75,7 +90,7 @@ export class Router {
   }
 
   public navigate(route: Route): void {
-    if (globalThis.location.pathname === route) return;
+    if (globalThis.location.pathname === route && globalThis.location.search === '') return;
 
     globalThis.history.pushState({}, '', route);
 

@@ -3,6 +3,7 @@ import { Router } from './router';
 import { AuthDialog } from '../components/dialogs/auth/auth-dialog';
 import { GameDialog } from '../components/dialogs/game/game-dialog';
 import { CommentsApi, CommentsService, GamesApi, GamesService, Store } from '../core';
+import { updateUrl, updateUrlAuth } from '../shared/utils/update-url';
 
 export class App {
   public async render(): Promise<void> {
@@ -14,6 +15,7 @@ export class App {
     const authDialog = new AuthDialog();
     const header = new Header(
       (mode) => {
+        updateUrlAuth(globalThis.location.pathname, mode);
         authDialog.open(mode);
       },
       (route) => {
@@ -25,7 +27,9 @@ export class App {
       store,
       gamesService,
       (slug: string) => {
-        gameDialog.open(slug);
+        updateUrl({ game: slug });
+
+        void gameDialog.open(slug);
       },
       (page, route) => {
         const currentPage = document.querySelector('main');
@@ -33,7 +37,28 @@ export class App {
         currentPage?.replaceWith(page);
         header.setActiveRoute(route);
       },
+      () => {
+        const parameters = new URLSearchParams(globalThis.location.search);
+        const game = parameters.get('game');
+
+        if (game) {
+          void gameDialog.open(game);
+        } else {
+          gameDialog.close(false);
+        }
+      },
+      () => {
+        const parameters = new URLSearchParams(globalThis.location.search);
+        const auth = parameters.get('auth');
+
+        if (auth === 'login' || auth === 'register') {
+          authDialog.open(auth);
+        } else {
+          authDialog.close(false);
+        }
+      },
     );
+
     const footer = new Footer();
 
     document.body.prepend(
@@ -41,7 +66,7 @@ export class App {
       await router.render(),
       footer.render(),
       authDialog.render(),
-      gameDialog.render(),
+      gameDialog.element,
     );
   }
 }

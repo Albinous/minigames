@@ -24,6 +24,7 @@ import { EmptyState } from '../../empty-state';
 import { GameDetailsSkeleton } from './game-dialog-skeleton';
 import { CommentSkeleton } from './comments-skeleton';
 import { Snackbar } from '../../snackbar/snackbar';
+import { updateUrl } from '../../../shared/utils/update-url';
 
 export class GameDialog {
   private dialogElement: HTMLDialogElement;
@@ -668,6 +669,10 @@ export class GameDialog {
 
     content.replaceChildren(this.createContent());
 
+    this.bindCloseButton();
+    this.bindAddFavourites();
+    this.bindLikeComment();
+
     this.renderGameData();
     this.renderCommentsState();
   }
@@ -700,8 +705,12 @@ export class GameDialog {
     this.renderGameState();
   }
 
-  public close(): void {
+  public close(isUpdateHistory = true): void {
     if (!this.dialogElement) return;
+
+    if (isUpdateHistory) {
+      updateUrl({ game: undefined });
+    }
 
     this.dialogElement.classList.add('closing');
 
@@ -730,6 +739,10 @@ export class GameDialog {
     }
 
     return this.store.comments.data.data;
+  }
+
+  public get element(): HTMLDialogElement {
+    return this.dialogElement;
   }
 
   public render(): HTMLDialogElement {

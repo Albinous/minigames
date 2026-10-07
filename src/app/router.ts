@@ -6,7 +6,7 @@ import {
   type GamesService,
   type Store,
 } from '../core';
-import { HomePage, LibraryPage } from '../pages';
+import { HomePage, LibraryPage, NotFound } from '../pages';
 
 export type Route = '/' | '/library';
 
@@ -34,7 +34,7 @@ export class Router {
     },
   };
 
-  private readonly onRouteChange: (page: HTMLElement, route: Route) => void;
+  private readonly onRouteChange: (page: HTMLElement, route: Route | undefined) => void;
   private readonly onDetailsClick: (slug: string) => void;
   private readonly onGameChange: () => void;
   private readonly onAuthChange: () => void;
@@ -43,7 +43,7 @@ export class Router {
     store: Store,
     gamesService: GamesService,
     onDetailsClick: (slug: string) => void,
-    onRouteChange: (page: HTMLElement, route: Route) => void,
+    onRouteChange: (page: HTMLElement, route: Route | undefined) => void,
     onGameChange: () => void,
     onAuthChange: () => void,
   ) {
@@ -54,9 +54,8 @@ export class Router {
     this.onGameChange = onGameChange;
     this.onAuthChange = onAuthChange;
 
-    globalThis.addEventListener('popstate', () => {
-      this.renderCurrentPage();
-      this.onGameChange();
+    globalThis.addEventListener('popstate', async () => {
+      await this.renderCurrentPage();
       this.onGameChange();
       this.onAuthChange();
     });
@@ -66,18 +65,31 @@ export class Router {
     return this.routes[route]();
   }
 
-  private getCurrentRoute(): Route {
+  private getCurrentRoute(): Route | undefined {
     const { pathname } = globalThis.location;
+
+    if (pathname === '/') {
+      return '/';
+    }
 
     if (pathname === '/library') {
       return '/library';
     }
 
-    return '/';
+    return undefined;
   }
 
   private async renderCurrentPage(): Promise<void> {
     const route = this.getCurrentRoute();
+
+    if (!route) {
+      const page = new NotFound().render(() => {
+        this.navigate('/');
+      })
+
+      this.onRouteChange(page, undefined);
+      return;
+    }
     const page = await this.createPage(route);
 
     this.onRouteChange(page, route);
@@ -85,6 +97,12 @@ export class Router {
 
   public async render(): Promise<HTMLElement> {
     const route = this.getCurrentRoute();
+
+    if (!route) {
+      return new NotFound().render(() => {
+        this.navigate('/');
+      })
+    }
 
     return await this.createPage(route);
   }

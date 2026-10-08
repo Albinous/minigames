@@ -1,3 +1,5 @@
+import type { AuthMode } from "../../components/dialogs/auth/auth-dialog.types";
+
 export const AUTH_FIELDS = ['username', 'email', 'password', 'confirmPassword'] as const;
 export type AuthField = (typeof AUTH_FIELDS)[number];
 export type AuthFormValues = Partial<Record<AuthField, string>>;
@@ -54,7 +56,37 @@ export const validateRegisterPassword = (value: string): string | undefined => {
   return undefined;
 }
 
-export const validateConfirmPassword = (value: string, confirmation: string): string | undefined => {
+export const validateConfirmPassword = (password: string, confirmation: string): string | undefined => {
   if (!confirmation) return 'Please confirm your password'
-  return (value === confirmation) ? undefined : `Passwords don't match`
+  return (password === confirmation) ? undefined : `Passwords don't match`
+}
+
+const FIELD_BY_MODE: Record<AuthMode, readonly AuthField[]> = {
+  'login': ['email', 'password'],
+  'register': ['username', 'email', 'password', 'confirmPassword']
+};
+
+const FIELD_VALIDATORS: Record<AuthField, (value: string, values: AuthFormValues, mode: AuthMode) => string | undefined> = {
+  username: (value) => validateUsername(value),
+  email: (value) => validateEmail(value),
+  password: (value, _values, mode) => mode === 'login' ? validateLoginPassword(value) : validateRegisterPassword(value),
+  confirmPassword: (value, values) => validateConfirmPassword(values.password ?? '', value),
+}
+
+const validateAuthField = (
+  mode: AuthMode,
+  field: AuthField,
+  values: AuthFormValues
+): string | undefined => FIELD_VALIDATORS[field](values[field] ?? '', values, mode);
+
+
+export const getAuthFormErrors = (mode: AuthMode, values: AuthFormValues): AuthFormErrors => {
+  const errors: AuthFormErrors = {};
+  const fields = FIELD_BY_MODE[mode]
+  for (const field of fields) {
+    const error = validateAuthField(mode, field, values);
+    if (error) errors[field] = error;
+  }
+
+  return errors;
 }

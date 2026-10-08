@@ -78,7 +78,7 @@ function getLoginFormView(): string {
             type="password"
             autocomplete="current-password"
             placeholder="••••••••"
-            minlength="8"
+            minlength="6"
             required
           />
 
@@ -188,7 +188,7 @@ function getRegisterFormView(): string {
             type="password"
             autocomplete="new-password"
             placeholder="Min. 8 characters"
-            minlength="8"
+            minlength="6"
             required
           />
 
@@ -216,7 +216,7 @@ function getRegisterFormView(): string {
             type="password"
             autocomplete="new-password"
             placeholder="Repeat your password"
-            minlength="8"
+            minlength="6"
             required
           />
 

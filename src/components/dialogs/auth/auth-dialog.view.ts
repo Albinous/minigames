@@ -1,6 +1,10 @@
 import './auth-dialog.scss';
 import type { AuthMode } from './auth-dialog.types';
 
+function getFieldErrorView(name: string): string {
+  return `<p class="auth-form__error" data-error-for="${name}" aria-live="polite"></p>`;
+}
+
 export function getAuthDialogView(mode: AuthMode): string {
   return `
     <div class="auth-dialog-backdrop">
@@ -41,7 +45,7 @@ export function getAuthDialogContentView(mode: AuthMode): string {
 
 function getLoginFormView(): string {
   return `
-    <form class="auth-form">
+    <form class="auth-form" novalidate>
       <h2 id="auth-dialog-title">
         Welcome Back!
       </h2>
@@ -56,7 +60,7 @@ function getLoginFormView(): string {
         </label>
 
         <input
-          class="auth-form__email"
+          class="auth-form__input auth-form__email"
           id="login-email"
           name="email"
           type="email"
@@ -64,6 +68,8 @@ function getLoginFormView(): string {
           placeholder="e.g. alex@minigames.com"
           required
         />
+
+        ${getFieldErrorView('email')}
       </div>
 
       <div class="auth-form__field">
@@ -73,12 +79,12 @@ function getLoginFormView(): string {
 
         <div class="auth-form__password">
           <input
+            class="auth-form__input"
             id="login-password"
             name="password"
             type="password"
             autocomplete="current-password"
             placeholder="••••••••"
-            minlength="8"
             required
           />
 
@@ -91,6 +97,7 @@ function getLoginFormView(): string {
             <img src="src/assets/icons/visibility.svg">
           </button>
         </div>
+        ${getFieldErrorView('password')}
       </div>
 
       <a
@@ -102,7 +109,7 @@ function getLoginFormView(): string {
 
       <button
         class="auth-form__submit-btn btn btn-primary auth-form__btn"
-        type="submit"
+        type="submit" disabled
       >
         Login
       </button>
@@ -134,7 +141,7 @@ function getLoginFormView(): string {
 
 function getRegisterFormView(): string {
   return `
-    <form class="auth-form">
+    <form class="auth-form" novalidate>
       <h2 id="auth-dialog-title">
         Create Account
       </h2>
@@ -150,13 +157,14 @@ function getRegisterFormView(): string {
 
         <input
           id="register-username"
-          class="auth-form__username"
+          class="auth-form__input auth-form__username"
           name="username"
           type="text"
           autocomplete="username"
           placeholder="e.g. CozyGamer_99"
           required
         />
+        ${getFieldErrorView('username')}
       </div>
 
       <div class="auth-form__field">
@@ -165,7 +173,7 @@ function getRegisterFormView(): string {
         </label>
 
         <input
-          class="auth-form__email"
+          class="auth-form__input auth-form__email"
           id="register-email"
           name="email"
           type="email"
@@ -173,6 +181,7 @@ function getRegisterFormView(): string {
           placeholder="your.email@domain.com"
           required
         />
+        ${getFieldErrorView('email')}
       </div>
 
       <div class="auth-form__field">
@@ -182,13 +191,12 @@ function getRegisterFormView(): string {
 
         <div class="auth-form__password">
           <input
-
+            class="auth-form__input"
             id="register-password"
             name="password"
             type="password"
             autocomplete="new-password"
-            placeholder="Min. 8 characters"
-            minlength="8"
+            placeholder="Min. 6 characters"
             required
           />
 
@@ -202,6 +210,8 @@ function getRegisterFormView(): string {
 
           </button>
         </div>
+        
+        ${getFieldErrorView('password')}
       </div>
 
       <div class="auth-form__field">
@@ -211,12 +221,12 @@ function getRegisterFormView(): string {
 
         <div class="auth-form__password">
           <input
+            class="auth-form__input"
             id="register-confirm-password"
             name="confirmPassword"
             type="password"
             autocomplete="new-password"
             placeholder="Repeat your password"
-            minlength="8"
             required
           />
 
@@ -230,11 +240,13 @@ function getRegisterFormView(): string {
 
           </button>
         </div>
+        
+        ${getFieldErrorView('confirmPassword')}
       </div>
 
       <button
         class="btn btn-primary auth-form__btn auth-form__submit-btn"
-        type="submit"
+        type="submit" disabled
       >
         Create Account
       </button>

@@ -1,6 +1,7 @@
 import type { AuthMode } from './auth-dialog.types';
 import { getAuthDialogContentView, getAuthDialogView } from './auth-dialog.view';
 import { updateUrlAuth } from '../../../shared/utils/update-url';
+import { AuthFormValidator } from './auth-form-validator';
 
 export class AuthDialog {
   private mode: AuthMode = 'login';
@@ -65,6 +66,15 @@ export class AuthDialog {
     });
   }
 
+  private bindValidation(): void {
+    if (!this.dialogElement) return;
+
+    const form = this.dialogElement.querySelector<HTMLFormElement>('.auth-form');
+    if (!form) return;
+    const validator = new AuthFormValidator(this.mode, form);
+    validator.bind();
+  }
+
   public open(mode: AuthMode): void {
     this.mode = mode;
 
@@ -80,6 +90,8 @@ export class AuthDialog {
     const backdrop = this.dialogElement?.querySelector('.auth-dialog-backdrop');
 
     backdrop?.classList.add('auth-dialog-backdrop--open');
+
+    this.bindValidation();
   }
 
   public close(isUpdateHistory = true): void {
@@ -105,6 +117,7 @@ export class AuthDialog {
     this.bindSwitcher();
     this.bindFormSwitcher();
     this.updateSwitcherState();
+    this.bindValidation();
 
     return root;
   }

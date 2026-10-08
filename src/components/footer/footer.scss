@@ -34,7 +34,7 @@
 
   &-descr {
     max-width: 400px;
-    font-size: 14px;
+    font-size: $font-size-label-large;
     margin-top: $size-3;
 
     @include tablet {
@@ -71,11 +71,11 @@
     &__menu {
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: $font-size-label-large;
       align-items: flex-start;
 
       @include mobile {
-        gap: 16px;
+        gap: $size-2;
       }
 
       &-item {
@@ -85,7 +85,7 @@
       }
 
       &-link {
-        font-size: 14px;
+        font-size: $font-size-label-large;
         padding-bottom: 2px;
         color: $color-on-bg-footer;
 
@@ -143,8 +143,8 @@
     }
 
     &__logo {
-      width: 20px;
-      height: 20px;
+      width: $size-large;
+      height: $size-large;
     }
 
     &__link {
@@ -154,22 +154,22 @@
     }
 
     &__title {
-      font-size: 14px;
+      font-size: $font-size-label-large;
       color: $color-on-bg-footer;
       font-weight: $font-weight-regular;
 
       @include mobile {
-        font-size: 12px;
+        font-size: $font-size-label-medium;
       }
     }
   }
 
   &-text {
-    font-size: 14px;
+    font-size: $font-size-label-large;
     color: $color-on-bg-footer;
 
     @include mobile {
-      font-size: 12px;
+      font-size: $font-size-label-medium;
 
       &:first-child {
         width: 100%;

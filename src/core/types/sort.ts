@@ -1,0 +1,1 @@
+export type SortOption = 'rating-asc' | 'rating-desc' | 'name-asc' | 'name-desc';

@@ -1,15 +1,22 @@
 import { getSliderView } from './slider.view';
-import gamesData from '../../data/all-games-seed.json';
-import type { IGame } from '../../core';
+import type { GamesService, IGame, Store } from '../../core';
+import { EmptyState, ErrorState } from '../../components';
+import { SliderSkeleton } from './slider-skeleton';
+import { Snackbar } from '../../components/snackbar/snackbar';
 
 const AUTOPLAY_INTERVAL = 4000;
 
 export class Slider {
+  private readonly store: Store;
+  private readonly gamesService: GamesService;
+  private readonly errorState = new ErrorState();
+  private readonly emptyState = new EmptyState();
+  private readonly skeleton = new SliderSkeleton();
+  private readonly snackbar = new Snackbar();
+
   private slider: HTMLElement | undefined = undefined;
   private track: HTMLElement | undefined = undefined;
   private activeIndex: number = 0;
-  private games: IGame[];
-  private featuredGames: IGame[];
   private autoplayId: number | undefined = undefined;
   private autoplayStartedAt = 0;
   private remainingTime = AUTOPLAY_INTERVAL;
@@ -17,13 +24,12 @@ export class Slider {
   private isDragging = false;
   private resizeObserver: ResizeObserver | undefined = undefined;
 
-  private readonly onDetailsClick: () => void;
+  private readonly onDetailsClick: (slug: string) => void;
 
-  constructor(onDetailsClick: () => void) {
+  constructor(store: Store, gamesService: GamesService, onDetailsClick: (slug: string) => void) {
+    this.store = store;
+    this.gamesService = gamesService;
     this.onDetailsClick = onDetailsClick;
-
-    this.games = gamesData.data;
-    this.featuredGames = this.games.filter((game) => game.featured);
   }
 
   private getCards(): HTMLElement[] {
@@ -248,28 +254,99 @@ export class Slider {
     for (const card of cards) {
       card.addEventListener('click', () => {
         if (this.isDragging) return;
+        const slug = card.dataset.gameSlug;
 
-        this.onDetailsClick?.();
+        if (!slug) return;
+
+        this.onDetailsClick?.(slug);
       });
     }
   }
 
-  public render(): HTMLElement {
-    this.slider = document.createElement('section');
+  private async loadFeaturedGames(): Promise<void> {
+    await this.gamesService.loadGames({ featured: true });
 
-    this.slider.className = 'games';
+    if (this.store.games.error) {
+      this.snackbar.show('Failed to load featured games', 'error');
+      return;
+    }
+
+    this.snackbar.show('Featured games loaded successfully', 'success');
+  }
+
+  private get featuredGames(): IGame[] {
+    return this.store.games.data?.data ?? [];
+  }
+
+  private renderState(): void {
+    if (!this.slider) return;
+
+    if (this.store.games.isLoading) {
+      this.stopAutoplay();
+      this.track = undefined;
+
+      this.slider.replaceChildren(this.skeleton.render());
+      return;
+    }
+
+    if (this.store.games.error) {
+      this.stopAutoplay();
+      this.track = undefined;
+
+      this.slider.replaceChildren(
+        this.errorState.render(this.store.games.error, () => this.retryLoad()),
+      );
+
+      return;
+    }
+
+    if (this.featuredGames.length === 0) {
+      this.stopAutoplay();
+      this.track = undefined;
+
+      this.slider.replaceChildren(this.emptyState.render());
+      return;
+    }
+
     this.slider.innerHTML = getSliderView(this.featuredGames);
     const track = this.slider.querySelector<HTMLElement>('.games-slider__track');
 
-    if (track) {
-      this.track = track;
-    }
+    if (!track) return;
+
+    this.track = track;
+
+    this.activeIndex = 0;
 
     this.updateCards();
     this.observeCards();
     this.bindEvents();
     this.bindSwipe();
     this.startAutoplay();
+  }
+
+  private async retryLoad(): Promise<void> {
+    const loadPromise = this.loadFeaturedGames();
+
+    this.renderState();
+
+    await loadPromise;
+
+    this.renderState();
+  }
+
+  public render(): HTMLElement {
+    this.slider = document.createElement('section');
+    this.slider.className = 'games';
+
+    const loadPromise = this.loadFeaturedGames();
+
+    this.renderState();
+
+    void loadPromise.then(() => {
+      this.renderState();
+    });
+
+    this.renderState();
 
     return this.slider;
   }

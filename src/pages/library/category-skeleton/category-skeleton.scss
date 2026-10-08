@@ -1,0 +1,14 @@
+@use '../../../styles/tokens' as *;
+
+.category-skeleton {
+  display: flex;
+  gap: $size-2;
+  overflow: hidden;
+
+  &__item {
+    width: $skeleton-category-w;
+    height: $skeleton-category-h;
+    flex-shrink: 0;
+    border-radius: $corner-extra-large;
+  }
+}

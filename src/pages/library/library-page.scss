@@ -19,7 +19,7 @@
     margin-bottom: $size-1;
 
     @include tablet {
-      font-size: 36px;
+      font-size: $font-size-display-large;
     }
 
     @include mobile {
@@ -65,12 +65,12 @@
   }
 
   &-category {
-    padding: 8px 15px;
+    padding: $size-1 15px;
     flex: 0 0 auto;
     border-radius: $corner-extra-large;
 
     @include tablet {
-      padding: 6px 14px;
+      padding: 6px $font-size-label-large;
     }
 
     &:hover {
@@ -101,7 +101,7 @@
       border-radius: $corner-extra-large;
 
       @include tablet {
-        padding: 10.5px 46px 10.5px 14px;
+        padding: 10.5px 46px 10.5px $font-size-label-large;
       }
 
       @include mobile {
@@ -125,15 +125,15 @@
       width: 100%;
       border: 2px solid $color-on-primary;
       border-radius: $corner-medium;
-      box-shadow: 4px 4px 0 0 #000;
+      box-shadow: $shadow-level-1;
       background-color: $color-white;
       overflow: hidden;
     }
 
     &__option {
       text-align-last: left;
-      padding: 16px 16px 16px 38px;
-      font-size: 14px;
+      padding: $size-2 $size-2 $size-2 3$size-1;
+      font-size: $font-size-label-large;
       font-weight: $font-weight-medium;
       color: $color-on-primary;
       border-top: 1px solid $color-outline;
@@ -149,13 +149,17 @@
         &::before {
           content: '';
           position: absolute;
-          left: 16px;
+          left: $size-2;
           top: 50%;
           transform: translate(0, -50%);
           background-image: url(../../assets/icons/check.svg);
-          width: 14px;
-          height: 14px;
+          width: $font-size-label-large;
+          height: $font-size-label-large;
         }
+      }
+
+      &:not(.active):hover {
+        background-color: $color-surface;
       }
     }
   }
@@ -171,12 +175,12 @@
     }
 
     @include mobile {
-      padding: 24px 0 8px 0;
+      padding: $size-3 0 $size-1 0;
     }
 
     button {
-      width: 40px;
-      height: 40px;
+      width: $size-5;
+      height: $size-5;
       border-radius: $corner-full;
       background-color: $color-white;
 

@@ -4,14 +4,14 @@
 .logo {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: $size-1;
 
   &-title {
     font-weight: $font-weight-bold;
-    font-size: 24px;
+    font-size: $size-3;
 
     @include tablet {
-      font-size: 20px;
+      font-size: $size-large;
     }
   }
 }

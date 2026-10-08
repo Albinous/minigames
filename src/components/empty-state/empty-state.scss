@@ -1,0 +1,19 @@
+@use '../../styles/tokens' as *;
+
+.empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 250px;
+  padding: $size-4;
+  text-align: center;
+  background-color: $color-white;
+  border: 2px solid $color-bg-footer-lowest;
+  border-radius: $corner-medium;
+
+  &__message {
+    margin: 0;
+    font-size: $size-3;
+    font-weight: $font-weight-bold;
+  }
+}

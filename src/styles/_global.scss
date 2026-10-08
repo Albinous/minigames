@@ -40,15 +40,15 @@ h2 {
 
 p {
   color: $color-on-bg;
-  font-size: 18px;
+  font-size: $font-size-body-large;
   line-height: 1.5;
 
   @include tablet {
-    font-size: 14px;
+    font-size: $font-size-label-large;
   }
 
   @include mobile {
-    font-size: 12px;
+    font-size: $font-size-label-medium;
   }
 }
 
@@ -116,7 +116,7 @@ section {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 8px 18px;
+  padding: $size-1$font-size-body-large;
   border: 2px solid $color-on-primary;
   border-radius: $corner-small;
   color: $color-on-primary;

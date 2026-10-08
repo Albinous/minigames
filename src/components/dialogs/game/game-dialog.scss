@@ -2,7 +2,7 @@
 @use '../../../styles/mixins' as *;
 
 .game-dialog {
-  width: 600px;
+  width: $game-dialog-width;
   max-width: 100%;
   height: 90vh;
   max-height: 90vh;
@@ -62,7 +62,7 @@
 
   &__img {
     width: 100%;
-    height: 220px;
+    height: $game-dialog-image;
     object-fit: cover;
   }
 
@@ -308,6 +308,12 @@
         max-width: 215px;
       }
     }
+
+    &-list {
+      display: flex;
+      flex-direction: column;
+      gap: $size-2;
+    }
   }
 
   &__comment {
@@ -409,4 +415,84 @@
 .date {
   font-size: $font-size-label-medium;
   color: $color-on-bg;
+}
+
+.game-details-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: $size-4;
+
+  @include mobile {
+    flex-direction: column;
+  }
+
+  &__image {
+    width: 45%;
+    height: 300px;
+    flex-shrink: 0;
+
+    @include mobile {
+      width: 100%;
+      height: 220px;
+    }
+  }
+
+  &__content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: $size-3;
+  }
+
+  &__title {
+    width: 60%;
+    height: $size-4;
+  }
+
+  &__category {
+    width: $s-100px;
+    height: 28px;
+  }
+
+  &__description {
+    width: 100%;
+    height: $s-100px;
+  }
+
+  &__stats {
+    width: 180px;
+    height: $size-3;
+  }
+
+  &__button {
+    width: 130px;
+    height: $size-5;
+  }
+}
+
+.comment-skeleton-list {
+  display: flex;
+  flex-direction: column;
+  gap: $size-3;
+}
+
+.comment-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: $size-2;
+
+  &__author {
+    width: 140px;
+    height: $size-large;
+  }
+
+  &__text {
+    width: 100%;
+    height: 50px;
+  }
+
+  &__meta {
+    width: $s-100px;
+    height: $size-2;
+  }
 }

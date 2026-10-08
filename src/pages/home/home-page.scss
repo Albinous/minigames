@@ -38,11 +38,11 @@
   }
 
   &-title {
-    font-size: 56px;
+    font-size: $font-size-display-large;
     line-height: 1.1;
 
     @include tablet {
-      font-size: 36px;
+      font-size: $font-size-display-large;
     }
 
     @include mobile {
@@ -67,16 +67,16 @@
   &-btn {
     padding: $btn-large-padding;
     align-self: flex-start;
-    font-size: 18px;
+    font-size: $font-size-body-large;
 
     @include tablet {
-      font-size: 14px;
-      padding: 8px 18px;
+      font-size: $font-size-label-large;
+      padding: $size-1$font-size-body-large;
     }
 
     @include mobile {
-      font-size: 12px;
-      padding: 6px 14px;
+      font-size: $font-size-label-medium;
+      padding: 6px $font-size-label-large;
     }
   }
 }
@@ -114,8 +114,8 @@
     border-radius: $corner-extra-large;
     padding: $size-5;
     box-shadow:
-      0 14px 30px -10px rgba(0, 0, 0, 0.08),
-      0 2px 8px -4px rgba(0, 0, 0, 0.04);
+      0 $font-size-label-large 30px -10px rgba(0, 0, 0, 0.08),
+      0 2px$size-1 -4px rgba(0, 0, 0, 0.04);
     background: $color-white;
     display: flex;
     flex-direction: column;
@@ -145,9 +145,9 @@
 
   &-btn {
     align-self: flex-start;
-    padding: 16px 24px 16px 56px;
+    padding: $size-2 $size-3 $size-2 $size-7;
     position: relative;
-    font-size: 18px;
+    font-size: $font-size-body-large;
     border-radius: $corner-medium;
 
     &::before {
@@ -162,32 +162,32 @@
     }
 
     @include tablet {
-      padding: 8px 20px 8px 44px;
-      font-size: 14px;
+      padding: $size-1$size-large$size-1 44px;
+      font-size: $font-size-label-large;
 
       &::before {
         width: $size-2;
         height: $size-2;
-        left: 18px;
+        left: $font-size-body-large;
         background-size: contain;
       }
     }
     @include mobile {
-      padding: 6px 14px 6px 38px;
-      font-size: 12px;
+      padding: 6px $font-size-label-large 6px 38px;
+      font-size: $font-size-label-medium;
 
       &::before {
-        left: 12px;
+        left: $font-size-label-medium;
       }
     }
   }
 
   &-contact {
-    font-size: 14px;
+    font-size: $font-size-label-large;
     color: $color-on-bg-low;
 
     @include tablet {
-      font-size: 12px;
+      font-size: $font-size-label-medium;
     }
   }
 }

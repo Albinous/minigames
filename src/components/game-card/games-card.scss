@@ -15,6 +15,10 @@
     @include mobile {
       gap: $size-2;
     }
+
+    .empty-state {
+      grid-column: 1 / -1;
+    }
   }
   &-card {
     display: flex;
@@ -44,14 +48,14 @@
       display: flex;
       flex-direction: column;
       gap: 17.5px;
-      padding: 14px;
+      padding: $font-size-label-large;
 
       @include tablet {
         gap: 11.5px;
       }
 
       @include mobile {
-        gap: 14px;
+        gap: $font-size-label-large;
         position: relative;
       }
     }
@@ -77,7 +81,7 @@
 
       @include mobile {
         flex-direction: column;
-        gap: 16px;
+        gap: $size-2;
       }
     }
 
@@ -85,14 +89,14 @@
       font-size: $size-3;
 
       @include tablet {
-        font-size: 20px;
+        font-size: $size-large;
       }
     }
 
     &__category {
       background-color: $color-secondary;
       font-weight: $font-weight-bold;
-      font-size: 12px;
+      font-size: $font-size-label-medium;
       border: 1.5px solid $color-on-primary;
       padding: 2.5px 6.5px;
       border-radius: $corner-extra-large;
@@ -108,13 +112,13 @@
       color: $color-price-free;
 
       @include tablet {
-        font-size: 20px;
+        font-size: $size-large;
       }
 
       @include mobile {
         position: absolute;
         top: 139px;
-        right: 16px;
+        right: $size-2;
       }
     }
 
@@ -130,7 +134,7 @@
       color: $color-on-bg;
 
       @include tablet {
-        font-size: 14px;
+        font-size: $font-size-label-large;
         -webkit-line-clamp: 2;
       }
     }
@@ -152,13 +156,97 @@
 
     &__btn {
       @include tablet {
-        padding: 6px 14px;
+        padding: 6px$font-size-label-large;
       }
 
       @include mobile {
         width: 100%;
-        font-size: 14px;
+        font-size: $font-size-label-large;
         padding: 10px;
+      }
+    }
+
+    &-skeleton {
+      display: flex;
+      border: 2.5px solid $color-on-primary;
+      box-shadow: $shadow-level-1;
+      border-radius: $corner-large;
+      overflow: hidden;
+
+      @include mobile {
+        flex-direction: column;
+      }
+
+      &__image {
+        width: 320px;
+        height: 220px;
+        flex-shrink: 0;
+
+        @include tablet {
+          width: 270px;
+        }
+
+        @include mobile {
+          width: 100%;
+        }
+      }
+
+      &__info {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        gap: 17.5px;
+        padding: $font-size-label-large;
+
+        @include tablet {
+          gap: 11.5px;
+        }
+
+        @include mobile {
+          gap: $font-size-label-large;
+        }
+      }
+
+      &__header {
+        @include flex-between;
+        align-items: center;
+      }
+
+      &__title {
+        width: 180px;
+        height: 24px;
+      }
+
+      &__category {
+        width: 70px;
+        height: 24px;
+      }
+
+      &__description {
+        width: 100%;
+        height: 60px;
+
+        @include tablet {
+          height: 42px;
+        }
+      }
+
+      &__footer {
+        @include flex-between;
+      }
+
+      &__stats {
+        width: 150px;
+        height: $size-large;
+      }
+
+      &__button {
+        width: 120px;
+        height: 40px;
+
+        @include mobile {
+          width: 100%;
+        }
       }
     }
   }

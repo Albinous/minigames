@@ -1,16 +1,17 @@
 import type { AuthMode } from './auth-dialog.types';
 import { getAuthDialogContentView, getAuthDialogView } from './auth-dialog.view';
+import { updateUrlAuth } from '../../../shared/utils/update-url';
 
 export class AuthDialog {
   private mode: AuthMode = 'login';
   private dialogElement: HTMLElement | undefined;
 
-  private bindCloseButton(): void {
-    const closeButton = this.dialogElement?.querySelector('.auth-dialog__close');
+  private updateSwitcherState(): void {
+    const loginButton = this.dialogElement?.querySelector('.auth-dialog__login');
+    const registerButton = this.dialogElement?.querySelector('.auth-dialog__register');
 
-    closeButton?.addEventListener('click', () => {
-      this.close();
-    });
+    loginButton?.classList.toggle('active', this.mode === 'login');
+    registerButton?.classList.toggle('active', this.mode === 'register');
   }
 
   private bindBackdrop(): void {
@@ -33,29 +34,34 @@ export class AuthDialog {
 
   private bindSwitcher(): void {
     const loginButton = this.dialogElement?.querySelector('.auth-dialog__login');
-
     const registerButton = this.dialogElement?.querySelector('.auth-dialog__register');
 
     loginButton?.addEventListener('click', () => {
       this.open('login');
+      updateUrlAuth(globalThis.location.pathname, 'login');
     });
 
     registerButton?.addEventListener('click', () => {
       this.open('register');
+      updateUrlAuth(globalThis.location.pathname, 'register');
     });
   }
 
   private bindFormSwitcher(): void {
     const registerButton = this.dialogElement?.querySelector('.auth-form__register');
+    const loginButton = this.dialogElement?.querySelector('.auth-form__login');
+
+    loginButton?.classList.toggle('active', this.mode === 'login');
+    registerButton?.classList.toggle('active', this.mode === 'register');
 
     registerButton?.addEventListener('click', () => {
       this.open('register');
+      updateUrlAuth(globalThis.location.pathname, 'register');
     });
-
-    const loginButton = this.dialogElement?.querySelector('.auth-form__login');
 
     loginButton?.addEventListener('click', () => {
       this.open('login');
+      updateUrlAuth(globalThis.location.pathname, 'login');
     });
   }
 
@@ -69,15 +75,21 @@ export class AuthDialog {
       this.bindFormSwitcher();
     }
 
+    this.updateSwitcherState();
+
     const backdrop = this.dialogElement?.querySelector('.auth-dialog-backdrop');
 
     backdrop?.classList.add('auth-dialog-backdrop--open');
   }
 
-  public close(): void {
+  public close(isUpdateHistory = true): void {
     const backdrop = this.dialogElement?.querySelector('.auth-dialog-backdrop');
 
     backdrop?.classList.remove('auth-dialog-backdrop--open');
+
+    if (isUpdateHistory) {
+      updateUrlAuth(globalThis.location.pathname, undefined);
+    }
   }
 
   public render(): HTMLElement {
@@ -87,11 +99,12 @@ export class AuthDialog {
     root.innerHTML = getAuthDialogView(this.mode);
 
     this.dialogElement = root;
-    this.bindCloseButton();
+
     this.bindBackdrop();
     this.bindEscape();
     this.bindSwitcher();
     this.bindFormSwitcher();
+    this.updateSwitcherState();
 
     return root;
   }

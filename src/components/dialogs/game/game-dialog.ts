@@ -8,19 +8,39 @@ import {
   formatTotalScore,
   iconToSvg,
 } from '../../../shared';
-import type { IGameDetails, IGameSpecs, ITopRecord, IComment } from '../../../core';
+import type {
+  IGameDetails,
+  IGameSpecs,
+  ITopRecord,
+  IComment,
+  GamesService,
+  Store,
+  CommentsService,
+} from '../../../core';
 import { closeIconImg, likeIconImg, sendIconImg, starIcon } from '../../../assets/icons';
-import { gameDetailsData, commentsData } from '../../../data';
 import { GameStat } from '../../game-stat';
+import { ErrorState } from '../../error-state';
+import { EmptyState } from '../../empty-state';
+import { GameDetailsSkeleton } from './game-dialog-skeleton';
+import { CommentSkeleton } from './comments-skeleton';
+import { Snackbar } from '../../snackbar/snackbar';
+import { updateUrl } from '../../../shared/utils/update-url';
 
 export class GameDialog {
-  private dialogElement: HTMLDialogElement | undefined;
-  private readonly game: IGameDetails = gameDetailsData.data;
-  private readonly comments: IComment[] = commentsData.data;
-  private initialLiked: boolean;
+  private dialogElement: HTMLDialogElement;
+  private store: Store;
+  private gamesService: GamesService;
+  private commentsService: CommentsService;
+  private readonly errorState = new ErrorState();
+  private readonly emptyState = new EmptyState();
+  private currentSlug = '';
+  private readonly snackbar = new Snackbar();
 
-  constructor() {
-    this.initialLiked = this.game.isLikedByCurrentUser;
+  constructor(store: Store, gamesService: GamesService, commentsService: CommentsService) {
+    this.store = store;
+    this.gamesService = gamesService;
+    this.commentsService = commentsService;
+    this.dialogElement = this.render();
   }
 
   private createContent(): HTMLElement {
@@ -35,13 +55,11 @@ export class GameDialog {
 
   private createHero(): HTMLElement {
     const container = createContainer('game-dialog__hero');
+
     const img = createElement('img', {
       className: 'game-dialog__img',
-      attributes: {
-        src: this.game.heroImage,
-        alt: this.game.name,
-      },
     });
+
     const closeButton = createElement('button', {
       className: 'game-dialog__close',
       attributes: {
@@ -66,56 +84,50 @@ export class GameDialog {
 
   private createInfo(): HTMLElement {
     const container = createContainer('game-dialog__info');
+
     const header = this.createHeader();
-    const text = createElement('p', {
+    const description = createElement('p', {
       className: 'game-dialog__descr',
-      text: this.game.fullDescription,
     });
     const specs = this.createSpecs();
     const buttons = this.createDialogButtons();
     const topRecords = this.createTopRecords();
     const comments = this.createComments();
 
-    container.append(header, text, specs, buttons, topRecords, comments);
+    container.append(header, description, specs, buttons, topRecords, comments);
 
     return container;
   }
 
   private createHeader(): HTMLElement {
     const container = createContainer('game-dialog__header');
+
     const title = createElement('h2', {
       className: 'game-dialog__title',
-      text: this.game.name,
     });
+
     const stats = createContainer('game-dialog__stats');
+
     const rating = new GameStat({
       icon: starIcon,
-      value: `${this.game.rating}`,
+      value: '',
       className: 'rating',
-    });
+    }).render();
+
     const likes = new GameStat({
       icon: likeIconImg,
-      value: `${formatLikesCount(this.game.likesCount)}`,
+      value: '',
       className: 'likes',
     }).render();
-    stats.append(rating.render(), likes);
 
+    stats.append(rating, likes);
     container.append(title, stats);
 
     return container;
   }
 
   private createSpecs(): HTMLElement {
-    const container = createContainer('game-dialog__specs');
-    const specData: IGameSpecs = this.game.specs;
-
-    for (const [key, value] of Object.entries(specData)) {
-      const specElement = this.createSpec(key, value);
-
-      container.append(specElement);
-    }
-
-    return container;
+    return createContainer('game-dialog__specs');
   }
 
   private createSpec(type: string, value: string): HTMLElement {
@@ -135,17 +147,15 @@ export class GameDialog {
 
   private createDialogButtons(): HTMLElement {
     const container = createContainer('game-dialog__btns');
+
     const playNow = this.createDialogBtn('play', 'primary', 'Play Now');
+
     const addFavourites = this.createDialogBtn(
       'favourite',
       'secondary',
-      this.game.isLikedByCurrentUser ? 'Remove from favourites' : 'Add to Favourites',
+      'Add to Favourites',
       likeIconImg,
     );
-
-    if (this.game.isLikedByCurrentUser) {
-      addFavourites.classList.add('active');
-    }
 
     container.append(playNow, addFavourites);
 
@@ -162,7 +172,7 @@ export class GameDialog {
       className: `btn btn-${buttonType} game-dialog__btn game-dialog__btn-${className}`,
       attributes: {
         type: 'button',
-        'aria-label': `${text}`,
+        'aria-label': text,
       },
     });
 
@@ -173,20 +183,18 @@ export class GameDialog {
 
     button.append(textElement);
 
-    if (icon) iconToSvg(likeIconImg, button);
+    if (icon) {
+      iconToSvg(icon, button);
+    }
 
     return button;
   }
 
   private createTopRecords(): HTMLElement {
     const container = createContainer('game-dialog__records');
+
     const header = this.createTopRecordsTitle();
     const records = createContainer('game-dialog__records-list');
-    const recordsData = this.game.topRecords;
-
-    for (const record of recordsData) {
-      records.append(this.createTopRecordItem(record));
-    }
 
     container.append(header, records);
 
@@ -232,19 +240,58 @@ export class GameDialog {
 
   private createComments(): HTMLElement {
     const container = createContainer('game-dialog__comments');
+
     const title = createElement('h3', {
       className: 'game-dialog__comments-title',
-      text: `Comments (${this.comments.length})`,
     });
+
     const form = this.createCommentInput();
 
-    container.append(title, form);
+    const comments = this.createCommentsList();
 
-    for (const comment of this.comments) {
-      container.append(this.createCommentItem(comment));
-    }
+    container.append(title, form, comments);
 
     return container;
+  }
+
+  private createCommentsList(): HTMLElement {
+    const comments = createContainer('game-dialog__comments-list');
+
+    if (this.store.comments.isLoading) {
+      comments.append(new CommentSkeleton().render());
+      return comments;
+    }
+
+    if (this.store.comments.error) {
+      comments.append(
+        this.errorState.render(this.store.comments.error, () => this.retryLoadComments()),
+      );
+
+      return comments;
+    }
+
+    const commentsData = this.store.comments.data?.data;
+
+    if (!commentsData || commentsData.length === 0) {
+      const message = 'No comments yet';
+      comments.append(this.emptyState.render(message));
+      return comments;
+    }
+
+    for (const comment of commentsData) {
+      comments.append(this.createCommentItem(comment));
+    }
+
+    return comments;
+  }
+
+  private async retryLoadComments(): Promise<void> {
+    const loadPromise = this.loadComments(this.currentSlug);
+
+    this.renderCommentsState();
+
+    await loadPromise;
+    this.renderCommentsState();
   }
 
   private createCommentInput(): HTMLFormElement {
@@ -280,29 +327,35 @@ export class GameDialog {
     return form;
   }
 
-  private createCommentItem(comment: IComment) {
+  private createCommentItem(comment: IComment): HTMLElement {
     const container = createContainer('game-dialog__comment');
+
     const header = this.createCommentHeader(comment);
+
     const text = createElement('p', {
       className: 'game-dialog__comment-text',
       text: comment.text,
     });
+
     const likes = createElement('button', {
       className: 'game-dialog__comment-likes',
       attributes: {
         type: 'button',
       },
     });
+
     iconToSvg(likeIconImg, likes);
-    const likesCount = createElement('h5', {
+
+    const likesCount = createElement('span', {
       className: 'game-dialog__comment-likes-count',
-      text: `${comment.likesCount}`,
+      text: String(comment.likesCount),
     });
 
-    if (comment.isLikedByCurrentUser) likes.classList.add('active');
+    if (comment.isLikedByCurrentUser) {
+      likes.classList.add('active');
+    }
 
     likes.append(likesCount);
-
     container.append(header, text, likes);
 
     return container;
@@ -348,6 +401,146 @@ export class GameDialog {
     return positionIcons[position - 1] ?? String(position);
   }
 
+  // RENDER DATA
+
+  private renderHero(): void {
+    const image = this.dialogElement.querySelector<HTMLImageElement>('.game-dialog__img');
+
+    if (!image) return;
+
+    image.src = this.game.heroImage;
+    image.alt = this.game.name;
+  }
+
+  private renderHeader(): void {
+    const title = this.dialogElement.querySelector<HTMLHeadingElement>('.game-dialog__title');
+
+    if (title) {
+      title.textContent = this.game.name;
+    }
+
+    const ratingValue = this.dialogElement.querySelector<HTMLElement>(
+      ':scope .rating .game-stat__value',
+    );
+
+    const likesValue = this.dialogElement.querySelector<HTMLElement>(
+      ':scope .likes .game-stat__value',
+    );
+
+    if (ratingValue) {
+      ratingValue.textContent = String(this.game.rating);
+    }
+
+    if (likesValue) {
+      likesValue.textContent = formatLikesCount(this.game.likesCount);
+    }
+  }
+
+  private renderDescription(): void {
+    const description =
+      this.dialogElement.querySelector<HTMLParagraphElement>('.game-dialog__descr');
+
+    if (description) {
+      description.textContent = this.game.fullDescription;
+    }
+  }
+
+  private renderSpecs(specs: IGameSpecs): void {
+    const container = this.dialogElement.querySelector('.game-dialog__specs');
+
+    if (!container) return;
+
+    container.replaceChildren();
+
+    for (const [key, value] of Object.entries(specs)) {
+      container.append(this.createSpec(key, value));
+    }
+  }
+
+  private renderFavouriteState(isLiked: boolean): void {
+    const button = this.dialogElement.querySelector<HTMLButtonElement>(
+      '.game-dialog__btn-favourite',
+    );
+
+    if (!button) return;
+
+    const text = button.querySelector('.game-dialog__btn-text');
+
+    if (text) {
+      text.textContent = isLiked ? 'Remove from favourites' : 'Add to Favourites';
+    }
+
+    button.classList.toggle('active', isLiked);
+  }
+
+  private renderTopRecords(recordsData: ITopRecord[]): void {
+    const records = this.dialogElement.querySelector('.game-dialog__records-list');
+
+    if (!records) return;
+
+    records.replaceChildren();
+
+    for (const record of recordsData) {
+      records.append(this.createTopRecordItem(record));
+    }
+  }
+
+  private renderCommentsState(): void {
+    const title = this.dialogElement.querySelector('.game-dialog__comments-title');
+
+    const list = this.dialogElement.querySelector('.game-dialog__comments-list');
+
+    if (!title || !list) return;
+
+    if (this.store.comments.isLoading) {
+      title.textContent = 'Comments';
+
+      const skeleton = new CommentSkeleton();
+
+      list.replaceChildren(skeleton.render());
+
+      return;
+    }
+
+    if (this.store.comments.error) {
+      title.textContent = 'Comments';
+
+      const errorState = this.errorState.render(this.store.comments.error, () =>
+        this.retryLoadComments(),
+      );
+
+      list.replaceChildren(errorState);
+
+      return;
+    }
+
+    const comments = this.store.comments.data?.data;
+
+    if (!comments || comments.length === 0) {
+      title.textContent = 'Comments';
+      const message = 'No comments yet';
+
+      list.replaceChildren(this.emptyState.render(message));
+
+      return;
+    }
+
+    title.textContent = `Comments (${comments.length})`;
+
+    const commentElements = comments.map((comment) => this.createCommentItem(comment));
+
+    list.replaceChildren(...commentElements);
+  }
+
+  private renderGameData(): void {
+    this.renderHero();
+    this.renderHeader();
+    this.renderDescription();
+    this.renderSpecs(this.game.specs);
+    this.renderFavouriteState(this.game.isLikedByCurrentUser);
+    this.renderTopRecords(this.game.topRecords);
+  }
+
   private bindCloseButton(): void {
     if (!this.dialogElement) return;
     const closeButton = this.dialogElement.querySelector('.game-dialog__close');
@@ -374,6 +567,7 @@ export class GameDialog {
 
   private bindAddFavourites(): void {
     if (!this.dialogElement) return;
+
     const addFavouritesButton = this.dialogElement.querySelector('.game-dialog__btn-favourite');
     if (!addFavouritesButton) return;
     const addFavouritesText = addFavouritesButton.querySelector('.game-dialog__btn-text');
@@ -391,6 +585,7 @@ export class GameDialog {
 
   private bindLikeComment(): void {
     if (!this.dialogElement) return;
+
     const comment = this.dialogElement.querySelector('.game-dialog__comments');
 
     comment?.addEventListener('click', (event) => {
@@ -403,8 +598,6 @@ export class GameDialog {
   }
 
   private reset(): void {
-    if (!this.dialogElement) return;
-
     this.game.isLikedByCurrentUser = this.initialLiked;
 
     const favouriteButton = this.dialogElement.querySelector('.game-dialog__btn-favourite');
@@ -425,13 +618,101 @@ export class GameDialog {
     textarea.style.height = '';
   }
 
-  public open(): void {
-    if (!this.dialogElement) return;
-    this.dialogElement.showModal();
+  private get initialLiked() {
+    return this.game.isLikedByCurrentUser;
   }
 
-  public close(): void {
+  private async loadGame(slug: string): Promise<void> {
+    await this.gamesService.loadGame(slug);
+
+    if (this.store.game.error) {
+      this.snackbar.show('Failed to load game details', 'error');
+    } else {
+      this.snackbar.show('Game details loaded successfully', 'success');
+    }
+  }
+
+  private async loadComments(slug: string): Promise<void> {
+    await this.commentsService.loadComments(slug);
+
+    if (this.store.comments.error) {
+      this.snackbar.show('Failed to load comments', 'error');
+    } else {
+      this.snackbar.show('Comments loaded successfully', 'success');
+    }
+  }
+
+  private renderLoadingState(): void {
+    const content = this.dialogElement.querySelector('.game-dialog__content');
+
+    if (!content) return;
+
+    content.replaceChildren(new GameDetailsSkeleton().render());
+  }
+
+  private renderGameState(): void {
+    const content = this.dialogElement.querySelector('.game-dialog__content');
+
+    if (!content) return;
+
+    if (this.store.game.error) {
+      content.replaceChildren(
+        this.errorState.render(this.store.game.error, () => this.retryLoadGame()),
+      );
+
+      return;
+    }
+
+    if (!this.store.game.data?.data) {
+      content.replaceChildren(this.emptyState.render());
+
+      return;
+    }
+
+    content.replaceChildren(this.createContent());
+
+    this.bindCloseButton();
+    this.bindAddFavourites();
+    this.bindLikeComment();
+
+    this.renderGameData();
+    this.renderCommentsState();
+  }
+
+  private async retryLoadGame(): Promise<void> {
+    const loadPromise = this.loadGame(this.currentSlug);
+
+    this.renderLoadingState();
+
+    await loadPromise;
+
+    if (this.store.game.error) {
+      this.snackbar.show('Failed to load game details', 'error');
+    } else {
+      this.snackbar.show('Game details loaded successfully', 'success');
+    }
+
+    this.renderGameState();
+  }
+
+  public async open(slug: string): Promise<void> {
+    this.currentSlug = slug;
+
+    this.dialogElement.showModal();
+
+    this.renderLoadingState();
+
+    await Promise.all([this.loadGame(slug), this.loadComments(slug)]);
+
+    this.renderGameState();
+  }
+
+  public close(isUpdateHistory = true): void {
     if (!this.dialogElement) return;
+
+    if (isUpdateHistory) {
+      updateUrl({ game: undefined });
+    }
 
     this.dialogElement.classList.add('closing');
 
@@ -444,6 +725,26 @@ export class GameDialog {
       },
       { once: true },
     );
+  }
+
+  public get game(): IGameDetails {
+    if (!this.store.game.data?.data) {
+      throw new Error('Game data is not loaded');
+    }
+
+    return this.store.game.data.data;
+  }
+
+  public get comments(): IComment[] {
+    if (!this.store.comments.data?.data) {
+      throw new Error('Game comments is not loaded');
+    }
+
+    return this.store.comments.data.data;
+  }
+
+  public get element(): HTMLDialogElement {
+    return this.dialogElement;
   }
 
   public render(): HTMLDialogElement {

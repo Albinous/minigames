@@ -10,13 +10,6 @@ export function getAuthDialogView(mode: AuthMode): string {
         aria-modal="true"
         aria-labelledby="auth-dialog-title"
       >
-        <button
-          class="auth-dialog__close"
-          type="button"
-          aria-label="Close"
-        >
-          ×
-        </button>
 
         <div class="auth-dialog__switcher">
           <button
@@ -63,6 +56,7 @@ function getLoginFormView(): string {
         </label>
 
         <input
+          class="auth-form__email"
           id="login-email"
           name="email"
           type="email"
@@ -94,20 +88,20 @@ function getLoginFormView(): string {
             data-password-for="login-password"
             aria-label="Show password"
           >
-            Show
+            <img src="src/assets/icons/visibility.svg">
           </button>
         </div>
       </div>
 
       <a
-        class="auth-form__forgot"
+        class="auth-form__forgot auth-form__underline"
         href="#"
       >
         Forgot Password?
       </a>
 
       <button
-        class="btn btn-primary"
+        class="auth-form__submit-btn btn btn-primary auth-form__btn"
         type="submit"
       >
         Login
@@ -119,15 +113,16 @@ function getLoginFormView(): string {
 
       <button
         type="button"
-        class="auth-form__google"
+        class="auth-form__google btn btn-secondary auth-form__btn"
       >
-        Continue with Google
+        <img src=src/assets/icons/google.svg>
+        <span>Continue with Google</span>
       </button>
 
-      <p>
+      <p class="auth-form__switcher">
         Don't have an account?
         <button
-          class="auth-form__register"
+          class="auth-form__register auth-form__underline"
           type="button"
         >
           Register
@@ -155,6 +150,7 @@ function getRegisterFormView(): string {
 
         <input
           id="register-username"
+          class="auth-form__username"
           name="username"
           type="text"
           autocomplete="username"
@@ -169,6 +165,7 @@ function getRegisterFormView(): string {
         </label>
 
         <input
+          class="auth-form__email"
           id="register-email"
           name="email"
           type="email"
@@ -185,6 +182,7 @@ function getRegisterFormView(): string {
 
         <div class="auth-form__password">
           <input
+
             id="register-password"
             name="password"
             type="password"
@@ -200,7 +198,8 @@ function getRegisterFormView(): string {
             data-password-for="register-password"
             aria-label="Show password"
           >
-            Show
+          <img src="src/assets/icons/visibility.svg">
+
           </button>
         </div>
       </div>
@@ -227,13 +226,14 @@ function getRegisterFormView(): string {
             data-password-for="register-confirm-password"
             aria-label="Show password"
           >
-            Show
+          <img src="src/assets/icons/visibility.svg">
+
           </button>
         </div>
       </div>
 
       <button
-        class="btn btn-primary"
+        class="btn btn-primary auth-form__btn auth-form__submit-btn"
         type="submit"
       >
         Create Account
@@ -245,15 +245,17 @@ function getRegisterFormView(): string {
 
       <button
         type="button"
-        class="auth-form__google"
+        class="btn btn-secondary auth-form__google auth-form__btn"
       >
-        Sign up with Google
+        <img src=src/assets/icons/google.svg>
+
+        <span>Sign up with Google</span>
       </button>
 
-      <p>
+      <p class="auth-form__switcher">
         Already have an account?
         <button
-          class="auth-form__login"
+          class="auth-form__login auth-form__underline"
           type="button"
         >
           Login

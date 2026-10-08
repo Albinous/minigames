@@ -40,12 +40,12 @@
         width: 120px;
 
         @include tablet {
-          padding: 16px 6px 16px 16px;
+          padding: $size-2 6px $size-2 $size-2;
           width: 102px;
         }
 
         @include mobile {
-          padding: 16px 4px 16px 16px;
+          padding: $size-2 4px $size-2 $size-2;
           width: 60px;
         }
       }
@@ -56,7 +56,7 @@
 
       @include tablet {
         padding: $size-2 6px;
-        font-size: 14px;
+        font-size: $font-size-label-large;
         line-height: 1.1;
 
         &:nth-child(2) {
@@ -78,12 +78,12 @@
 
         &:nth-last-child(2) {
           width: 170px;
-          padding: 16px 54px 16px 6px;
+          padding: $size-2 54px $size-2 6px;
         }
       }
 
       @include mobile {
-        padding: 16px 4px;
+        padding: $size-2 4px;
 
         &:nth-child(2) {
           width: 105px;
@@ -97,7 +97,7 @@
         }
         &:nth-last-child(2) {
           width: 100%;
-          padding: 16px 4px 16px 16px;
+          padding: $size-2 4px $size-2 $size-2;
         }
       }
     }
@@ -145,14 +145,14 @@
       height: 70px;
 
       @include tablet {
-        font-size: 14px;
-        padding: 16px 8px;
+        font-size: $font-size-label-large;
+        padding: $size-2 8px;
         height: 59px;
       }
 
       @include tablet {
-        font-size: 14px;
-        padding: 16px 4px;
+        font-size: $font-size-label-large;
+        padding: $size-2 4px;
         height: 54px;
       }
     }
@@ -161,22 +161,22 @@
       width: 120px;
 
       @include tablet {
-        padding: 16px;
+        padding: $size-2;
       }
       @include mobile {
-        padding: 20px 8px 20px 16px;
+        padding: $size-large 8px$size-large $size-2;
       }
     }
 
     &__name {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: $font-size-label-medium;
       text-align: left;
-      padding: 16px 8px 16px 0px;
+      padding: $size-2 8px $size-2 0px;
 
       @include tablet {
-        padding: 16px 6px;
+        padding: $size-2 6px;
         gap: $size-1;
       }
 
@@ -190,7 +190,7 @@
       font-size: $size-2;
 
       @include tablet {
-        font-size: 14px;
+        font-size: $font-size-label-large;
       }
     }
 
@@ -235,8 +235,8 @@
       &-text {
         border: 1.5px solid $color-on-primary;
         border-radius: $corner-extra-large;
-        padding: $size-05 12px;
-        font-size: 12px;
+        padding: $size-05$font-size-label-medium;
+        font-size: $font-size-label-medium;
         display: inline-block;
         line-height: 1;
       }
@@ -254,5 +254,33 @@
   display: none;
   @include mobile {
     display: block;
+  }
+}
+
+.leaderboard-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: $size-2;
+
+  &__row {
+    display: grid;
+    grid-template-columns: 50px 1fr 100px;
+    gap: $size-3;
+    align-items: center;
+  }
+
+  &__rank {
+    width: 30px;
+    height: $size-large;
+  }
+
+  &__name {
+    width: 150px;
+    height: $size-large;
+  }
+
+  &__score {
+    width: 80px;
+    height: $size-large;
   }
 }

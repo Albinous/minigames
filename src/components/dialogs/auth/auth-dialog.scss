@@ -1,6 +1,8 @@
 @use '../../../styles/mixins' as *;
 @use '../../../styles/tokens' as *;
 
+$border-input-invalid: 2px solid $color-error;
+
 .auth-dialog-root {
   position: relative;
 }
@@ -113,15 +115,22 @@
       color: $color-on-primary;
       font-weight: $font-weight-bold;
     }
+  }
 
-    input {
-      border: $border-level-3;
-      border-radius: $corner-small;
-      padding: $size-2 $size-2 $size-2 52px;
-      font-size: $font-size-label-large;
-      background-repeat: no-repeat;
-      background-position: $size-2 center;
+  &__input {
+    border: $border-level-3;
+    border-radius: $corner-small;
+    padding: $size-2 $size-2 $size-2 52px;
+    font-size: $font-size-label-large;
+    background-repeat: no-repeat;
+    background-position: $size-2 center;
+    &--invalid {
+      border: $border-input-invalid;
     }
+  }
+
+  &__error {
+    color: $color-error;
   }
 
   &__email {

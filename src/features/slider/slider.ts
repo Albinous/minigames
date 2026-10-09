@@ -1,8 +1,7 @@
 import { getSliderView } from './slider.view';
 import type { GamesService, IGame, Store } from '../../core';
-import { EmptyState, ErrorState } from '../../components';
+import { EmptyState, ErrorState, Snackbar } from '../../components';
 import { SliderSkeleton } from './slider-skeleton';
-import { Snackbar } from '../../components/snackbar/snackbar';
 
 const AUTOPLAY_INTERVAL = 4000;
 
@@ -270,8 +269,6 @@ export class Slider {
       this.snackbar.show('Failed to load featured games', 'error');
       return;
     }
-
-    this.snackbar.show('Featured games loaded successfully', 'success');
   }
 
   private get featuredGames(): IGame[] {

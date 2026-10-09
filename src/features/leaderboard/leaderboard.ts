@@ -1,8 +1,7 @@
 import { getLeaderBoardView } from './leaderboard.view';
 import type { ILeaderboard, LeaderboardService, Store } from '../../core';
 import { LeaderboardSkeleton } from './leaderboard-skeleton';
-import { EmptyState, ErrorState } from '../../components';
-import { Snackbar } from '../../components/snackbar/snackbar';
+import { EmptyState, ErrorState, Snackbar } from '../../components';
 
 export class LeaderBoard {
   private readonly store: Store;
@@ -23,8 +22,6 @@ export class LeaderBoard {
 
     if (this.store.leaderboard.error) {
       this.snackbar.show('Failed to load leaderboard', 'error');
-    } else {
-      this.snackbar.show('Leaderboard loaded successfully', 'success');
     }
   }
 

@@ -18,20 +18,6 @@ export class AuthFormValidator {
     this.form = form;
   }
 
-  private getValues(): AuthFormValues {
-    const values: AuthFormValues = {};
-
-    for (const field of AUTH_FIELDS) {
-      const element = this.form.elements.namedItem(field);
-
-      if (element instanceof HTMLInputElement) {
-        values[field] = element.value;
-      }
-    }
-
-    return values;
-  }
-
   private handleEvent(event: Event): void {
     const target = event.target;
     if (!(target instanceof HTMLInputElement)) return;
@@ -73,6 +59,20 @@ export class AuthFormValidator {
 
     input.classList.toggle('auth-form__input--invalid', hasError);
     input.setAttribute('aria-invalid', String(hasError));
+  }
+
+  public getValues(): AuthFormValues {
+    const values: AuthFormValues = {};
+
+    for (const field of AUTH_FIELDS) {
+      const element = this.form.elements.namedItem(field);
+
+      if (element instanceof HTMLInputElement) {
+        values[field] = element.value;
+      }
+    }
+
+    return values;
   }
 
   public bind(): void {

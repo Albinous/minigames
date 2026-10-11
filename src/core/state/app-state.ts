@@ -1,4 +1,5 @@
 import type {
+  AppSession,
   CategoriesResponse,
   CommentsResponse,
   GameResponse,
@@ -18,4 +19,5 @@ export interface AppState {
   categories: ResourceState<CategoriesResponse>;
   comments: ResourceState<CommentsResponse>;
   leaderboard: ResourceState<LeaderboardResponse>;
+  session: AppSession | undefined;
 }

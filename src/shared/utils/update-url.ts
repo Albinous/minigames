@@ -37,3 +37,11 @@ export function updateUrlAuth(pathname: string, auth: AuthMode | undefined) {
 
   globalThis.history.pushState({}, '', url);
 }
+
+export const removeAuthFromUrl = (): void => {
+  const url = new URL(globalThis.location.href);
+
+  url.searchParams.delete('auth');
+
+  globalThis.history.replaceState(globalThis.history.state, '', url);
+};

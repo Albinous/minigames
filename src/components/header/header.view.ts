@@ -29,8 +29,8 @@ export function getHeaderView(): string {
               </ul>
             </nav>
             <div class="header-btns">
-              <button class="btn header-btn header-btn__login">Log In</button>
-              <button class="btn btn-primary header-btn header-btn__signup">Sign Up</button>
+              <div class="header-auth">
+              </div>
               <button 
                 class="header-burger"
                 type="button"
@@ -46,3 +46,10 @@ export function getHeaderView(): string {
       </div>
   `;
 }
+
+export const getGuestControlView = (): string => {
+  return `
+    <button class="btn header-btn header-btn__login" data-mode="login">Log In</button>
+    <button class="btn btn-primary header-btn header-btn__signup" data-mode="register">Sign Up</button>
+  `;
+};

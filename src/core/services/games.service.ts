@@ -28,15 +28,30 @@ export class GamesService {
 
   public async loadGame(slug: string): Promise<void> {
     this.store.game.isLoading = true;
+    this.store.game.error = undefined;
 
     try {
-      const response = await this.api.getGameDetails(slug);
+      const response = await this.api.getGameDetails(slug, this.store.session?.email);
 
       this.store.game.data = response;
     } catch {
       this.store.game.error = 'Failed to load game details';
     } finally {
       this.store.game.isLoading = false;
+    }
+  }
+
+  public async toggleFavorite(slug: string): Promise<void> {
+    const email = this.store.session?.email;
+
+    if (!email) throw new Error('Authentication is required');
+
+    const response = await this.api.toggleFavorite(slug, email);
+    const game = this.store.game.data?.data;
+
+    if (game) {
+      game.isLikedByCurrentUser = response.data.isFavorited;
+      game.likesCount = response.data.likesCount;
     }
   }
 }

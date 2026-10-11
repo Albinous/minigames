@@ -1,10 +1,29 @@
 import type { AuthMode } from './auth-dialog.types';
 import { getAuthDialogContentView, getAuthDialogView } from './auth-dialog.view';
-import { updateUrlAuth } from '../../../shared/utils/update-url';
+import { AuthFormValidator } from './auth-form-validator';
+import {
+  getAuthErrorMessage,
+  isAuthCancelled,
+  type AuthService,
+  type AuthUser,
+} from '../../../core';
+import { updateUrlAuth } from '../../../shared';
+import type { Snackbar } from '../../snackbar';
 
 export class AuthDialog {
+  private authService: AuthService;
+  private snackbar: Snackbar;
+  private onSuccess: (user: AuthUser) => void;
   private mode: AuthMode = 'login';
   private dialogElement: HTMLElement | undefined;
+  private validator: AuthFormValidator | undefined;
+  private isPending = false;
+
+  constructor(authService: AuthService, snackbar: Snackbar, onSuccess: (user: AuthUser) => void) {
+    this.authService = authService;
+    this.snackbar = snackbar;
+    this.onSuccess = onSuccess;
+  }
 
   private updateSwitcherState(): void {
     const loginButton = this.dialogElement?.querySelector('.auth-dialog__login');
@@ -12,6 +31,55 @@ export class AuthDialog {
 
     loginButton?.classList.toggle('active', this.mode === 'login');
     registerButton?.classList.toggle('active', this.mode === 'register');
+  }
+
+  private setPending(isPending: boolean): void {
+    this.isPending = isPending;
+
+    const controls = this.dialogElement?.querySelectorAll('input, button');
+    if (!controls) return;
+    for (const control of controls) {
+      if (control instanceof HTMLInputElement || control instanceof HTMLButtonElement) {
+        control.disabled = isPending;
+      }
+    }
+
+    if (!isPending) {
+      this.validator?.update();
+    }
+  }
+
+  private async authenticate(action: () => Promise<AuthUser>): Promise<void> {
+    if (this.isPending) return;
+
+    this.setPending(true);
+
+    try {
+      const user = await action();
+      this.setPending(false);
+      this.onSuccess(user);
+      this.close();
+    } catch (error) {
+      this.setPending(false);
+
+      if (!isAuthCancelled(error)) {
+        this.snackbar.show(getAuthErrorMessage(error), 'error');
+      }
+    }
+  }
+
+  private async submit(): Promise<void> {
+    if (this.isPending) return;
+    const values = this.validator?.getValues();
+    const username = values?.username ?? '';
+    const email = values?.email?.trim() ?? '';
+    const password = values?.password ?? '';
+
+    void this.authenticate(() =>
+      this.mode === 'login'
+        ? this.authService.login(email, password)
+        : this.authService.register(username, email, password),
+    );
   }
 
   private bindBackdrop(): void {
@@ -65,6 +133,24 @@ export class AuthDialog {
     });
   }
 
+  private bindForm(): void {
+    const form = this.dialogElement?.querySelector<HTMLFormElement>('.auth-form');
+
+    if (!form) return;
+
+    this.validator = new AuthFormValidator(this.mode, form);
+    this.validator.bind();
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      this.submit();
+    });
+
+    form.querySelector('.auth-form__google')?.addEventListener('click', () => {
+      void this.authenticate(() => this.authService.loginWithGoogle());
+    });
+  }
+
   public open(mode: AuthMode): void {
     this.mode = mode;
 
@@ -73,6 +159,7 @@ export class AuthDialog {
     if (content) {
       content.innerHTML = getAuthDialogContentView(this.mode);
       this.bindFormSwitcher();
+      this.bindForm();
     }
 
     this.updateSwitcherState();
@@ -83,6 +170,7 @@ export class AuthDialog {
   }
 
   public close(isUpdateHistory = true): void {
+    if (this.isPending) return;
     const backdrop = this.dialogElement?.querySelector('.auth-dialog-backdrop');
 
     backdrop?.classList.remove('auth-dialog-backdrop--open');
@@ -104,6 +192,7 @@ export class AuthDialog {
     this.bindEscape();
     this.bindSwitcher();
     this.bindFormSwitcher();
+    this.bindForm();
     this.updateSwitcherState();
 
     return root;

@@ -53,6 +53,58 @@
         display: none;
       }
     }
+
+    &__logout {
+      margin-left: $size-2;
+
+      @include mobile {
+        display: none;
+      }
+    }
+  }
+
+  &-auth {
+    display: flex;
+    align-items: center;
+    gap: $size-2;
+
+    @include tablet {
+      flex-direction: column;
+    }
+  }
+
+  &-profile {
+    display: flex;
+    align-items: center;
+    gap: $size-1;
+    font-weight: $font-weight-bold;
+
+    @include tablet {
+      display: none;
+    }
+
+    &__name {
+      font-size: $font-size-label-extra-large;
+    }
+
+    &__avatar {
+      width: $size-4;
+      height: $size-4;
+      @include flex-center;
+      color: $color-white;
+      background-color: $color-on-primary;
+      font-size: $font-size-label-large;
+      border-radius: $corner-full;
+
+      svg {
+        width: $size-4;
+        height: $size-4;
+      }
+
+      img {
+        border-radius: $corner-full;
+      }
+    }
   }
 
   &-burger {
@@ -137,7 +189,7 @@
 
       .header-btns {
         position: absolute;
-        bottom: 90px;
+        bottom: $size-3;
 
         width: 100%;
         padding: 0 24px;
@@ -149,14 +201,14 @@
 
         margin-top: auto;
 
-        .header-btn__login,
-        .header-btn__signup {
+        .header-btn {
           display: flex;
           width: 100%;
         }
       }
 
-      .header-btn__login {
+      .header-btn__login,
+      .header-btn__logout {
         color: $color-white;
         border: 2px solid $color-white;
       }

@@ -6,3 +6,6 @@ export * from './format-relative-date';
 export * from './set-active-element';
 export * from './format-numbers';
 export * from './icon-to-svg.ts';
+export * from './update-url.ts';
+export * from './validators.ts';
+export * from './profile.ts';

@@ -1,4 +1,5 @@
 import type {
+  AppSession,
   CategoriesResponse,
   CommentsResponse,
   GameResponse,
@@ -9,7 +10,36 @@ import type { AppState, ResourceState } from './app-state';
 import { initialState } from './initial-state';
 
 export class Store {
-  private state: AppState = initialState;
+  private state: AppState = structuredClone(initialState);
+
+  private readonly listeners = new Set<() => void>();
+
+  private notify(): void {
+    for (const listener of this.listeners) {
+      listener();
+    }
+  }
+
+  public subscribe(listener: () => void): () => void {
+    this.listeners.add(listener);
+
+    return () => {
+      this.listeners.delete(listener);
+    };
+  }
+
+  public setSession(session: AppSession | undefined): void {
+    this.state = { ...this.state, session };
+    this.notify();
+  }
+
+  public get session(): AppSession | undefined {
+    return this.state.session;
+  }
+
+  public get isAuthenticated(): boolean {
+    return Boolean(this.state.session);
+  }
 
   public get games(): ResourceState<GamesResponse> {
     return this.state.games;

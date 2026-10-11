@@ -1,32 +1,124 @@
-import { Header, Footer } from '../components';
+import { Header, Footer, Snackbar, AuthDialog, GameDialog } from '../components';
 import { Router } from './router';
-import { AuthDialog } from '../components/dialogs/auth/auth-dialog';
-import { GameDialog } from '../components/dialogs/game/game-dialog';
-import { CommentsApi, CommentsService, GamesApi, GamesService, Store } from '../core';
-import { updateUrl, updateUrlAuth } from '../shared/utils/update-url';
+import {
+  AuthService,
+  CommentsApi,
+  CommentsService,
+  GamesApi,
+  GamesService,
+  SessionService,
+  Store,
+} from '../core';
+import { removeAuthFromUrl, updateUrl, updateUrlAuth } from '../shared/utils/update-url';
 
 export class App {
+  private readonly store: Store;
+  private readonly snackbar: Snackbar;
+  private readonly sessionService: SessionService;
+  private readonly authDialog: AuthDialog;
+
+  constructor() {
+    const authService = new AuthService();
+
+    this.store = new Store();
+    this.snackbar = new Snackbar();
+    this.sessionService = new SessionService(this.store, authService, () => {
+      this.snackbar.show('Your session has expired. Please log in again', 'error');
+    });
+    this.authDialog = new AuthDialog(authService, this.snackbar, (user) => {
+      this.sessionService.start(user);
+    });
+  }
+
+  private canOpenAuth(): boolean {
+    const isAuthenticated = this.sessionService.checkExpiration();
+
+    if (!isAuthenticated) return true;
+
+    removeAuthFromUrl();
+    this.snackbar.show('You are already logged in', 'error');
+
+    return false;
+  }
+
+  private requireLogin(gameDialog: GameDialog): boolean {
+    if (this.sessionService.checkExpiration()) return true;
+
+    this.snackbar.show('Please log in to continue', 'error');
+    gameDialog.close(false);
+    updateUrlAuth(globalThis.location.pathname, 'login');
+    this.authDialog.open('login');
+
+    return false;
+  }
+
+  private syncAuthWithUrl(): void {
+    const auth = new URLSearchParams(globalThis.location.search).get('auth');
+
+    if (auth !== 'login' && auth !== 'register') {
+      this.authDialog.close(false);
+      return;
+    }
+
+    if (!this.canOpenAuth()) {
+      this.authDialog.close(false);
+      return;
+    }
+
+    this.authDialog.open(auth);
+  }
+
+  private logout(): void {
+    void this.sessionService.end().then((isSignedOut) => {
+      if (!isSignedOut) {
+        this.snackbar.show(
+          'Could not complete sign out, but you are now logged out on this device',
+          'error',
+        );
+      }
+    });
+  }
+
+  private bindTabEvents(): void {
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+        this.sessionService.checkExpiration();
+      }
+    });
+  }
+
   public async render(): Promise<void> {
-    const store = new Store();
     const gamesApi = new GamesApi();
-    const gamesService = new GamesService(store, gamesApi);
+    const gamesService = new GamesService(this.store, gamesApi);
     const commentsApi = new CommentsApi();
-    const commentsService = new CommentsService(store, commentsApi);
-    const authDialog = new AuthDialog();
+    const commentsService = new CommentsService(this.store, commentsApi);
+
     const header = new Header(
+      this.store,
       (mode) => {
+        if (!this.canOpenAuth()) return;
+
         updateUrlAuth(globalThis.location.pathname, mode);
-        authDialog.open(mode);
+        this.authDialog.open(mode);
       },
       (route) => {
+        this.sessionService.checkExpiration();
         router.navigate(route);
       },
+      () => {
+        this.logout();
+      },
     );
-    const gameDialog = new GameDialog(store, gamesService, commentsService);
+
+    const gameDialog: GameDialog = new GameDialog(this.store, gamesService, commentsService, () =>
+      this.requireLogin(gameDialog),
+    );
+
     const router = new Router(
-      store,
+      this.store,
       gamesService,
       (slug: string) => {
+        this.sessionService.checkExpiration();
         updateUrl({ game: slug });
 
         void gameDialog.open(slug);
@@ -40,6 +132,7 @@ export class App {
         }
       },
       () => {
+        this.sessionService.checkExpiration();
         const parameters = new URLSearchParams(globalThis.location.search);
         const game = parameters.get('game');
 
@@ -50,25 +143,24 @@ export class App {
         }
       },
       () => {
-        const parameters = new URLSearchParams(globalThis.location.search);
-        const auth = parameters.get('auth');
-
-        if (auth === 'login' || auth === 'register') {
-          authDialog.open(auth);
-        } else {
-          authDialog.close(false);
-        }
+        this.syncAuthWithUrl();
       },
     );
 
     const footer = new Footer();
 
+    this.sessionService.restore();
+
     document.body.prepend(
       header.render(),
       await router.render(),
       footer.render(),
-      authDialog.render(),
+      this.authDialog.render(),
       gameDialog.element,
     );
+
+    this.bindTabEvents();
+
+    this.syncAuthWithUrl();
   }
 }

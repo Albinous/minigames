@@ -4,3 +4,6 @@ export * from './games.service';
 export * from './categories.service';
 export * from './comments.service';
 export * from './leaderboard.service';
+export * from './auth.service';
+export * from './auth-error-message';
+export * from './session.service';

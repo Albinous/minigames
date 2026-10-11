@@ -31,23 +31,6 @@ export class AuthFormValidator {
     this.update();
   }
 
-  private update(): void {
-    const errors = getAuthFormErrors(this.mode, this.getValues());
-
-    for (const field of AUTH_FIELDS) {
-      if (this.touched.has(field)) {
-        this.renderError(field, errors[field]);
-      }
-    }
-
-    const submitButton = this.form.querySelector<HTMLButtonElement>('.auth-form__submit-btn');
-    const hasErrors = Object.keys(errors).length > 0;
-
-    if (submitButton) {
-      submitButton.disabled = hasErrors;
-    }
-  }
-
   private renderError(field: AuthField, error: string | undefined): void {
     const input = this.form.elements.namedItem(field);
     const message = this.form.querySelector<HTMLElement>(`[data-error-for="${CSS.escape(field)}"]`);
@@ -73,6 +56,23 @@ export class AuthFormValidator {
     }
 
     return values;
+  }
+
+  public update(): void {
+    const errors = getAuthFormErrors(this.mode, this.getValues());
+
+    for (const field of AUTH_FIELDS) {
+      if (this.touched.has(field)) {
+        this.renderError(field, errors[field]);
+      }
+    }
+
+    const submitButton = this.form.querySelector<HTMLButtonElement>('.auth-form__submit-btn');
+    const hasErrors = Object.keys(errors).length > 0;
+
+    if (submitButton) {
+      submitButton.disabled = hasErrors;
+    }
   }
 
   public bind(): void {

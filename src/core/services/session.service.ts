@@ -1,15 +1,14 @@
+import { getProfileName } from '../../shared';
 import type { Store } from '../state';
 import type { AppSession, AuthUser } from '../types';
 import type { AuthService } from './auth.service';
 import { clearSession, isSessionExpired, readSession, saveSession } from './session-storage';
 
 const FALLBACK_EMAIL = 'no-email@example.com';
-const FALLBACK_DISPLAY_NAME = 'Player';
 
 export const createSession = (user: AuthUser, now = Date.now()): AppSession => {
-  const emailName = user.email?.split('@', 1)[0];
   const email = user.email ?? FALLBACK_EMAIL;
-  const displayName = user.displayName || emailName || FALLBACK_DISPLAY_NAME;
+  const displayName = getProfileName(user.displayName ?? '', user.email ?? '');
   const authenticatedAt = now;
   const avatarUrl = user.photoURL;
 

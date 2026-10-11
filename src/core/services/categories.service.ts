@@ -12,7 +12,7 @@ export class CategoriesService {
 
   public async loadCategories(): Promise<void> {
     this.store.categories.isLoading = true;
-    this.store.games.error = undefined;
+    this.store.categories.error = undefined;
 
     try {
       const response = await this.api.getCategories();

@@ -13,7 +13,7 @@ export class CommentsService {
 
   public async loadComments(slug: string, sort?: CommentsSortOption): Promise<void> {
     this.store.comments.isLoading = true;
-    this.store.games.error = undefined;
+    this.store.comments.error = undefined;
 
     try {
       const response = await this.api.getComments(slug, sort);

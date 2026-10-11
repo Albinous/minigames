@@ -74,7 +74,7 @@ describe('GamesService.loadGame', () => {
     getGameDetails.mockResolvedValue(response);
     await service.loadGame('tiny-glade');
 
-    expect(getGameDetails).toHaveBeenCalledWith('tiny-glade');
+    expect(getGameDetails).toHaveBeenCalledWith('tiny-glade', undefined);
     expect(store.game.data).toBe(response);
     expect(store.game.isLoading).toBe(false);
   });

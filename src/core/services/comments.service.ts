@@ -27,12 +27,39 @@ export class CommentsService {
 
     try {
       const response = await this.api.getComments(slug, sort, this.store.session?.email);
-      
+
       this.store.comments.data = response;
     } catch {
       this.store.comments.error = 'Failed to load comments';
     } finally {
       this.store.comments.isLoading = false;
+    }
+  }
+
+  public async submitComment(slug: string, text: string): Promise<void> {
+    const session = this.store.session;
+
+    if (!session) throw new Error('Authentication is required');
+
+    await this.api.postComment(slug, {
+      userEmail: session.email,
+      authorName: toAuthorName(session.displayName),
+      text,
+    });
+    await this.loadComments(slug);
+  }
+
+  public async toggleLike(commentId: string): Promise<void> {
+    const email = this.store.session?.email;
+
+    if (!email) throw new Error('Authentication is required');
+
+    const response = await this.api.toggleLike(commentId, email);
+    const comment = this.store.comments.data?.data.find((item) => item.commentId === commentId);
+
+    if (comment) {
+      comment.isLikedByCurrentUser = response.data.isLikedByCurrentUser;
+      comment.likesCount = response.data.likesCount;
     }
   }
 }

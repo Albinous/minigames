@@ -26,6 +26,8 @@ import { CommentSkeleton } from './comments-skeleton';
 import { Snackbar } from '../../snackbar/snackbar';
 import { updateUrl } from '../../../shared/utils/update-url';
 
+const MAX_COMMENT_LENGTH = 500;
+
 export class GameDialog {
   private dialogElement: HTMLDialogElement;
   private store: Store;
@@ -35,11 +37,18 @@ export class GameDialog {
   private readonly emptyState = new EmptyState();
   private currentSlug = '';
   private readonly snackbar = new Snackbar();
+  private readonly ensureAuthenticated: () => boolean;
 
-  constructor(store: Store, gamesService: GamesService, commentsService: CommentsService) {
+  constructor(
+    store: Store,
+    gamesService: GamesService,
+    commentsService: CommentsService,
+    isEnsureAuthenticated: () => boolean,
+  ) {
     this.store = store;
     this.gamesService = gamesService;
     this.commentsService = commentsService;
+    this.ensureAuthenticated = isEnsureAuthenticated;
     this.dialogElement = this.render();
   }
 
@@ -295,23 +304,28 @@ export class GameDialog {
   }
 
   private createCommentInput(): HTMLFormElement {
+    const isAuthenticated = this.store.isAuthenticated;
     const form = createElement('form', {
       className: 'game-dialog__comments-form',
     });
     const author = createElement('div', {
       className: 'game-dialog__comments-avatar username-circle',
-      text: 'U',
+      text: this.getFirstLetterOfUsername(this.store.session?.displayName ?? 'U'),
     });
+    // Гость видит заблокированное поле
     const textarea = createElement('textarea', {
       className: 'game-dialog__comments-textarea',
       attributes: {
-        placeholder: 'Write a comment...',
+        placeholder: isAuthenticated ? 'Write a comment...' : 'Log in to write a comment',
+        disabled: !isAuthenticated,
       },
     });
     const sendButton = createElement('button', {
       className: 'game-dialog__comments-send',
       attributes: {
         type: 'submit',
+        'aria-label': 'Send comment',
+        disabled: !isAuthenticated,
       },
     });
 
@@ -323,8 +337,56 @@ export class GameDialog {
       textarea.style.height = 'auto';
       textarea.style.height = `${Math.min(textarea.scrollHeight, 88)}px`;
     });
+    textarea.addEventListener('keydown', (event) => {
+      if (event.key !== 'Enter' || event.shiftKey) {
+        return;
+      }
+
+      event.preventDefault();
+      void this.submitComment(form);
+    });
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      void this.submitComment(form);
+    });
 
     return form;
+  }
+
+  private async submitComment(form: HTMLFormElement): Promise<void> {
+    const textarea = form.querySelector<HTMLTextAreaElement>('.game-dialog__comments-textarea');
+    const sendButton = form.querySelector<HTMLButtonElement>('.game-dialog__comments-send');
+
+    if (!textarea || !sendButton || textarea.disabled) return;
+    if (!this.ensureAuthenticated()) return;
+
+    const text = textarea.value.trim();
+
+    if (text.length === 0) {
+      this.snackbar.show('Comment cannot be empty', 'error');
+      return;
+    }
+
+    if (text.length > MAX_COMMENT_LENGTH) {
+      this.snackbar.show(`Comment must be at most ${MAX_COMMENT_LENGTH} characters`, 'error');
+      return;
+    }
+
+    textarea.disabled = true;
+    sendButton.disabled = true;
+
+    try {
+      await this.commentsService.submitComment(this.currentSlug, text);
+      textarea.value = '';
+      textarea.style.height = '';
+      this.renderCommentsState();
+    } catch {
+      this.snackbar.show('Failed to send the comment. Please check and try again', 'error');
+    } finally {
+      textarea.disabled = false;
+      sendButton.disabled = false;
+    }
   }
 
   private createCommentItem(comment: IComment): HTMLElement {
@@ -341,6 +403,7 @@ export class GameDialog {
       className: 'game-dialog__comment-likes',
       attributes: {
         type: 'button',
+        'data-comment-id': comment.commentId,
       },
     });
 
@@ -385,7 +448,7 @@ export class GameDialog {
   }
 
   private getFirstLetterOfUsername(username: string): string {
-    return username[0].toUpperCase();
+    return username.trim().at(0)?.toUpperCase() ?? '';
   }
 
   private getTopRecordSpan(classname: string, value: string) {
@@ -525,7 +588,9 @@ export class GameDialog {
       return;
     }
 
-    title.textContent = `Comments (${comments.length})`;
+    const total = this.store.comments.data?.meta?.totalComments ?? comments.length;
+
+    title.textContent = `Comments (${total})`;
 
     const commentElements = comments.map((comment) => this.createCommentItem(comment));
 
@@ -568,33 +633,67 @@ export class GameDialog {
   private bindAddFavourites(): void {
     if (!this.dialogElement) return;
 
-    const addFavouritesButton = this.dialogElement.querySelector('.game-dialog__btn-favourite');
-    if (!addFavouritesButton) return;
-    const addFavouritesText = addFavouritesButton.querySelector('.game-dialog__btn-text');
+    const button = this.dialogElement.querySelector<HTMLButtonElement>(
+      '.game-dialog__btn-favourite',
+    );
 
-    addFavouritesButton?.addEventListener('click', () => {
-      this.game.isLikedByCurrentUser = !this.game.isLikedByCurrentUser;
-      if (addFavouritesText) {
-        addFavouritesText.textContent = this.game.isLikedByCurrentUser
-          ? 'Remove from favourites'
-          : 'Add to Favourites';
-      }
-      addFavouritesButton.classList.toggle('active', this.game.isLikedByCurrentUser);
+    button?.addEventListener('click', () => {
+      void this.toggleFavourite(button);
     });
+  }
+
+  private async toggleFavourite(button: HTMLButtonElement): Promise<void> {
+    if (button.disabled) return;
+    if (!this.ensureAuthenticated()) return;
+
+    button.disabled = true;
+    button.classList.add('loading');
+
+    try {
+      await this.gamesService.toggleFavorite(this.currentSlug);
+      this.renderFavouriteState(this.game.isLikedByCurrentUser);
+      this.renderHeader();
+    } catch {
+      this.snackbar.show('Failed to update favourites. Please try again', 'error');
+    } finally {
+      button.disabled = false;
+      button.classList.remove('loading');
+    }
   }
 
   private bindLikeComment(): void {
     if (!this.dialogElement) return;
 
-    const comment = this.dialogElement.querySelector('.game-dialog__comments');
+    const comments = this.dialogElement.querySelector('.game-dialog__comments');
 
-    comment?.addEventListener('click', (event) => {
+    comments?.addEventListener('click', (event) => {
       if (!(event.target instanceof Element)) return;
+
       const button = event.target.closest<HTMLButtonElement>('.game-dialog__comment-likes');
+
       if (!button) return;
 
-      button.classList.toggle('active');
+      void this.toggleCommentLike(button);
     });
+  }
+
+  private async toggleCommentLike(button: HTMLButtonElement): Promise<void> {
+    const commentId = button.dataset.commentId;
+
+    if (!commentId || button.disabled) return;
+    if (!this.ensureAuthenticated()) return;
+
+    button.disabled = true;
+    button.classList.add('loading');
+
+    try {
+      await this.commentsService.toggleLike(commentId);
+      this.renderCommentsState();
+    } catch {
+      this.snackbar.show('Failed to like the comment. Please try again', 'error');
+      button.disabled = false;
+      button.classList.remove('loading');
+    }
   }
 
   private reset(): void {

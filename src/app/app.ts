@@ -41,6 +41,17 @@ export class App {
     return false;
   }
 
+  private requireLogin(gameDialog: GameDialog): boolean {
+    if (this.sessionService.checkExpiration()) return true;
+
+    this.snackbar.show('Please log in to continue', 'error');
+    gameDialog.close(false);
+    updateUrlAuth(globalThis.location.pathname, 'login');
+    this.authDialog.open('login');
+
+    return false;
+  }
+
   private syncAuthWithUrl(): void {
     const auth = new URLSearchParams(globalThis.location.search).get('auth');
 
@@ -99,7 +110,9 @@ export class App {
       },
     );
 
-    const gameDialog = new GameDialog(this.store, gamesService, commentsService);
+    const gameDialog: GameDialog = new GameDialog(this.store, gamesService, commentsService, () =>
+      this.requireLogin(gameDialog),
+    );
 
     const router = new Router(
       this.store,

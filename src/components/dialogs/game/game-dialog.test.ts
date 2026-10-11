@@ -116,14 +116,24 @@ const gameDetails = {
 
 const comments = [
   {
+    commentId: 'c1',
     authorName: 'alice',
     text: 'Great',
     createdAt: DATE,
     likesCount: 3,
     isLikedByCurrentUser: true,
   },
-  { authorName: 'Bob', text: 'Nice', createdAt: DATE, likesCount: 0, isLikedByCurrentUser: false },
+  {
+    commentId: 'c2',
+    authorName: 'Bob',
+    text: 'Nice',
+    createdAt: DATE,
+    likesCount: 0,
+    isLikedByCurrentUser: false,
+  },
 ];
+
+const session = { displayName: 'alex', email: 'alex@mail.com', authenticatedAt: 1000 };
 
 type Context = ReturnType<typeof createContext>;
 
@@ -135,17 +145,35 @@ const createContext = () => {
   });
   const loadComments = vi.fn<(slug: string) => Promise<void>>(async () => {
     store.comments.error = undefined;
-    store.comments.data = { data: comments } as never;
+    store.comments.data = { data: structuredClone(comments) } as never;
   });
+  const toggleFavorite = vi.fn<(slug: string) => Promise<void>>(async () => {
+    const game = store.game.data?.data as unknown as { isLikedByCurrentUser: boolean };
+
+    game.isLikedByCurrentUser = !game.isLikedByCurrentUser;
+  });
+  const toggleLike = vi.fn<(commentId: string) => Promise<void>>(async () => {});
+  const submitComment = vi.fn<(slug: string, text: string) => Promise<void>>(async () => {});
+  const ensureAuthenticated = vi.fn<() => boolean>(() => true);
   const dialog = new GameDialog(
     store,
-    { loadGame } as unknown as GamesService,
-    { loadComments } as unknown as CommentsService,
+    { loadGame, toggleFavorite } as unknown as GamesService,
+    { loadComments, toggleLike, submitComment } as unknown as CommentsService,
+    ensureAuthenticated,
   );
 
   document.body.append(dialog.element);
 
-  return { store, loadGame, loadComments, dialog };
+  return {
+    store,
+    loadGame,
+    loadComments,
+    toggleFavorite,
+    toggleLike,
+    submitComment,
+    ensureAuthenticated,
+    dialog,
+  };
 };
 
 const openDialog = async (context: Context = createContext()) => {
@@ -154,11 +182,40 @@ const openDialog = async (context: Context = createContext()) => {
   return context;
 };
 
+const openAsUser = async (): Promise<Context> => {
+  const context = createContext();
+
+  context.store.setSession(session);
+
+  return openDialog(context);
+};
+
 const select = (context: Context, selector: string): HTMLElement | null =>
   context.dialog.element.querySelector<HTMLElement>(selector);
 
 const texts = (context: Context, selector: string): (string | null)[] =>
   [...context.dialog.element.querySelectorAll(selector)].map((element) => element.textContent);
+
+const textareaOf = (context: Context): HTMLTextAreaElement =>
+  select(context, '.game-dialog__comments-textarea') as HTMLTextAreaElement;
+
+const typeComment = (context: Context, value: string): void => {
+  textareaOf(context).value = value;
+  textareaOf(context).dispatchEvent(new Event('input'));
+};
+
+const pressEnter = (context: Context, isShiftKey = false): KeyboardEvent => {
+  const event = new KeyboardEvent('keydown', {
+    key: 'Enter',
+    shiftKey: isShiftKey,
+    bubbles: true,
+    cancelable: true,
+  });
+
+  textareaOf(context).dispatchEvent(event);
+
+  return event;
+};
 
 beforeAll(() => {
   // В jsdom у <dialog> может не быть showModal и close
@@ -438,66 +495,32 @@ describe('GameDialog closing', () => {
 
   it('clears the draft comment and like marks after closing', async () => {
     const context = await openDialog();
-    const textarea = select(context, '.game-dialog__comments-textarea') as HTMLTextAreaElement;
 
-    textarea.value = 'draft';
-    textarea.dispatchEvent(new Event('input'));
-    select(context, '.game-dialog__btn-favourite')?.click();
+    typeComment(context, 'draft');
+    expect(select(context, '.game-dialog__comment-likes.active')).not.toBeNull();
 
     context.dialog.close();
     context.dialog.element.dispatchEvent(new Event('transitionend'));
 
-    expect(textarea.value).toBe('');
-    expect(textarea.style.height).toBe('');
-    expect(select(context, '.game-dialog__btn-favourite')?.classList.contains('active')).toBe(
-      false,
-    );
+    expect(textareaOf(context).value).toBe('');
+    expect(textareaOf(context).style.height).toBe('');
     expect(select(context, '.game-dialog__comment-likes.active')).toBeNull();
   });
 });
 
-describe('GameDialog current local interactions', () => {
-  it('toggles the favourite button', async () => {
-    const context = await openDialog();
-    const button = select(context, '.game-dialog__btn-favourite');
-    const label = (): string | null | undefined =>
-      button?.querySelector('.game-dialog__btn-text')?.textContent;
-
-    button?.click();
-    expect(label()).toBe('Remove from favourites');
-    expect(button?.classList.contains('active')).toBe(true);
-    expect(context.dialog.game.isLikedByCurrentUser).toBe(true);
-
-    button?.click();
-    expect(label()).toBe('Add to Favourites');
-    expect(button?.classList.contains('active')).toBe(false);
-    expect(context.dialog.game.isLikedByCurrentUser).toBe(false);
-  });
-
-  it('toggles the like mark of a comment', async () => {
-    const context = await openDialog();
-    const [first, second] = [
-      ...context.dialog.element.querySelectorAll<HTMLElement>('.game-dialog__comment-likes'),
-    ];
-
-    first.click();
-    second.click();
-
-    expect(first.classList.contains('active')).toBe(false);
-    expect(second.classList.contains('active')).toBe(true);
-  });
-
+describe('GameDialog comment area', () => {
   it('ignores clicks in the comments area that are not on a like button', async () => {
     const context = await openDialog();
 
     select(context, '.game-dialog__comments-title')?.click();
 
+    expect(context.toggleLike).not.toHaveBeenCalled();
     expect(select(context, '.game-dialog__comment-likes.active')).not.toBeNull();
   });
 
   it('grows the comment textarea up to a limit', async () => {
     const context = await openDialog();
-    const textarea = select(context, '.game-dialog__comments-textarea') as HTMLTextAreaElement;
+    const textarea = textareaOf(context);
 
     Object.defineProperty(textarea, 'scrollHeight', { value: 40, configurable: true });
     textarea.dispatchEvent(new Event('input'));
@@ -506,5 +529,224 @@ describe('GameDialog current local interactions', () => {
     Object.defineProperty(textarea, 'scrollHeight', { value: 200, configurable: true });
     textarea.dispatchEvent(new Event('input'));
     expect(textarea.style.height).toBe('88px');
+  });
+});
+
+describe('GameDialog favourites', () => {
+  it('asks a guest to log in and sends nothing', async () => {
+    const context = await openDialog();
+
+    context.ensureAuthenticated.mockReturnValue(false);
+    select(context, '.game-dialog__btn-favourite')?.click();
+
+    expect(context.ensureAuthenticated).toHaveBeenCalled();
+    expect(context.toggleFavorite).not.toHaveBeenCalled();
+  });
+
+  it('shows the state confirmed by the server', async () => {
+    const context = await openDialog();
+    const button = select(context, '.game-dialog__btn-favourite');
+
+    button?.click();
+    await vi.waitFor(() => {
+      expect(button?.classList.contains('active')).toBe(true);
+    });
+
+    expect(context.toggleFavorite).toHaveBeenCalledWith(SLUG);
+    expect(button?.querySelector('.game-dialog__btn-text')?.textContent).toBe(
+      'Remove from favourites',
+    );
+  });
+
+  it('locks the button during the request and ignores a second click', async () => {
+    const context = await openDialog();
+    const button = select(context, '.game-dialog__btn-favourite') as HTMLButtonElement;
+    let isLockedDuringRequest = false;
+
+    context.toggleFavorite.mockImplementation(async () => {
+      isLockedDuringRequest = button.disabled;
+    });
+    button.click();
+    button.click();
+    await vi.waitFor(() => {
+      expect(button.disabled).toBe(false);
+    });
+
+    expect(isLockedDuringRequest).toBe(true);
+    expect(context.toggleFavorite).toHaveBeenCalledTimes(1);
+  });
+
+  it('reports a failed request and unlocks the button', async () => {
+    const context = await openDialog();
+    const button = select(context, '.game-dialog__btn-favourite') as HTMLButtonElement;
+
+    context.toggleFavorite.mockRejectedValue(new Error('network'));
+    button.click();
+    await vi.waitFor(() => {
+      expect(show).toHaveBeenCalledWith(expect.any(String), 'error');
+    });
+
+    expect(button.disabled).toBe(false);
+    expect(button.classList.contains('active')).toBe(false);
+  });
+});
+
+describe('GameDialog comment likes', () => {
+  it('asks a guest to log in and sends nothing', async () => {
+    const context = await openDialog();
+
+    context.ensureAuthenticated.mockReturnValue(false);
+    select(context, '.game-dialog__comment-likes')?.click();
+
+    expect(context.toggleLike).not.toHaveBeenCalled();
+  });
+
+  it('sends the comment id and shows the state confirmed by the server', async () => {
+    const context = await openDialog();
+
+    context.toggleLike.mockImplementation(async () => {
+      const first = context.store.comments.data?.data[0] as unknown as {
+        likesCount: number;
+        isLikedByCurrentUser: boolean;
+      };
+
+      first.likesCount = 2;
+      first.isLikedByCurrentUser = false;
+    });
+    select(context, '.game-dialog__comment-likes')?.click();
+    await vi.waitFor(() => {
+      expect(texts(context, '.game-dialog__comment-likes-count')[0]).toBe('2');
+    });
+
+    expect(context.toggleLike).toHaveBeenCalledWith('c1');
+    expect(select(context, '.game-dialog__comment-likes')?.classList.contains('active')).toBe(
+      false,
+    );
+  });
+
+  it('reports a failed request and unlocks the button', async () => {
+    const context = await openDialog();
+    const button = select(context, '.game-dialog__comment-likes') as HTMLButtonElement;
+
+    context.toggleLike.mockRejectedValue(new Error('network'));
+    button.click();
+    await vi.waitFor(() => {
+      expect(show).toHaveBeenCalledWith(expect.any(String), 'error');
+    });
+
+    expect(button.disabled).toBe(false);
+  });
+});
+
+describe('GameDialog comment form', () => {
+  it('is locked for a guest', async () => {
+    const context = await openDialog();
+
+    expect(textareaOf(context).disabled).toBe(true);
+    expect(select(context, '.game-dialog__comments-send')?.hasAttribute('disabled')).toBe(true);
+  });
+
+  it('shows the first letter of the user name in the avatar', async () => {
+    const context = await openAsUser();
+
+    expect(select(context, '.game-dialog__comments-avatar')?.textContent).toBe('A');
+    expect(textareaOf(context).disabled).toBe(false);
+  });
+
+  it('sends the trimmed text on Enter and clears the field', async () => {
+    const context = await openAsUser();
+
+    typeComment(context, '  Hello  ');
+
+    expect(pressEnter(context).defaultPrevented).toBe(true);
+    await vi.waitFor(() => {
+      expect(textareaOf(context).value).toBe('');
+    });
+
+    expect(context.submitComment).toHaveBeenCalledWith(SLUG, 'Hello');
+  });
+
+  it('sends the text with the send button', async () => {
+    const context = await openAsUser();
+
+    typeComment(context, 'Nice game');
+    select(context, '.game-dialog__comments-send')?.click();
+    await vi.waitFor(() => {
+      expect(context.submitComment).toHaveBeenCalledWith(SLUG, 'Nice game');
+    });
+  });
+
+  it('does not send on Shift+Enter', async () => {
+    const context = await openAsUser();
+
+    typeComment(context, 'Hello');
+
+    expect(pressEnter(context, true).defaultPrevented).toBe(false);
+    expect(context.submitComment).not.toHaveBeenCalled();
+  });
+
+  it('rejects an empty comment', async () => {
+    const context = await openAsUser();
+
+    typeComment(context, ' '.repeat(3));
+    pressEnter(context);
+
+    expect(context.submitComment).not.toHaveBeenCalled();
+    expect(show).toHaveBeenCalledWith(expect.any(String), 'error');
+  });
+
+  it('rejects a comment over 500 characters but accepts exactly 500', async () => {
+    const context = await openAsUser();
+
+    typeComment(context, 'a'.repeat(501));
+    pressEnter(context);
+    expect(context.submitComment).not.toHaveBeenCalled();
+
+    typeComment(context, 'a'.repeat(500));
+    pressEnter(context);
+    await vi.waitFor(() => {
+      expect(context.submitComment).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  it('locks the form during the request', async () => {
+    const context = await openAsUser();
+    let isLockedDuringRequest = false;
+
+    context.submitComment.mockImplementation(async () => {
+      isLockedDuringRequest = textareaOf(context).disabled;
+    });
+    typeComment(context, 'Hello');
+    pressEnter(context);
+    await vi.waitFor(() => {
+      expect(textareaOf(context).disabled).toBe(false);
+    });
+
+    expect(isLockedDuringRequest).toBe(true);
+  });
+
+  it('keeps the text and unlocks the form when sending fails', async () => {
+    const context = await openAsUser();
+
+    context.submitComment.mockRejectedValue(new Error('network'));
+    typeComment(context, 'Hello');
+    pressEnter(context);
+    await vi.waitFor(() => {
+      expect(show).toHaveBeenCalledWith(expect.any(String), 'error');
+    });
+
+    expect(textareaOf(context).value).toBe('Hello');
+    expect(textareaOf(context).disabled).toBe(false);
+  });
+
+  it('sends nothing when the session is no longer valid', async () => {
+    const context = await openAsUser();
+
+    context.ensureAuthenticated.mockReturnValue(false);
+    typeComment(context, 'Hello');
+    pressEnter(context);
+
+    expect(context.submitComment).not.toHaveBeenCalled();
+    expect(textareaOf(context).value).toBe('Hello');
   });
 });

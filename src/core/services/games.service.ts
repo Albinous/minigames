@@ -41,7 +41,7 @@ export class GamesService {
     }
   }
 
-    public async toggleFavorite(slug: string): Promise<void> {
+  public async toggleFavorite(slug: string): Promise<void> {
     const email = this.store.session?.email;
 
     if (!email) throw new Error('Authentication is required');

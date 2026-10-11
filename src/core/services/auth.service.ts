@@ -1,6 +1,7 @@
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signOut,
   updateProfile,
   type User,
 } from 'firebase/auth';
@@ -30,5 +31,9 @@ export class AuthService {
     await updateProfile(credential.user, { displayName: username });
 
     return toAuthUser(credential.user);
+  }
+
+  public async signOut(): Promise<void> {
+    await signOut(auth);
   }
 }

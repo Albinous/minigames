@@ -1,8 +1,14 @@
-import { Header, Footer, Snackbar } from '../components';
+import { Header, Footer, Snackbar, AuthDialog, GameDialog } from '../components';
 import { Router } from './router';
-import { AuthDialog } from '../components/dialogs/auth/auth-dialog';
-import { GameDialog } from '../components/dialogs/game/game-dialog';
-import { AuthService, CommentsApi, CommentsService, GamesApi, GamesService, Store } from '../core';
+import {
+  AuthService,
+  CommentsApi,
+  CommentsService,
+  GamesApi,
+  GamesService,
+  SessionService,
+  Store,
+} from '../core';
 import { updateUrl, updateUrlAuth } from '../shared/utils/update-url';
 
 export class App {
@@ -14,9 +20,13 @@ export class App {
     const commentsService = new CommentsService(store, commentsApi);
     const authService = new AuthService();
     const snackbar = new Snackbar();
+    const sessionService = new SessionService(store, authService, () =>
+      snackbar.show('Your session has expired. Please log in again', 'error'),
+    );
     const authDialog = new AuthDialog(authService, snackbar, (user) => {
-      snackbar.show(`Welcome, ${user.displayName ?? user.email ?? 'player'}!`, 'success');
+      sessionService.start(user);
     });
+
     const header = new Header(
       (mode) => {
         updateUrlAuth(globalThis.location.pathname, mode);
@@ -24,6 +34,7 @@ export class App {
       },
       (route) => {
         router.navigate(route);
+        sessionService.checkExpiration();
       },
     );
     const gameDialog = new GameDialog(store, gamesService, commentsService);
@@ -34,6 +45,7 @@ export class App {
         updateUrl({ game: slug });
 
         void gameDialog.open(slug);
+        sessionService.checkExpiration();
       },
       (page, route) => {
         const currentPage = document.querySelector('main');
@@ -52,6 +64,7 @@ export class App {
         } else {
           gameDialog.close(false);
         }
+        sessionService.checkExpiration();
       },
       () => {
         const parameters = new URLSearchParams(globalThis.location.search);
@@ -62,10 +75,13 @@ export class App {
         } else {
           authDialog.close(false);
         }
+        sessionService.checkExpiration();
       },
     );
 
     const footer = new Footer();
+
+    sessionService.restore();
 
     document.body.prepend(
       header.render(),
@@ -74,5 +90,15 @@ export class App {
       authDialog.render(),
       gameDialog.element,
     );
+
+    this.bindTabEvents(sessionService);
+  }
+
+  public bindTabEvents(sessionService: SessionService): void {
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+        sessionService.checkExpiration();
+      }
+    });
   }
 }

@@ -627,8 +627,6 @@ export class GameDialog {
 
     if (this.store.game.error) {
       this.snackbar.show('Failed to load game details', 'error');
-    } else {
-      this.snackbar.show('Game details loaded successfully', 'success');
     }
   }
 
@@ -637,8 +635,6 @@ export class GameDialog {
 
     if (this.store.comments.error) {
       this.snackbar.show('Failed to load comments', 'error');
-    } else {
-      this.snackbar.show('Comments loaded successfully', 'success');
     }
   }
 
@@ -688,8 +684,6 @@ export class GameDialog {
 
     if (this.store.game.error) {
       this.snackbar.show('Failed to load game details', 'error');
-    } else {
-      this.snackbar.show('Game details loaded successfully', 'success');
     }
 
     this.renderGameState();

@@ -75,8 +75,6 @@ export class LibraryPage {
 
     if (this.store.categories.error) {
       this.snackbar.show('Failed to load categories', 'error');
-    } else {
-      this.snackbar.show('Categories loaded successfully', 'success');
     }
 
     this.updateCategories(main);
@@ -278,8 +276,6 @@ export class LibraryPage {
 
       if (this.store.games.error) {
         this.snackbar.show('Failed to load games', 'error');
-      } else {
-        this.snackbar.show('Games loaded successfully', 'success');
       }
       this.updateCards(main);
       this.updatePageButtons(main);
@@ -335,8 +331,6 @@ export class LibraryPage {
 
       if (this.store.games.error) {
         this.snackbar.show('Failed to load games', 'error');
-      } else {
-        this.snackbar.show('Games loaded successfully', 'success');
       }
       this.updateCards(main);
       this.updatePageButtons(main);
@@ -539,14 +533,9 @@ export class LibraryPage {
 
     if (this.store.games.error) {
       this.snackbar.show('Failed to load games', 'error');
-    } else {
-      this.snackbar.show('Games loaded successfully', 'success');
     }
-
     if (this.store.categories.error) {
       this.snackbar.show('Failed to load categories', 'error');
-    } else {
-      this.snackbar.show('Categories loaded successfully', 'success');
     }
   }
 

@@ -20,6 +20,7 @@ export default defineConfig({
         'src/assets/**',
         'src/core/firebase/firebase.ts',
         'src/main.ts',
+        'src/pages/home/home-page.view.ts',
       ],
     },
   },

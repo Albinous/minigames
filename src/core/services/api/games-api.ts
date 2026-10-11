@@ -2,6 +2,10 @@ import { GAMES_BASE_URL } from '../../constants';
 import type { GameResponse, GamesQuery, GamesResponse } from '../../types';
 import { Api } from './api';
 
+export interface FavoriteResponse {
+  data: { isFavorited: boolean; likesCount: number };
+}
+
 export class GamesApi extends Api {
   public async getGames({
     page,
@@ -21,7 +25,13 @@ export class GamesApi extends Api {
     return this.get(`${GAMES_BASE_URL}?${parameters.toString()}`);
   }
 
-  public async getGameDetails(gameSlug: string): Promise<GameResponse> {
-    return this.get(`${GAMES_BASE_URL}/${gameSlug}`);
+  public async getGameDetails(gameSlug: string, userEmail?: string): Promise<GameResponse> {
+    const query = userEmail === undefined ? '' : `?userEmail=${encodeURIComponent(userEmail)}`;
+
+    return this.get(`${GAMES_BASE_URL}/${gameSlug}${query}`);
+  }
+
+  public async toggleFavorite(gameSlug: string, userEmail: string): Promise<FavoriteResponse> {
+    return this.post(`${GAMES_BASE_URL}/${gameSlug}/favorite`, { userEmail });
   }
 }

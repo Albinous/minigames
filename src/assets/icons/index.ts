@@ -4,3 +4,4 @@ export { default as likeIconImg } from './like.svg?raw';
 export { default as arrowLeftIcon } from './pagination_backward.svg';
 export { default as arrowRightIcon } from './pagination_forward.svg';
 export { default as starIcon } from './star.svg?raw';
+export { default as personIcon } from './person.svg?raw';

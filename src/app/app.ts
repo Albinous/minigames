@@ -28,13 +28,24 @@ export class App {
     });
 
     const header = new Header(
+      store,
       (mode) => {
         updateUrlAuth(globalThis.location.pathname, mode);
         authDialog.open(mode);
       },
       (route) => {
-        router.navigate(route);
         sessionService.checkExpiration();
+        router.navigate(route);
+      },
+      () => {
+        void sessionService.end().then((isSignedOut) => {
+          if (!isSignedOut) {
+            snackbar.show(
+              'Could not complete sign out, but you are now logged out on this device',
+              'error',
+            );
+          }
+        });
       },
     );
     const gameDialog = new GameDialog(store, gamesService, commentsService);
@@ -42,10 +53,10 @@ export class App {
       store,
       gamesService,
       (slug: string) => {
+        sessionService.checkExpiration();
         updateUrl({ game: slug });
 
         void gameDialog.open(slug);
-        sessionService.checkExpiration();
       },
       (page, route) => {
         const currentPage = document.querySelector('main');
@@ -56,6 +67,7 @@ export class App {
         }
       },
       () => {
+        sessionService.checkExpiration();
         const parameters = new URLSearchParams(globalThis.location.search);
         const game = parameters.get('game');
 
@@ -64,9 +76,9 @@ export class App {
         } else {
           gameDialog.close(false);
         }
-        sessionService.checkExpiration();
       },
       () => {
+        sessionService.checkExpiration();
         const parameters = new URLSearchParams(globalThis.location.search);
         const auth = parameters.get('auth');
 
@@ -75,7 +87,6 @@ export class App {
         } else {
           authDialog.close(false);
         }
-        sessionService.checkExpiration();
       },
     );
 

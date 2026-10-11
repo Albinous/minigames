@@ -1,15 +1,14 @@
+import { getProfileName } from '../../shared';
 import type { Store } from '../state';
 import type { AppSession, AuthUser } from '../types';
 import type { AuthService } from './auth.service';
 import { clearSession, isSessionExpired, readSession, saveSession } from './session-storage';
 
 const FALLBACK_EMAIL = 'no-email@example.com';
-const FALLBACK_DISPLAY_NAME = 'Player';
 
 export const createSession = (user: AuthUser, now = Date.now()): AppSession => {
-  const emailName = user.email?.split('@', 1)[0];
   const email = user.email ?? FALLBACK_EMAIL;
-  const displayName = user.displayName || emailName || FALLBACK_DISPLAY_NAME;
+  const displayName = getProfileName(user.displayName ?? '', user.email ?? '');
   const authenticatedAt = now;
   const avatarUrl = user.photoURL;
 
@@ -43,13 +42,15 @@ export class SessionService {
     this.store.setSession(session);
   }
 
-  public async end(): Promise<void> {
+  public async end(): Promise<boolean> {
     clearSession();
     this.store.setSession(undefined);
     try {
       await this.authService.signOut();
+      return true;
     } catch {
       // At this time user is already in the Guest mode, so signOut wouldn't help
+      return false;
     }
   }
 

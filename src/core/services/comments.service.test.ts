@@ -19,7 +19,7 @@ describe('CommentsService.loadComments', () => {
     getComments.mockResolvedValue(response);
     await service.loadComments('tiny-glade');
 
-    expect(getComments).toHaveBeenCalledWith('tiny-glade', undefined);
+    expect(getComments).toHaveBeenCalledWith('tiny-glade', undefined, undefined);
     expect(store.comments.data).toBe(response);
     expect(store.comments.isLoading).toBe(false);
   });
@@ -30,7 +30,7 @@ describe('CommentsService.loadComments', () => {
     getComments.mockResolvedValue({});
     await service.loadComments('tiny-glade', 'newest');
 
-    expect(getComments).toHaveBeenCalledWith('tiny-glade', 'newest');
+    expect(getComments).toHaveBeenCalledWith('tiny-glade', 'newest', undefined);
   });
 
   it('stores an error when the request fails', async () => {

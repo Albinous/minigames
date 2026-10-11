@@ -108,8 +108,6 @@ export class AuthDialog {
   }
 
   private bindSubmit(form: HTMLFormElement): void {
-    console.log('binsubmit', form);
-
     form.addEventListener('submit', (event) => {
       event.preventDefault();
       void this.submit();
@@ -170,7 +168,6 @@ export class AuthDialog {
     this.dialogElement = root;
 
     const form = this.dialogElement?.querySelector<HTMLFormElement>('.auth-form');
-    console.log(form);
 
     this.bindBackdrop();
     this.bindEscape();

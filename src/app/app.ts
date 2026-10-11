@@ -1,8 +1,14 @@
-import { Header, Footer, Snackbar } from '../components';
+import { Header, Footer, Snackbar, AuthDialog, GameDialog } from '../components';
 import { Router } from './router';
-import { AuthDialog } from '../components/dialogs/auth/auth-dialog';
-import { GameDialog } from '../components/dialogs/game/game-dialog';
-import { AuthService, CommentsApi, CommentsService, GamesApi, GamesService, Store } from '../core';
+import {
+  AuthService,
+  CommentsApi,
+  CommentsService,
+  GamesApi,
+  GamesService,
+  SessionService,
+  Store,
+} from '../core';
 import { updateUrl, updateUrlAuth } from '../shared/utils/update-url';
 
 export class App {
@@ -14,9 +20,13 @@ export class App {
     const commentsService = new CommentsService(store, commentsApi);
     const authService = new AuthService();
     const snackbar = new Snackbar();
+    const sessionService = new SessionService(store, authService, () =>
+      snackbar.show('Your session has expired. Please log in again', 'error'),
+    );
     const authDialog = new AuthDialog(authService, snackbar, (user) => {
-      snackbar.show(`Welcome, ${user.displayName ?? user.email ?? 'player'}!`, 'success');
+      sessionService.start(user);
     });
+
     const header = new Header(
       (mode) => {
         updateUrlAuth(globalThis.location.pathname, mode);
@@ -66,6 +76,8 @@ export class App {
     );
 
     const footer = new Footer();
+
+    sessionService.restore();
 
     document.body.prepend(
       header.render(),

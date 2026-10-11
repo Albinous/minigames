@@ -27,6 +27,7 @@ import { Snackbar } from '../../snackbar/snackbar';
 import { updateUrl } from '../../../shared/utils/update-url';
 
 const MAX_COMMENT_LENGTH = 500;
+const AVATAR_COLOR_COUNT = 5;
 
 export class GameDialog {
   private dialogElement: HTMLDialogElement;
@@ -38,6 +39,7 @@ export class GameDialog {
   private currentSlug = '';
   private readonly snackbar = new Snackbar();
   private readonly ensureAuthenticated: () => boolean;
+  private readonly avatarColors = new Map<string, number>();
 
   constructor(
     store: Store,
@@ -247,6 +249,18 @@ export class GameDialog {
     return container;
   }
 
+  private getAvatarColorIndex(authorName: string): number {
+    const savedIndex = this.avatarColors.get(authorName);
+
+    if (savedIndex !== undefined) return savedIndex;
+
+    const index = Math.floor(Math.random() * AVATAR_COLOR_COUNT) + 1;
+
+    this.avatarColors.set(authorName, index);
+
+    return index;
+  }
+
   private createComments(): HTMLElement {
     const container = createContainer('game-dialog__comments');
 
@@ -431,6 +445,7 @@ export class GameDialog {
       className: 'game-dialog__comment-author__letter username-circle',
       text: this.getFirstLetterOfUsername(comment.authorName),
     });
+    authorLetter.classList.add(`avatar-random-${this.getAvatarColorIndex(comment.authorName)}`);
     const authorName = createElement('h4', {
       className: 'game-dialog__comment-author__name',
       text: comment.authorName,

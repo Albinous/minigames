@@ -28,6 +28,7 @@ export class GamesService {
 
   public async loadGame(slug: string): Promise<void> {
     this.store.game.isLoading = true;
+    this.store.game.error = undefined;
 
     try {
       const response = await this.api.getGameDetails(slug);

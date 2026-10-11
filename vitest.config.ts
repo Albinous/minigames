@@ -3,6 +3,7 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig({
   test: {
     environment: 'jsdom',
+    setupFiles: ['./vitest.setup.ts'],
     include: ['src/**/*.test.ts'],
     coverage: {
       provider: 'v8',
@@ -19,6 +20,7 @@ export default defineConfig({
         'src/assets/**',
         'src/core/firebase/firebase.ts',
         'src/main.ts',
+        'src/pages/home/home-page.view.ts',
       ],
     },
   },

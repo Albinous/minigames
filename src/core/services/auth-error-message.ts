@@ -11,7 +11,7 @@ const ERROR_MESSAGES: Partial<Record<string, string>> = {
   'auth/popup-blocked': 'Enable popups in your browser and try again',
 };
 
-const CANCELLED_CODES = ['auth/popup-closed-by-user', 'auth/cancelled-popup-request'];
+const CANCELLED_CODES = new Set(['auth/popup-closed-by-user', 'auth/cancelled-popup-request']);
 
 export const getAuthErrorMessage = (error: unknown): string => {
   if (error instanceof FirebaseError) {
@@ -23,7 +23,7 @@ export const getAuthErrorMessage = (error: unknown): string => {
 
 export const isAuthCancelled = (error: unknown): boolean => {
   if (error instanceof FirebaseError) {
-    return Object.keys(CANCELLED_CODES).includes(error.code);
+    return CANCELLED_CODES.has(error.code);
   }
 
   return false;

@@ -3,7 +3,7 @@ import type { CommentsResponse, CommentsSortOption } from '../../types';
 import { Api } from './api';
 
 const LIMIT_COMMENTS = 3;
-const COMMENTS_BASE_URL = '/comments';
+const COMMENTS_BASE_URL = 'comments';
 
 export class CommentsApi extends Api {
   public async getComments(

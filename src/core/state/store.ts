@@ -10,7 +10,7 @@ import type { AppState, ResourceState } from './app-state';
 import { initialState } from './initial-state';
 
 export class Store {
-  private state: AppState = initialState;
+  private state: AppState = structuredClone(initialState);
 
   private readonly listeners = new Set<() => void>();
 

@@ -1,6 +1,8 @@
 import {
   createUserWithEmailAndPassword,
+  GoogleAuthProvider,
   signInWithEmailAndPassword,
+  signInWithPopup,
   signOut,
   updateProfile,
   type User,
@@ -30,6 +32,12 @@ export class AuthService {
     const credential = await createUserWithEmailAndPassword(auth, email, password);
     await updateProfile(credential.user, { displayName: username });
 
+    return toAuthUser(credential.user);
+  }
+
+  public async loginWithGoogle(): Promise<AuthUser> {
+    const googleAuthProvider = new GoogleAuthProvider();
+    const credential = await signInWithPopup(auth, googleAuthProvider);
     return toAuthUser(credential.user);
   }
 

@@ -17,7 +17,7 @@ export const validateEmail = (value: string): string | undefined => {
 
   if (!email) return 'Email is required';
 
-  return EMAIL_PATTERN.test(value) ? undefined : 'Enter a valid email address';
+  return EMAIL_PATTERN.test(email) ? undefined : 'Enter a valid email address';
 };
 
 export const validateUsername = (value: string): string | undefined => {
@@ -81,7 +81,7 @@ const FIELD_VALIDATORS: Record<
   confirmPassword: (value, values) => validateConfirmPassword(values.password ?? '', value),
 };
 
-const validateAuthField = (
+export const validateAuthField = (
   mode: AuthMode,
   field: AuthField,
   values: AuthFormValues,

@@ -8,18 +8,21 @@ import { personIcon } from '../../assets/icons';
 
 export class Header {
   private element: HTMLElement | undefined;
-  private store: Store;
+  private readonly store: Store;
   private readonly onAuthOpen: (mode: AuthMode) => void;
   private readonly onNavigate: (route: Route) => void;
+  private readonly onLogout: () => void;
 
   constructor(
     store: Store,
     onAuthOpen: (mode: AuthMode) => void,
     onNavigate: (route: Route) => void,
+    onLogout: () => void,
   ) {
     this.store = store;
     this.onAuthOpen = onAuthOpen;
     this.onNavigate = onNavigate;
+    this.onLogout = onLogout;
   }
 
   private addLogo(header: HTMLElement): void {
@@ -35,11 +38,10 @@ export class Header {
     const session = this.store.session;
 
     if (session) {
-      container.replaceChildren();
       const { displayName, avatarUrl } = session;
       const profile = this.createProfile(displayName, avatarUrl);
       const logOutButton = this.createLogOutButton();
-      container.append(profile, logOutButton);
+      container.replaceChildren(profile, logOutButton);
     } else {
       container.innerHTML = getGuestControlView();
     }
@@ -68,7 +70,7 @@ export class Header {
       container.replaceChildren();
 
       if (initials) {
-        container.textContent = initials ?? personIcon;
+        container.textContent = initials;
       } else {
         iconToSvg(personIcon, container);
       }
@@ -148,6 +150,12 @@ export class Header {
 
     container.addEventListener('click', (event) => {
       if (!(event.target instanceof Element)) return;
+
+      if (event.target.closest('[data-action="logout"]')) {
+        this.closeMenu(header);
+        this.onLogout();
+        return;
+      }
 
       const authButton = event.target.closest<HTMLButtonElement>('[data-mode]');
       if (!authButton) return;

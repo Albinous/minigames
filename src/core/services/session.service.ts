@@ -42,13 +42,15 @@ export class SessionService {
     this.store.setSession(session);
   }
 
-  public async end(): Promise<void> {
+  public async end(): Promise<boolean> {
     clearSession();
     this.store.setSession(undefined);
     try {
       await this.authService.signOut();
+      return true;
     } catch {
       // At this time user is already in the Guest mode, so signOut wouldn't help
+      return false;
     }
   }
 

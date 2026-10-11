@@ -37,6 +37,16 @@ export class App {
         sessionService.checkExpiration();
         router.navigate(route);
       },
+      () => {
+        void sessionService.end().then((isSignedOut) => {
+          if (!isSignedOut) {
+            snackbar.show(
+              'Could not complete sign out, but you are now logged out on this device',
+              'error',
+            );
+          }
+        });
+      },
     );
     const gameDialog = new GameDialog(store, gamesService, commentsService);
     const router = new Router(

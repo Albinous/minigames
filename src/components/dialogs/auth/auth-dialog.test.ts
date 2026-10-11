@@ -380,7 +380,9 @@ describe('AuthDialog Google sign in', () => {
   it('stays quiet and keeps the dialog usable when the user closes the Google window', async () => {
     const context = createContext();
 
-    context.loginWithGoogle.mockRejectedValue(new FirebaseError('auth/popup-closed-by-user', 'raw'));
+    context.loginWithGoogle.mockRejectedValue(
+      new FirebaseError('auth/popup-closed-by-user', 'raw'),
+    );
     context.dialog.open('login');
     clickGoogle(context);
     await vi.waitFor(() => {

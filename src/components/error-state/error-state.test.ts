@@ -7,7 +7,9 @@ describe('ErrorState', () => {
     const button = element.querySelector<HTMLButtonElement>('.error-state__retry');
 
     expect(element.className).toBe('error-state');
-    expect(element.querySelector('.error-state__message')?.textContent).toBe('Failed to load games');
+    expect(element.querySelector('.error-state__message')?.textContent).toBe(
+      'Failed to load games',
+    );
     expect(button?.textContent).toBe('Retry');
     expect(button?.type).toBe('button');
   });

@@ -13,7 +13,9 @@ describe('NotFound', () => {
 
   it('leads back home on every click of the button', () => {
     const onHomeClick = vi.fn();
-    const button = new NotFound().render(onHomeClick).querySelector<HTMLButtonElement>('.not-found__btn');
+    const button = new NotFound()
+      .render(onHomeClick)
+      .querySelector<HTMLButtonElement>('.not-found__btn');
 
     button?.click();
     button?.click();

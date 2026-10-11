@@ -34,6 +34,7 @@ export class App {
       },
       (route) => {
         router.navigate(route);
+        sessionService.checkExpiration();
       },
     );
     const gameDialog = new GameDialog(store, gamesService, commentsService);
@@ -44,6 +45,7 @@ export class App {
         updateUrl({ game: slug });
 
         void gameDialog.open(slug);
+        sessionService.checkExpiration();
       },
       (page, route) => {
         const currentPage = document.querySelector('main');
@@ -62,6 +64,7 @@ export class App {
         } else {
           gameDialog.close(false);
         }
+        sessionService.checkExpiration();
       },
       () => {
         const parameters = new URLSearchParams(globalThis.location.search);
@@ -72,6 +75,7 @@ export class App {
         } else {
           authDialog.close(false);
         }
+        sessionService.checkExpiration();
       },
     );
 
@@ -86,5 +90,15 @@ export class App {
       authDialog.render(),
       gameDialog.element,
     );
+
+    this.bindTabEvents(sessionService);
+  }
+
+  public bindTabEvents(sessionService: SessionService): void {
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+        sessionService.checkExpiration();
+      }
+    });
   }
 }

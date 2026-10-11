@@ -1,14 +1,23 @@
 import { Logo } from '../logo';
-import { getHeaderView } from './header.view';
+import { getGuestControlView, getHeaderView } from './header.view';
 import type { AuthMode } from '../dialogs/auth/auth-dialog.types';
 import type { Route } from '../../app/router';
+import type { Store } from '../../core';
+import { createContainer, createElement, getInitials, iconToSvg } from '../../shared';
+import { personIcon } from '../../assets/icons';
 
 export class Header {
   private element: HTMLElement | undefined;
+  private store: Store;
   private readonly onAuthOpen: (mode: AuthMode) => void;
   private readonly onNavigate: (route: Route) => void;
 
-  constructor(onAuthOpen: (mode: AuthMode) => void, onNavigate: (route: Route) => void) {
+  constructor(
+    store: Store,
+    onAuthOpen: (mode: AuthMode) => void,
+    onNavigate: (route: Route) => void,
+  ) {
+    this.store = store;
     this.onAuthOpen = onAuthOpen;
     this.onNavigate = onNavigate;
   }
@@ -17,6 +26,85 @@ export class Header {
     const headerWrapper = header.querySelector('.header-wrapper');
 
     headerWrapper?.prepend(new Logo().render());
+  }
+
+  private renderAuth(header: HTMLElement): void {
+    const container = header.querySelector('.header-auth');
+    if (!container) return;
+
+    const session = this.store.session;
+
+    if (session) {
+      container.replaceChildren();
+      const { displayName, avatarUrl } = session;
+      const profile = this.createProfile(displayName, avatarUrl);
+      const logOutButton = this.createLogOutButton();
+      container.append(profile, logOutButton);
+    } else {
+      container.innerHTML = getGuestControlView();
+    }
+  }
+
+  private createProfile(displayName: string, avatarUrl: string | undefined): HTMLElement {
+    const container = createContainer('header-profile');
+
+    const username = createElement('span', {
+      className: 'header-profile__name',
+      text: displayName,
+    });
+
+    const avatar = this.createAvatar(avatarUrl, displayName);
+
+    container.append(username, avatar);
+
+    return container;
+  }
+
+  private createAvatar(avatarUrl: string | undefined, name: string): HTMLElement {
+    const container = createContainer('header-profile__avatar');
+    const showFallback = (): void => {
+      const initials = getInitials(name);
+
+      container.replaceChildren();
+
+      if (initials) {
+        container.textContent = initials ?? personIcon;
+      } else {
+        iconToSvg(personIcon, container);
+      }
+    };
+
+    if (!avatarUrl) {
+      showFallback();
+      return container;
+    }
+
+    const avatarImg = createElement('img', {
+      className: 'header-profile__avatar-img',
+      attributes: {
+        alt: '',
+        referrerpolicy: 'no-referrer',
+      },
+    });
+    avatarImg.addEventListener('error', showFallback, { once: true });
+    avatarImg.src = avatarUrl;
+
+    container.append(avatarImg);
+
+    return container;
+  }
+
+  private createLogOutButton(): HTMLButtonElement {
+    const logOutButton = createElement('button', {
+      className: 'btn header-btn header-btn__logout',
+      text: 'Log Out',
+      attributes: {
+        'data-action': 'logout',
+        type: 'button',
+      },
+    });
+
+    return logOutButton;
   }
 
   private openMenu(header: HTMLElement): void {
@@ -55,16 +143,20 @@ export class Header {
   }
 
   private bindAuthButtons(header: HTMLElement): void {
-    const loginButton = header.querySelector('.header-btn__login');
+    const container = header.querySelector('.header-auth');
+    if (!container) return;
 
-    const signupButton = header.querySelector('.header-btn__signup');
+    container.addEventListener('click', (event) => {
+      if (!(event.target instanceof Element)) return;
 
-    loginButton?.addEventListener('click', () => {
-      this.onAuthOpen('login');
-    });
+      const authButton = event.target.closest<HTMLButtonElement>('[data-mode]');
+      if (!authButton) return;
 
-    signupButton?.addEventListener('click', () => {
-      this.onAuthOpen('register');
+      const authMode = authButton.dataset.mode;
+
+      if (!authMode || !this.isAuthMode(authMode)) return;
+
+      this.onAuthOpen(authMode);
     });
   }
 
@@ -86,6 +178,10 @@ export class Header {
     });
   }
 
+  private isAuthMode(value: string): value is AuthMode {
+    return ['login', 'register'].includes(value);
+  }
+
   public setActiveRoute(route: Route) {
     if (!this.element) return;
     const links = this.element.querySelectorAll<HTMLAnchorElement>('[data-route]');
@@ -103,11 +199,17 @@ export class Header {
     header.innerHTML = getHeaderView();
 
     this.addLogo(header);
+    this.renderAuth(header);
+
     this.bindMenuEvents(header);
     this.bindAuthButtons(header);
     this.bindNavLinks(header);
 
     this.setActiveRoute(globalThis.location.pathname === '/library' ? '/library' : '/');
+
+    this.store.subscribe(() => {
+      this.renderAuth(header);
+    });
 
     return header;
   }

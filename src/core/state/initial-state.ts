@@ -19,4 +19,5 @@ export const initialState: AppState = {
   categories: createInitialResourceState<CategoriesResponse>(),
   comments: createInitialResourceState<CommentsResponse>(),
   leaderboard: createInitialResourceState<LeaderboardResponse>(),
+  session: undefined,
 };

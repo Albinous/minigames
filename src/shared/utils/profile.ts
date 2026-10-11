@@ -6,7 +6,7 @@ export const getProfileName = (displayName: string, email: string): string => {
   const emailName = email.split('@', 1)[0].trim();
 
   return name || emailName || FALLBACK_DISPLAY_NAME;
-}
+};
 
 export const getInitials = (name: string): string | undefined => {
   const firstTwoWords = name.trim().split(/\s+/).slice(0, 2);
@@ -14,11 +14,11 @@ export const getInitials = (name: string): string | undefined => {
   const characters: string[] = [];
 
   for (const word of firstTwoWords) {
-    const matchedWord = word.match(UNICODE__PATTERN)
+    const matchedWord = word.match(UNICODE__PATTERN);
     if (matchedWord) {
-      characters.push(matchedWord[0])
+      characters.push(matchedWord[0]);
     }
   }
 
   return characters.join('').toUpperCase() || undefined;
-}
+};
